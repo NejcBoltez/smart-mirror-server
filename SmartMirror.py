@@ -103,7 +103,10 @@ class Camera(Frame):
         self.getCamera()
         #self.label1.after(10, self.getCamera)
     def getCamera(self):
-        face_front=cv2.CascadeClassifier('C:/Users/nejcb/AppData/Local/Programs/Python/Python37-32/Lib/site-packages/cv2/data/haarcascade_frontalface_default.xml')
+        '''try:
+            face_front=cv2.CascadeClassifier('C:/Users/nejcb/AppData/Local/Programs/Python/Python37-32/Lib/site-packages/cv2/data/haarcascade_frontalface_default.xml')
+        except:'''
+        face_front=cv2.CascadeClassifier('/home/nejc/anaconda3/lib/python3.7/site-packages/cv2/data/haarcascade_frontalface_default.xml')
 # Capture frame-by-frame
         cap = cv2.VideoCapture(0)
         ret, frame = cap.read()
