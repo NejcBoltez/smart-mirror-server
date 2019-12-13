@@ -1,4 +1,4 @@
-I am using Python3.6
+I am using Python3.6 on Linuxmint
 
 INSTALL DLIB
     sudo apt-get install build-essential cmake pkg-config libx11-dev libatlas-base-dev libgtk-3-dev libboost-python-dev
