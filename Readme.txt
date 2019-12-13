@@ -1,9 +1,5 @@
 I am using Python3.6
 
-pip3 install setuptools
-pip3 install opencv-python
-pip3 install pillow
-
 INSTALL DLIB
     sudo apt-get install build-essential cmake pkg-config libx11-dev libatlas-base-dev libgtk-3-dev libboost-python-dev
     sudo apt-get install python-dev python-pip python3-dev python3-pip
@@ -16,4 +12,11 @@ INSTALL DLIB
     cmake --build . --config Release
     sudo make install
     sudo ldconfig
-    pip3 install dlib
+    cd ..
+    pkg-config --libs --cflags dlib-1
+    python setup.py install
+    
+pip3 install setuptools
+pip3 install opencv-python
+pip3 install pillow
+pip3 install face_recognition
