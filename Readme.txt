@@ -1,3 +1,5 @@
+I am using Python3.6
+
 pip3 install setuptools
 pip3 install opencv-python
 pip3 install pillow
