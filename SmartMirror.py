@@ -101,6 +101,7 @@ class Camera(Frame):
         self.label1=Label(self.CamFrame, font=('Helvetica', 9), fg="white", bg="black")
         self.label1.pack(anchor='w')
         self.getCamera()
+                    
         #self.label1.after(10, self.getCamera)
     def getCamera(self):
         '''try:
@@ -110,6 +111,7 @@ class Camera(Frame):
 # Capture frame-by-frame
         cap = cv2.VideoCapture(0)
         ret, frame = cap.read()
+        tekst=''
         #detect face
         faces = face_front.detectMultiScale(frame, scaleFactor=1.5, minNeighbors=5)
         for (x, y, w, h) in faces:
@@ -117,29 +119,40 @@ class Camera(Frame):
             
             #print (x)
             roi_color=frame[y:y+h, x:x+w]
-            img_item2='D:/Smart-mirror/Uporabniki/nejc/Nejc_1.png'
+            
             #image = face_recognition.load_image_file('./Images/stevejobs.png')
             image_encoding = face_recognition.face_encodings(frame)[0]
             for root, dirs, files in os.walk(image_dir):
-                for file in files:
-                    #print(file)
-                    unknown_image = face_recognition.load_image_file('./Images/'+file)
-                    unknown_encoding= face_recognition.face_encodings(unknown_image)[0]
+                for d in dirs:
+                    print(d)
+                    for root, dirs, files in os.walk(image_dir+'/'+d):
+                        print(files)
+                        for file in files:
+                            print('File: '+file)
+                            unknown_image = face_recognition.load_image_file(image_dir+'/'+d+'/'+file)
+                            unknown_encoding= face_recognition.face_encodings(unknown_image)[0]
 
-                    results=face_recognition.compare_faces([image_encoding], unknown_encoding)
+                            results=face_recognition.compare_faces([image_encoding], unknown_encoding)
 
-                    if results[0]:
-                        #print(file)
-                        tekst=file
-                        break
-                    else:
-                        continue
-            #save the image
-            cv2.imwrite(img_item2, roi_color)
+                            if results[0]:
+                                #print(file)
+                                tekst=file
+                                print('tekst'+tekst)
+                                #save the image
+                                path, dirs, files = next(os.walk(image_dir+'/'+d))
+                                file_count = len(files)
+                                print(file_count)
+                                img_item2='./Uporabniki/nejc/Nejc_'+str(file_count+1)+'.png'
+                                cv2.imwrite(img_item2, roi_color)
+                                break
+                            else:
+                                continue
+                        
+            #cv2.imwrite(img_item2, roi_color)
             self.label1.config(text=tekst)
         if len(faces)==0:
             self.label1.config(text='Prazno')
-        #self.label1.after(600, self.getCamera)
+        self.label1.after(600, self.getCamera)
 
 class Okno:
     def __init__(self):

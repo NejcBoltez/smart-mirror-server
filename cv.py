@@ -1,9 +1,14 @@
 import numpy as np
 import cv2
 
-face_front=cv2.CascadeClassifier('C:/Users/nejcb/AppData/Local/Programs/Python/Python37-32/Lib/site-packages/cv2/data/haarcascade_frontalface_default.xml')
+'''try:
+    face_front=cv2.CascadeClassifier('C:/Users/nejcb/AppData/Local/Programs/Python/Python37-32/Lib/site-packages/cv2/data/haarcascade_frontalface_default.xml')
+except:'''
+face_front=cv2.CascadeClassifier('/home/nejc/anaconda3/lib/python3.7/site-packages/cv2/data/haarcascade_frontalface_default.xml')
 
-face_eye=cv2.CascadeClassifier('C:/Users/nejcb/AppData/Local/Programs/Python/Python37-32/Lib/site-packages/cv2/data/haarcascade_profileface.xml')
+#face_front=cv2.CascadeClassifier('C:/Users/nejcb/AppData/Local/Programs/Python/Python37-32/Lib/site-packages/cv2/data/haarcascade_frontalface_default.xml')
+
+face_eye=cv2.CascadeClassifier('/home/nejc/anaconda3/lib/python3.7/site-packages/cv2/data/haarcascade_profileface.xml')
 cap = cv2.VideoCapture(0)
 
 ret, frame = cap.read()
@@ -16,10 +21,10 @@ while(True):
 
     faces = face_front.detectMultiScale(frame, scaleFactor=1.5, minNeighbors=5)
     # Display the resulting frame
-    if len(faces) == 0:
+    '''if len(faces) == 0:
         print('prazno')
         faces2 = face_eye.detectMultiScale(frame, scaleFactor=1.5, minNeighbors=5)
-        print (faces2)
+        print (faces2)'''
     for (x, y, w, h) in faces:
         print (x,y,w,h)
         roi_gray=gray[y:y+h, x:x+w]
