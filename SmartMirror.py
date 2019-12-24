@@ -104,10 +104,11 @@ class Camera(Frame):
                     
         #self.label1.after(10, self.getCamera)
     def getCamera(self):
-        '''try:
-            face_front=cv2.CascadeClassifier('C:/Users/nejcb/AppData/Local/Programs/Python/Python37-32/Lib/site-packages/cv2/data/haarcascade_frontalface_default.xml')
-        except:'''
-        face_front=cv2.CascadeClassifier('/home/nejc/anaconda3/lib/python3.7/site-packages/cv2/data/haarcascade_frontalface_default.xml')
+        # .local is inside home directory
+        try:
+            face_front=cv2.CascadeClassifier('../.local/lib/python3.6/site-packages/cv2/data/haarcascade_frontalface_default.xml')
+        except:
+            face_front=cv2.CascadeClassifier('../.local/lib/python3.7/site-packages/cv2/data/haarcascade_frontalface_default.xml')
 # Capture frame-by-frame
         cap = cv2.VideoCapture(0)
         ret, frame = cap.read()
@@ -125,29 +126,34 @@ class Camera(Frame):
             for root, dirs, files in os.walk(image_dir):
                 for d in dirs:
                     print(d)
+                    print(image_dir+'/'+d)
                     for root, dirs, files in os.walk(image_dir+'/'+d):
                         print(files)
                         for file in files:
                             print('File: '+file)
                             unknown_image = face_recognition.load_image_file(image_dir+'/'+d+'/'+file)
-                            unknown_encoding= face_recognition.face_encodings(unknown_image)[0]
-
-                            results=face_recognition.compare_faces([image_encoding], unknown_encoding)
-
-                            if results[0]:
-                                #print(file)
-                                tekst=file
-                                print('tekst'+tekst)
-                                #save the image
-                                path, dirs, files = next(os.walk(image_dir+'/'+d))
-                                file_count = len(files)
-                                print(file_count)
-                                img_item2='./Uporabniki/nejc/Nejc_'+str(file_count+1)+'.png'
-                                cv2.imwrite(img_item2, roi_color)
-                                break
-                            else:
-                                continue
-                        
+                            '''print(unknown_image)
+                            unknown_encoding=face_recognition.face_encodings(unknown_image)
+                            print(len(unknown_encoding))
+                            if (len(unknown_encoding)>0):
+                                unknown_encoding1=face_recognition.face_encodings(unknown_image)[0]
+                                
+                                results=face_recognition.compare_faces([image_encoding], unknown_encoding1)
+'''
+                                if results[0]:
+                                    #print(file)
+                                    tekst=file
+                                    print('tekst'+tekst)
+                                    #save the image
+                                    path, dirs, files = next(os.walk(image_dir+'/'+d))
+                                    file_count = len(files)
+                                    print(file_count)
+                                    img_item2='./Uporabniki/'+d+'/'+d+'_'+str(file_count+1)+'.png'
+                                    cv2.imwrite(img_item2, roi_color)
+                                    break
+                                else:
+                                    continue
+                            
             #cv2.imwrite(img_item2, roi_color)
             self.label1.config(text=tekst)
         if len(faces)==0:
