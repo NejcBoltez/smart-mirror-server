@@ -137,9 +137,9 @@ class Camera(Frame):
                             print(len(unknown_encoding))
                             if (len(unknown_encoding)>0):
                                 unknown_encoding1=face_recognition.face_encodings(unknown_image)[0]
-                                
+'''                                
                                 results=face_recognition.compare_faces([image_encoding], unknown_encoding1)
-'''
+
                                 if results[0]:
                                     #print(file)
                                     tekst=file
