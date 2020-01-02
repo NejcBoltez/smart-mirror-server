@@ -132,18 +132,18 @@ class Camera(Frame):
                         for file in files:
                             print('File: '+file)
                             unknown_image = face_recognition.load_image_file(image_dir+'/'+d+'/'+file)
-                            '''print(unknown_image)
+                            print(unknown_image)
                             unknown_encoding=face_recognition.face_encodings(unknown_image)
                             print(len(unknown_encoding))
                             if (len(unknown_encoding)>0):
                                 unknown_encoding1=face_recognition.face_encodings(unknown_image)[0]
-'''                                
+
                                 results=face_recognition.compare_faces([image_encoding], unknown_encoding1)
 
                                 if results[0]:
                                     #print(file)
-                                    tekst=file
-                                    print('tekst'+tekst)
+                                    tekst=d
+                                    print('tekst: '+tekst)
                                     #save the image
                                     path, dirs, files = next(os.walk(image_dir+'/'+d))
                                     file_count = len(files)
