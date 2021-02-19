@@ -21,19 +21,22 @@ image_encoding = face_recognition.face_encodings(image)[0]
 
 for root, dirs, files in os.walk(image_dir):
     for file in files:
-        print(dirs)
+        '''print(dirs)
         print(root)
         print(files)
-        print(file)
+        print(file)'''
         unknown_image = face_recognition.load_image_file(root+'/'+file)
-        unknown_encoding= face_recognition.face_encodings(unknown_image)[0]
+        '''print(unknown_image)'''
+        if (len(unknown_image) > 0 ):
+            unknown_encoding= face_recognition.face_encodings(unknown_image)
+            print('Image: ' + str(unknown_image[0]))
+            if (len(unknown_encoding) > 0):
+                results=face_recognition.compare_faces([image_encoding], unknown_encoding[0])
 
-        results=face_recognition.compare_faces([image_encoding], unknown_encoding)
-
-        if results[0]:
-            print(file)
-        else:
-            print('false')
+                if results[0]:
+                    print(file)
+                else:
+                    print('false')
         '''
         if file.endswith('png') or file.endswith('jpg'):
             print(file)
