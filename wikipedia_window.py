@@ -43,6 +43,7 @@ def get_image(wiki_url):
 	image_url=list(wiki_response['query']['pages'].values())[0]['original']['source']
 	print(image_url)
 	save_image(image_url)
+
 	#image_byt = urlopen(image_url, 'wiki.png').read()
 	'''if ("svg" in image_url):
 		image_byt=requests.get(image_url)
@@ -63,14 +64,19 @@ def save_image(url_of_image):
 	g.save("novo.png", format="PNG")'''
 	#file_path="belgian.svg"
 	#time.sleep(5)
-	get_svg('wiki.jpg')
+	if(file_end in ('svg','png','gif')):
+		get_svg('wiki.jpg')
 	place_image(file_path)
 
 def place_image(file_name):
 	#try:
 	#image_open=Image.open(file_name)
 	#image_bytes=io.BytesIO(image_byt.content)
-	load = Image.open('wiki.pdf')
+	try:
+		load = Image.open('wiki.jpg')
+	except:
+		time.sleep(5)
+		load = Image.open('wiki.jpg')
 	'''if load.tile[0][0] == "gif":
 		# only read the first "local image" from this GIF file
 		tag, (x0, y0, x1, y1), offset, extra = im.tile[0]
@@ -81,17 +87,19 @@ def place_image(file_name):
 	render = ImageTk.PhotoImage(image_final)
 	img = Label(FrameWiki, image=render, width=450, height=300, background="black")
 	img.image = render
-	img.place(x=100, y=350)
+	img.place(x=1100, y=350)
 	'''except:
 		time.sleep(1)
 		place_image(file_name)'''
 odgovor=''
 p=''
 title=['']
-#odgovor = wikipedia.summary(vpras.replace('_', ' '), sentences = 4)
+odgovor = wikipedia.summary(vpras.replace('_', ' '), sentences = 4)
 #p=wikipedia.page(vpras.replace('_', ' '))
 title=wikipedia.search(vpras.replace('_', ' '))
+img_path=wikipedia.page(vpras.replace('_', ' '))
 print(title[0])
+print(img_path)
 root=tk.Tk()
 root.geometry("1900x1000")
 FrameWiki=Canvas(root, background="black")
@@ -99,5 +107,6 @@ FrameWiki.pack(fill=BOTH, expand= TRUE, anchor='w')
 FrameWiki.create_text(600,300, text=title[0], fill="white", font=("verdana", 25, "bold"))
 FrameWiki.create_text(600,500,width=800, text=odgovor, fill='white', font=('verdana', 15))
 wiki_api_url="http://en.wikipedia.org/w/api.php?action=query&prop=pageimages&format=json&piprop=original&titles="+str(title[0])
+print(wiki_api_url)
 wiki_img=get_image(wiki_api_url)
 root.mainloop()

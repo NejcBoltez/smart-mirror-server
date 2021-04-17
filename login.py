@@ -15,7 +15,8 @@ from PIL import Image, ImageTk
 import dlib
 import os
 import face_recognition
-from SmartMirror import Okno
+import subprocess
+#from SmartMirror import Okno
 BASE_DIR= os.path.dirname(os.path.abspath(__file__))
 image_dir=os.path.join(BASE_DIR, 'Uporabniki')
 user = ''
@@ -81,22 +82,27 @@ class Camera(Frame):
                                     print(file_count)
                                     img_item2='./Uporabniki/'+d+'/'+d+'_'+str(file_count+1)+'.png'
                                     cv2.imwrite(img_item2, roi_color)
+                                    teskst123='Pozdravljen ' + tekst
+                                    self.labelMain.config(text=teskst123)
                                     break
                                 else:
                                     continue
-                            
+        if len(faces)!=0:                    
             #cv2.imwrite(img_item2, roi_color)
             teskst123='Pozdravljen ' + tekst
-            self.labelMain.config(text=teskst123)
+            #self.labelMain.config(text=teskst123)
             #self.label1.config(text=tekst)
             #this.user=tekst
             #self.home_window()
             user=tekst
             #self.labelMain.after(700, self.home_window)
-            home=Okno()
+            home=subprocess.Popen(["python3","SmartMirror.py", user])
+            time.sleep(5)
+            self.tk.quit()
+           # home=Okno()
 #             root.destroy()
-            home.tk.mainloop()
-        if len(faces)==0:
+            #home.tk.mainloop()
+        elif len(faces)==0:
             self.label1.config(text='Prazno')
             self.label1.after(600, self.getCamera)
             
@@ -108,7 +114,7 @@ class Login:
         self.tk=tk.Tk()
         self.tk.configure(background='black')
         self.tk.title("Pozdravljeni")
-        self.tk.geometry("1000x600")
+        self.tk.geometry("1920x1000")
         #self.tk.attributes('-fullscreen', True)  
         #self.fullScreenState = False
         self.Frame=Frame(self.tk, background='Black')

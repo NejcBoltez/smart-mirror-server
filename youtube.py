@@ -22,21 +22,29 @@ import base64
 from PIL import ImageTk
 import PIL.Image
 from urllib.request import urlopen
+#from SmartMirror import okno
+
+
 arguments = list(sys.argv)
 class yt_search(Frame):
     def __init__(self, parent, *args, **kwargs):
         Frame.__init__(self, parent)
-        self.search_frame=Canvas(self, width=1800, height=800, background="black", borderwidth=0, highlightthickness=0)
+#okno.delete('1.0', END)
+        #self.search_frame=Canvas(self, width=18, height=8, background="black", borderwidth=0, highlightthickness=0)
+        self.search_frame=Frame(self, width=1800, height=800, background="black", borderwidth=0, highlightthickness=0)
         self.search_frame.pack(fill=BOTH, expand=YES)
         self.search_text=Label(self.search_frame, text=str(arguments[1]).replace('_', ' ').upper(), font=('verdana', 30, 'bold'), fg="white", background="black", borderwidth=0, highlightthickness=0)
-        self.search_text.pack(side=TOP, anchor='w')
-        self.search_frame_top=Canvas(self.search_frame, width=1700, height=400, background="black", borderwidth=0, highlightthickness=0)
+        self.search_text.pack(side=TOP, anchor="center")
+        self.search_frame_top=Canvas(self.search_frame,width=1700, height=400, background="black", borderwidth=0, highlightthickness=0)
+        #self.search_frame_top=self.search_frame.create_window((10,10, 1710, 3410,fill="black", outline="white")# borderwidth=0, highlightthickness=0)
         self.search_frame_top.pack(side=TOP, fill=BOTH, expand= TRUE)
-        self.search_frame_bottom=Canvas(self.search_frame, width=1500, height=400, background="black", borderwidth=0, highlightthickness=0)
+        self.search_frame_bottom=Canvas(self.search_frame, width=1700, height=400, background="black", borderwidth=0, highlightthickness=0)
         self.search_frame_bottom.pack(side=BOTTOM, fill=BOTH, expand= TRUE)
-        self.results = YoutubeSearch(str(arguments[1]).replace('_', ' '), max_results=10).to_json()
+        self.results = YoutubeSearch(str(arguments[1]).replace('_', ' '), max_results=20).to_json()
         self.get_json=json.loads(self.results)
         self.yt=self.get_json['videos']
+        self.position_x=1500
+        self.x=0
         coordinate=70
         c=0
         #print(type(get_json))
@@ -51,33 +59,86 @@ class yt_search(Frame):
                 self.search_frame_top.create_rectangle(coordinate,10, coordinate+300, 350, fill="black", outline="white")
                 try:
                     self.search_frame_top.create_text(coordinate+150,60, width=230, text=str(i['title']), fill="white", font=('verdana', 12, 'bold'))
+                    img = Label(self.search_frame_top, image=render, width=250, height=200)
+                    img.image = render
+                    img.place(x=coordinate+20, y=120)
+                    coordinate=coordinate+320
+                    c=c+1
                 except:
+                    #c=c-1
                     continue
-                img = Label(self.search_frame_top, image=render, width=250, height=200)
-                img.image = render
-                img.place(x=coordinate+20, y=120)
-                coordinate=coordinate+320
-                print(i['id']+'\n'+i['title']+'\n'+i['thumbnails'][0])
-                c=c+1
+                
+                #print(i['id']+'\n'+i['title']+'\n'+i['thumbnails'][0])
+                #c=c+1
+            elif (c==10):
+                break
             else:
                 if (c==5):
                     coordinate=70
-                self.search_frame_bottom.create_rectangle(coordinate,10, coordinate+300, 350, fill="black", outline="white")
+                
                 try:
+                    self.search_frame_bottom.create_rectangle(coordinate,10, coordinate+300, 350, fill="black", outline="white")
                     self.search_frame_bottom.create_text(coordinate+150,60, width=230, text=str(i['title']), fill="white", font=('verdana', 12, 'bold'))
+                    img = Label(self.search_frame_bottom, image=render, width=250, height=200)
+                    img.image = render
+                    img.place(x=coordinate+20, y=120)
+                    coordinate=coordinate+320
+                    c=c+1
                 except:
+                    c=c-1
                     continue
-                img = Label(self.search_frame_bottom, image=render, width=250, height=200)
-                img.image = render
-                img.place(x=coordinate+20, y=120)
-                coordinate=coordinate+320
-                print(i['id']+'\n'+i['title']+'\n'+i['thumbnails'][0])
-                c=c+1
+            print(c)
+            print(i)
+                
+                #print(i['id']+'\n'+i['title']+'\n'+i['thumbnails'][0])
+                #c=c+1
+        #time.sleep(1)
+        
+        self.resize_animation()
+        #time.sleep(7)
+        
+        '''while(self.position_x>=500):
+            #self.search_frame.move(self.search_frame_top, self.position_x, 0)
+            self.search_frame_top.update()
+            self.search_frame.update()
+            print(self.position_x)
+            self.search_frame_top.pack_configure(padx=self.position_x)
+            self.position_x=self.position_x-100
+            time.sleep(0.5)'''
+            
+            
+    def resize_animation(self):
+        if(self.position_x>=0):
+            #self.search_frame_top.update()
+            #self.search_frame.update()
+            #print(self.position_x)
+            self.search_frame_top.pack_configure(side=TOP, fill=BOTH, expand= TRUE, padx=self.position_x)
+            self.search_frame_bottom.pack_configure(side=TOP, fill=BOTH, expand= TRUE, padx=self.position_x)
+            self.position_x=self.position_x-50
+        else:
+            self.search_frame.after_cancel(self.move_left)
+        self.move_left=self.search_frame.after(100, self.resize_animation)
+        return self.position_x
+        
+        '''if self.x<0:
+            position_x=1500
+            #while (position_x>=0):
+            #    print(position_x)
+                #print(self.search_frame_bottom.winfo_width())
+            for i in range(15):
+                self.search_frame_top.pack_configure(padx=position_x)
+                #print(position_x)
+                position_x=position_x-100
+            #self.position_x=self.position_x-100
+            #return self.position_x
+        else:
+            self.x=1
+        return self.x'''
 
 class Window:
     def __init__(self):
         self.tk=tk.Tk()
-        #self.tk.geometry("1500x1000")
+        self.tk.geometry("1920x1000")
         self.Frame=Frame(self.tk, background="black")
         self.Frame.pack(fill=BOTH, expand=YES)
         self.Canvas=Canvas(self.Frame)

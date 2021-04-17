@@ -16,14 +16,18 @@ print(arguments)
 class Video(Frame):
     def __init__(self, parent, *args, **kwargs):
         Frame.__init__(self, parent)
+        self.start_w_animation=14
+        self.end_w_animation=1400
+        self.start_h_animation=6.5
+        self.end_h_animation=650
         self.videoframe=Frame(self, background="black", width=1400, height=700)
         self.videoframe.pack(fill=BOTH, expand=YES)
         self.video_name=Label(self.videoframe, fg="white", background="black")
         self.video_name.pack(side=TOP)
         self.video_play=Frame(self.videoframe, background="black", width=1400, height=650)
         self.video_play.pack(fill=BOTH, expand=YES)
-        self.url= self.get_URL()
-        #self.url="https://www.youtube.com/watch?v=xAg7z6u4NE8"
+        #self.url= self.get_URL()
+        self.url="https://www.youtube.com/watch?v=xAg7z6u4NE8"
         self.video=pafy.new(self.url) #pip3 install youtube-dl    
         self.best=self.video.getbest()
         self.playurl=self.best.url
@@ -34,6 +38,20 @@ class Video(Frame):
         self.media.get_mrl()
         self.player.set_media(self.media)
         self.player.play()
+        time.sleep(1)
+        #self.player.pause()
+        self.start_animation()
+    def start_animation(self):
+        if(self.start_w_animation<=self.end_w_animation and self.start_h_animation<=self.end_h_animation):
+            self.video_play.configure(width=self.start_w_animation, height=self.start_h_animation, background="black")
+            self.start_w_animation=self.start_w_animation+10
+            self.start_h_animation=self.start_h_animation+10
+            self.start=self.video_play.after(1, self.start_animation)
+        else:
+            self.video_play.after_cancel(self.start)
+            #self.player.play()
+
+
     def get_URL(self):
         self.results_yt = YoutubeSearch(arguments[1], max_results=10).to_json()
         self.get_json=json.loads(self.results_yt)

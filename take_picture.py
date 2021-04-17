@@ -4,6 +4,7 @@ import sys
 import time
 from PIL import ImageTk
 import PIL.Image
+import multiprocessing
 try:
     import tkinter as tk
     from tkinter import *
@@ -11,64 +12,77 @@ except:
     import Tkinter as tk
     from Tkinter import *
 
-time.sleep(5)
-arguments = list(sys.argv)
 
-'''try:
-    face_front=cv2.CascadeClassifier('C:/Users/nejcb/AppData/Local/Programs/Python/Python37-32/Lib/site-packages/cv2/data/haarcascade_frontalface_default.xml')
-except:'''
-#face_front=cv2.CascadeClassifier('/home/nejc/anaconda3/lib/python3.7/site-packages/cv2/data/haarcascade_frontalface_default.xml')
-#face_front=cv2.CascadeClassifier('../.local/lib/python3.7/site-packages/cv2/data/haarcascade_frontalface_default.xml')
-
-#face_front=cv2.CascadeClassifier('C:/Users/nejcb/AppData/Local/Programs/Python/Python37-32/Lib/site-packages/cv2/data/haarcascade_frontalface_default.xml')
-
-#face_eye=cv2.CascadeClassifier('/home/nejc/anaconda3/lib/python3.7/site-packages/cv2/data/haarcascade_profileface.xml')
-class get_video(Frame):
-     def __init__(self, parent, *args, **kwargs):
-        Frame.__init__(self, parent, bg='black')
-        self.Frame=Frame(self, width=1800, height=1000, background="black")
-        self.Frame.pack()
+from threading import Thread
+seconds_left=11
+class take_pic(Frame):
+    def __init__(self, parent, *args, **kwargs):
+        Frame.__init__(self, parent, background='Black')
+        self.Frame=Frame(self, background='black')
+        self.Frame.pack(fill=BOTH, expand=YES)
+        self.counts=Label(self.Frame, text="TEXT,", bg="white")
+        self.counts.pack()
+        self.img = Label(self.Frame, width=700, height=700, bg="green")
+        self.img.pack(padx=20, pady=20)
         self.cap = cv2.VideoCapture(0)
+        self.get_camera_stream()
+        self.count_seconds(10)
+    def get_camera_stream(self):
+        
+        self.rec, self.frame_image = self.cap.read()
+        self.cv2image = cv2.cvtColor(self.frame_image, cv2.COLOR_BGR2RGBA)
+        self.image = PIL.Image.fromarray(self.cv2image)
+        render = ImageTk.PhotoImage(image=self.image)
 
-        self.ret, self.frame = self.cap.read()
-        count=0
-        found_faces=[10]
-        #while(count<10):
-            # Capture frame-by-frame
-        #    ret, frame = cap.read()
-        #cv2.imshow('frame',self.frame)
-        #    if (cv2.waitKey(1) & 0xFF == ord('q')) or sys.stdin == str.encode('q') :
-        #        break
+        self.img.imgtk = render
+        self.img.configure(image=render)
+        self.img.after(10, self.get_camera_stream)
+    def count_seconds(self, remaining):
+        #if remaining is not None:
+        #    self.remaining = remaining
 
-        # When everything done, release the capture
-
-        '''image_byt = urlopen('https:'+image_url).read()
-        load = PIL.Image.open(io.BytesIO(image_byt))
-        image_final=load.resize((370,200), PIL.Image.ANTIALIAS)'''
-        self.image = PIL.Image.fromarray(self.frame)
-        render = ImageTk.PhotoImage(self.image)
-
-        img = Label(self.Frame, image=render, width=310, height=200)
-        img.image = render
-        img.place(x=20, y=100)
-        img.pack()
-
-
-        #cap.release()
+        #if self.remaining <= 0:
+        #    self.label.configure(text="time's up!")
+        #else:
+        self.counts.configure(text="%d" % remaining)
+        '''if (remaining == 10):
+            self.counts.after(10000, self.count_seconds(remaining - 1))
+        elif (remaining > 0):
+            self.counts.after(1000, self.count_seconds(remaining - 1))'''
+        #for i in range(10):
+        #    self.counts.config(text=str(i))
+        #    time.sleep(1)
+       # seconds_left=seconds_left-1
+       # if (seconds_left==0):
+       #     self.save_picture()
+       # return seconds_left
+    def save_picture(self):
+        save_as="nejc.jpg"
+        cv2.imwrite(save_as, self.frame_image)
+        #if()
+        #time.sleep(15)
+        #self.cap.release()
         #cv2.destroyAllWindows()
 class Window:
     def __init__(self):
+        seconds_left=11
         self.tk=tk.Tk()
+        self.seconds_left=11
         self.tk.configure(background='black')
         self.tk.title("Pozdravljeni")
         self.tk.geometry("1000x600")
         self.Frame=Frame(self.tk, background='black')
         self.Frame.pack(fill=BOTH, expand=YES)
-        #self.video=Canvas(self.Frame, background="black", width="600", height="400")
-        #self.video.pack()
-        self.news_label=get_video(self.Frame)
-        self.news_label.pack()
-        #get_news(self)
+        
+        self.get_camera=take_pic(self.Frame)
+        self.get_camera.pack()
+        #self.counts.after(1000, self.count_seconds)
+        #self.count_seconds(10)
+        #self.img.after(1000, self.save_picture)
+
+    
+        #for
+    
         
 
 window=Window()

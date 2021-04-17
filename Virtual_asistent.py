@@ -19,6 +19,7 @@ import tkinter
 import urllib.parse as urllib
 import json
 from tkinter import *
+import requests
 #import pyaudio
 #from pygsr import Pygsr
 #import smartmirror
@@ -556,7 +557,7 @@ def jarvis(listening):
     #elif besedilo == "test":
     #    continue
     elif besedilo == "map of " or besedilo == "maps of " or besedilo == "Map of " or besedilo == "Maps of ":
-        mesto = ""
+        '''mesto = ""
         z=0
         zemla = "Openning google maps."
         govor(zemla)
@@ -571,7 +572,12 @@ def jarvis(listening):
                     mesto+= i+" "
         city = urllib.quote(mesto)
         zemljevid= "https://www.google.de/maps/"
-        webbrowser.open("https://www.google.de/maps/place/"+city)
+        webbrowser.open("https://www.google.de/maps/place/"+city)'''
+        location="San Francisco" 
+        url_data="http://maps.googleapis.com/maps/api/staticmap?center=%s&zoom=13&scale=false&size=1200x600&maptype=satellite&format=png" % location
+        body={'url':url_data}
+        new_url='https://www.google.com/maps/place/8000+Novo+mesto/@45.8035832,15.1346662,13z/data=!3m1!4b1!4m5!3m4!1s0x47645557e323d15f:0x102d55e340217bd4!8m2!3d45.8010824!4d15.1710089'
+        requests.post(new_url)#"http://localhost:8080/image", data=json.dumps(body))
     elif besedilo == "thank " or besedilo == "thanks ":
         izgovor="You are welcome"
         govor(izgovor)

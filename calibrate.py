@@ -57,7 +57,7 @@ while(count<10):
 
 
         #recognize
-    time.sleep(100)
+    #time.sleep(100)
     cv2.imshow('frame',frame)
     if (cv2.waitKey(1) & 0xFF == ord('q')) or sys.stdin == str.encode('q') :
         break
