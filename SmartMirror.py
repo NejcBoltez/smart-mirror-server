@@ -25,7 +25,7 @@ import multiprocessing
 
 
 BASE_DIR= os.path.dirname(os.path.abspath(__file__))
-image_dir=os.path.join(BASE_DIR, 'Uporabniki')
+image_dir=os.path.join(BASE_DIR, '../Uporabniki')
 user = ''
 speech_engine = pyttsx.init()
 class Ura(Frame):
@@ -145,7 +145,7 @@ class Camera(Frame):
 		try:
 			face_front=cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 		except:
-			face_front=cv2.CascadeClassifier('../.local/lib/python3.7/site-packages/cv2/data/haarcascade_frontalface_default.xml')
+			face_front=cv2.CascadeClassifier('../../.local/lib/python3.7/site-packages/cv2/data/haarcascade_frontalface_default.xml')
 # Capture frame-by-frame
 		global user
 		#global login

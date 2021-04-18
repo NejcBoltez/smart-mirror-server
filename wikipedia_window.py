@@ -33,7 +33,7 @@ vpras=str(sys.argv[1])
 print("Vprasanje: "+vpras)
 
 def get_svg(svg_file):
-	drawing = svg2rlg(svg_file)
+	drawing = svg2rlg(svg_file)#, background="black")
 	renderPM.drawToFile(drawing, "wiki.jpg", fmt="JPG")
 	renderPDF.drawToFile(drawing, "wiki.pdf")
 
@@ -72,25 +72,26 @@ def place_image(file_name):
 	#try:
 	#image_open=Image.open(file_name)
 	#image_bytes=io.BytesIO(image_byt.content)
-	try:
+	load = Image.open('wiki.jpg')
+	'''try:
 		load = Image.open('wiki.jpg')
 	except:
 		time.sleep(5)
 		load = Image.open('wiki.jpg')
-	'''if load.tile[0][0] == "gif":
+		'''
+
+	#if load.tile[0][0] == "gif":
 		# only read the first "local image" from this GIF file
-		tag, (x0, y0, x1, y1), offset, extra = im.tile[0]
-		load.size = (x1 - x0, y1 - y0)
-		load.tile = [(tag, (0, 0) + im.size, offset, extra)]'''
+	#	tag, (x0, y0, x1, y1), offset, extra = im.tile[0]
+	#	load.size = (x1 - x0, y1 - y0)
+	#	load.tile = [(tag, (0, 0) + im.size, offset, extra)]'''
 
 	image_final=load.resize((450,300), Image.ANTIALIAS)
 	render = ImageTk.PhotoImage(image_final)
 	img = Label(FrameWiki, image=render, width=450, height=300, background="black")
 	img.image = render
 	img.place(x=1100, y=350)
-	'''except:
-		time.sleep(1)
-		place_image(file_name)'''
+
 odgovor=''
 p=''
 title=['']
