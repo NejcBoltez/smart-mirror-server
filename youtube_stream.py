@@ -40,7 +40,7 @@ class Video(Frame):
         self.player.play()
         time.sleep(1)
         #self.player.pause()
-        self.start_animation()
+        #self.start_animation()
     def start_animation(self):
         if(self.start_w_animation<=self.end_w_animation and self.start_h_animation<=self.end_h_animation):
             self.video_play.configure(width=self.start_w_animation, height=self.start_h_animation, background="black")

@@ -191,15 +191,16 @@ class Camera(Frame):
 									#print(file_count)
 									img_item2='./Uporabniki/'+d+'/'+d+'_'+str(file_count+1)+'.png'
 									cv2.imwrite(img_item2, roi_color)
+									teskst123='Pozdravljen ' + tekst
+									self.labelMain.config(text=teskst123)
+									self.label1.config(text=tekst)
+									self.labelMain.pack()
 									break
 								else:
 									continue
 							
 			#cv2.imwrite(img_item2, roi_color)
-			teskst123='Pozdravljen ' + tekst
-			self.labelMain.config(text=teskst123)
-			self.label1.config(text=tekst)
-			self.labelMain.pack()
+			
 			#this.user=tekst
 			#self.home_window()
 			user=tekst
@@ -216,7 +217,7 @@ class Camera(Frame):
 			self.label1.after(600, self.getCamera)
 
 	def get_home(self):
-		time.sleep(10)
+		#time.sleep(10)
 		self.labelMain.config(text='')
 		self.TopFrame = Frame(self, background='red')
 		self.BottomFrame = Frame(self, background='yellow')
