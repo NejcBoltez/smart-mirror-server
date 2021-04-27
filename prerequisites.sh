@@ -3,9 +3,37 @@
 
 #Install python packages
 pip3 install setuptools
+pip3 install time
+pip3 install sys
+pip3 install os
+pip3 install json
+pip3 install io
+pip3 install requests
+pip3 install base64
+pip3 install subprocess
+pip3 install signal
+pip3 install multiprocessing
+pip3 install matplotlib
+pip3 install wikipedia
+pip3 install webbrowser
+pip3 install youtube-dl
+pip3 install numpy
 pip3 install opencv-python
 pip3 install pillow
 pip3 install face_recognition
+pip3 install SpeechRecognition
+pip3 install urllib3
+pip3 install random
+pip3 install datetime
+pip3 install calendar
+pip3 install youtube-search
+pip3 install pyttsx3
+pip3 install python-vlc
+pip3 install pafy
+pip3 install tkinterhtml
+pip3 install goose3
+pip3 install svglib
+pip3 install reportlab
 
 
 sudo apt-get install libatlas-base-dev -y
