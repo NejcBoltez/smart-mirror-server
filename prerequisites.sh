@@ -34,6 +34,7 @@ pip3 install tkinterhtml
 pip3 install goose3
 pip3 install svglib
 pip3 install reportlab
+pip3 install PyAudio
 
 
 sudo apt-get install libatlas-base-dev -y
