@@ -50,4 +50,6 @@ while (True):
             Open_yt_search=subprocess.Popen(["python3","SmartMirror.py"])
             break
     except:
+	print(sys.exc_info()[0])
         continue
+	
