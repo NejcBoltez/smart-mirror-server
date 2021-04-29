@@ -1,5 +1,11 @@
 #!/bin/bash
 
+sudo apt-get install libatlas-base-dev -y
+sudo apt-get install libjasper-dev -y
+sudo apt-get install libqtgui4 -y
+sudo apt-get install python3-pyqt5 -y
+sudo apt-get install python3-tk -y
+sudo apt-get install portaudio19-dev python-pyaudio -y
 
 #Install python packages
 pip3 install setuptools
@@ -37,10 +43,6 @@ pip3 install reportlab
 pip3 install PyAudio
 
 
-sudo apt-get install libatlas-base-dev -y
-sudo apt-get install libjasper-dev -y
-sudo apt-get install libqtgui4 -y
-sudo apt-get install python3-pyqt5 -y
-sudo apt-get install python3-tk -y
+
 
 
