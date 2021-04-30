@@ -6,7 +6,7 @@ sudo apt-get install libqtgui4 -y
 sudo apt-get install python3-pyqt5 -y
 sudo apt-get install python3-tk -y
 sudo apt-get install portaudio19-dev python-pyaudio -y
-sudo apt-get install flac -y
+sudo apt-get install flac -y # import form speech_recognition
 
 #Install python packages
 pip3 install setuptools
@@ -43,8 +43,6 @@ pip3 install svglib
 pip3 install reportlab
 pip3 install PyAudio
 
-#relocate flac for speexh_recognition to work
-sudo ln -s /usr/local/bin/flac /usr/bin
 
 
 
