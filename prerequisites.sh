@@ -42,7 +42,8 @@ pip3 install svglib
 pip3 install reportlab
 pip3 install PyAudio
 
-
+#relocate flac for speexh_recognition to work
+sudo ln -s /usr/local/bin/flac /usr/bin
 
 
 
