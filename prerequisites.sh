@@ -43,6 +43,10 @@ pip3 install svglib
 pip3 install reportlab
 pip3 install PyAudio
 
+#create folder for user pictures
+cd ..
+mkdir Users
+
 
 
 
