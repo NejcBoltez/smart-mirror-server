@@ -6,6 +6,7 @@ sudo apt-get install libqtgui4 -y
 sudo apt-get install python3-pyqt5 -y
 sudo apt-get install python3-tk -y
 sudo apt-get install portaudio19-dev python-pyaudio -y
+sudo apt-get install espeak
 sudo apt-get install flac -y # import form speech_recognition
 
 #Install python packages
