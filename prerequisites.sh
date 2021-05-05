@@ -47,6 +47,7 @@ pip3 install PyAudio
 #create folder for user pictures
 cd ..
 mkdir Users
+sudo chmod -R 766 sm art-mirror
 
 
 
