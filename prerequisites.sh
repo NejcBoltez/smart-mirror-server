@@ -47,7 +47,7 @@ pip3 install PyAudio
 #create folder for user pictures
 cd ..
 mkdir Users
-sudo chmod -R 766 smart-mirror
+sudo chmod -R 777 smart-mirror # if we would do 766 then we could only access directory with sudo
 
 
 
