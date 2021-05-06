@@ -43,10 +43,12 @@ pip3 install goose3
 pip3 install svglib
 pip3 install reportlab
 pip3 install PyAudio
+pip3 install seaborn
 
 #create folder for user pictures
 cd ..
 mkdir Users
+sudo chmod -R 777 smart-mirror # if we would do 766 then we could only access directory with sudo
 
 
 
