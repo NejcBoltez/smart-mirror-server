@@ -3,14 +3,9 @@ import subprocess
 import os
 import signal
 import Virtual_asistent as asistant
-#from wikipedia_window import wiki
-#from youtube import *
 import time
 import multiprocessing
 from multiprocessing import Queue
-#from SmartMirror.py import okno
-# obtain audio from the microphone
-#from SmartMirror import *
 try:
 	import tkinter as tk
 	from tkinter import *
@@ -47,7 +42,7 @@ class Listen(Frame):
 
 			while razgovor=='':
 				with sr.Microphone() as source:
-					print("Say something1234!")
+					print("Say something12345678!")
 					#q=Queue()
 					#print(q.get())
 					print(Frame)
@@ -79,10 +74,6 @@ class Listen(Frame):
 								if (razgovor_search==""):
 									for p in open_processes:
 										if ("Open_forecast" in p):
-											'''print(p)
-											killid=p.split(':')
-											print(int(killid[1]))
-											os.killpg(os.getpgid(int(killid[1])), signal.SIGTERM)'''
 											Open_forecast.terminate()
 									Open_forecast=subprocess.Popen(["python3","weather.py"])
 									open_processes.append("Open_forecast:"+str(Open_forecast.pid))
@@ -90,10 +81,6 @@ class Listen(Frame):
 								else:
 									for p in open_processes:
 										if ("Open_forecast" in p):
-											'''print(p)
-											killid=p.split(':')
-											print(int(killid[1]))
-											os.killpg(os.getpgid(int(killid[1])), signal.SIGTERM)'''
 											Open_forecast.terminate()
 									#Open_forecast.terminate()
 									print(razgovor_search)
@@ -194,10 +181,7 @@ class Listen(Frame):
 								if("Open_news" in open_processes[len(open_processes)-1]):
 									Open_news.terminate()
 									Open_news=subprocess.Popen(["python3", "news.py", show_news+5])
-									show_news=show_news+5
-								'''elif("Open_yt" in open_processes[len(open_processes)-1]):
-									Open_yt.terminate()
-									open_processes.remove([len(open_processes)-1])'''			
+									show_news=show_news+5			
 							else:
 								AskMirror=multiprocessing.Process(target=asistant.jarvis(razgovor))
 								AskMirror.start()
