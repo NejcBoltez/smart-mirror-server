@@ -1,6 +1,6 @@
 # The code for changing pages was derived from: http://stackoverflow.com/questions/7546050/switch-between-two-frames-in-tkinter
 # License: http://creativecommons.org/licenses/by-sa/3.0/	
-
+'''
 import matplotlib
 matplotlib.use("TkAgg")
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
@@ -126,4 +126,22 @@ class PageThree(tk.Frame):
         
 
 app = SeaofBTCapp()
-app.mainloop()
+app.mainloop()'''
+
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+import seaborn as sns
+import tkinter as tk
+
+def graphspage():
+    pf = tk.Tk()
+    pf.geometry("1000x800")
+
+
+### Works
+    f = Figure(figsize=(5, 5), dpi=100)
+    a = f.add_subplot(111)
+    a.plot(df['date'],daily_drawdown, 'k-',df['date'], daily_drawdownbm, 'b-', linewidth=1)
+    f.tight_layout()
+
+    canvas = FigureCanvasTkAgg(f,pf)
+    canvas.get_tk_widget().grid(row=1,column=1)

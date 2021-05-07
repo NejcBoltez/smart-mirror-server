@@ -15,14 +15,15 @@ except:
     from Tkinter import *
 import sys
 import pyttsx3 as pyttsx
-
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+import seaborn as sns
 
 
 #from tkinter.ttk import *
 
 import matplotlib
 import matplotlib.pyplot as plt
-matplotlib.use("TkAgg")
+#matplotlib.use("TkAgg")
 #import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
@@ -88,6 +89,7 @@ class display_weather(Frame):
         days_string=""
         weather=''
         t=[]
+        h=[]
         hours=[]
         coordinate=50
         coordinatey=100
@@ -127,13 +129,16 @@ class display_weather(Frame):
         for i in preberi['list']:
             date=str(i['dt_txt']).split(' ')[0]
             if (date == day_selected):
-                temp="Temp: " + str(i['main']['temp'])
+                cels=self.kelvin_to_celsius(int(i['main']['temp']))
+                temp="Temp: " + str(cels)
                 humidity="Humidity: " + str(i['main']['humidity'])
                 temp_min="Temp_min: " + str(i['main']['temp_min'])
                 temp_max="Temp_max: " + str(i['main']['temp_max'])
                 day_forecast=str(i['dt_txt']) + '\n' + temp +'\n' + humidity + '\n' + temp_min + '\n' + temp_max +'\n\n'
                 weather=weather + str(i['dt_txt']) + '\n' + temp +'\n' + humidity + '\n' + temp_min + '\n' + temp_max +'\n\n' #+'\n' + days_table
-                t.append(str(i['main']['temp']))
+                
+                t.append(cels)
+                h.append(int(i['main']['humidity']))
                 hours.append(str(i['dt_txt']).split(' ')[1])
                 #self.data.create_text(coordinate,500, text=weather, width=100, fill="white")
                 #self.data.create_window(285, 280, window=frm, anchor=CENTER)
@@ -154,7 +159,7 @@ class display_weather(Frame):
                 #print(weather)
         #self.data.create_text(150,500, text=weather, width=200, fill="white")
         
-        self.create_graph(hours, t)
+        self.create_graph(hours, t, h)
     def day_position(self, arg):
         day_number=0
         print(days_table)
@@ -187,22 +192,35 @@ class display_weather(Frame):
         print(day_number)
 
         return days_table[int(day_number)]
-
-    def create_graph(self,x,y):
-        #self.graph=self.forecast.create_window(1000,1000)
+    def kelvin_to_celsius(self,k):
         
-        figure = Figure(figsize=(15, 7), dpi=70, facecolor="black") # https://matplotlib.org/3.3.3/api/_as_gen/matplotlib.pyplot.figure.html
-        plot = figure.add_subplot(1, 1, 1)
-        chart = FigureCanvasTkAgg(figure, self.chart)#, width=1400, height=300)
-        chart.get_tk_widget().grid(row=0, column=00, padx=100, pady=50)#, width=1400, height=300)
-        #plot.plot(0.5, 0.3, color="#C41E3A", marker="o", linestyle="")
+        self.celsius=k-273.15 #273.15K − 273.15 = 0C
+        print('Kelvins to celsius')
+        print(k)
+        print(round(self.celsius,2))
+        return round(self.celsius,2)
 
+    def create_graph(self,hours,t,h):
+        f = Figure(figsize=(8, 4), dpi=100,facecolor='black', edgecolor="black")
+        temp = f.add_subplot(111,facecolor='black')
+        temp.scatter(hours,t, color='red', marker="X", s=200)
+        temp.scatter(hours,h, color='purple', marker="X", s=200)
+        #temp.spines['bottom'].set_color('red')
+        #temp.xaxis.label.set_color('red')
+        temp.xaxis.label.set_color('white')#set x axis value color to white        https://stackoverflow.com/questions/4761623/how-to-change-the-color-of-the-axis-ticks-and-labels-for-a-plot-in-matplotlib
+        temp.tick_params(axis='x', colors='white')#set x axis  value color to white
+        temp.yaxis.label.set_color('white')
+        temp.tick_params(axis='y', colors='white')
+        temp.set_title('WEATHER DATA',color="white")
+        temp.set_xlabel('HOURS',color="white")
+        temp.set_ylabel('VALUES',color="white")
+        temp.plot(hours,t, color='red',linewidth=3,label="temp")
+        temp.plot(hours,h,color='purple',linewidth=3,label="humidity")
+        temp.legend()
+        f.tight_layout()
 
-        #x = [ 0.1, 0.2, 0.3 ]
-        #y = [ -0.1, -0.2, -0.3 ]
-        plt.plot(y)
-        #plt.plot([1,2,3,4])
-        #plt.show()
+        canvas = FigureCanvasTkAgg(f,self.chart)
+        canvas.get_tk_widget().pack(pady=100)
 
 
 class Weather:
