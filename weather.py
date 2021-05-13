@@ -238,6 +238,7 @@ class Weather:
         #get_news(self)
         
 
-window=Weather()
-window.tk.mainloop()
+class Start:
+    window=Weather()
+    window.tk.mainloop()
 

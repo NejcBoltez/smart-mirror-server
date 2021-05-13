@@ -12,7 +12,17 @@ try:
 except:
 	import Tkinter as tk
 	from Tkinter import *
-
+class listening_window:
+	def __init__(self):
+		self.tk=tk.Tk()
+		self.tk.configure(background='black')
+		self.tk.title("Pozdravljeni")
+		self.tk.eval('tk::PlaceWindow . center')
+		self.tk.geometry("100x100")
+		#self.tk.attributes('-fullscreen', True)  
+		#self.fullScreenState = False
+		self.Frame=Frame(self.tk, background='Purple')
+		self.Frame.pack(fill=BOTH, expand=YES)
 class Listen(Frame):
 	def __init__(self, parent, *args, **kwargs):
 		Frame.__init__(self, parent)
@@ -62,6 +72,8 @@ class Listen(Frame):
 					
 					if ("mirror" in razgovor):
 						print('LETS GO')
+						l_win=listening_window()
+						l_win.mainloop()
 						listen=1
 					elif (listen==1):
 						print('WE HAVE IT')
@@ -188,6 +200,7 @@ class Listen(Frame):
 								#AskMirror.join()
 								#subprocess.Popen(["python3","Virtual_asistent.py", razgovor])
 							listen=0
+						l_win.destroy()
 				except sr.UnknownValueError:
 					print("Google Speech Recognition could not understand audio")
 					#listened+=1
