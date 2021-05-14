@@ -23,7 +23,7 @@ from multiprocessing import Queue
 import multiprocessing
 import speech_recognition as sr
 import threading
-import send_command.py as send_command
+import send_command
 
 
 
@@ -38,6 +38,13 @@ speech_engine = pyttsx.init()
 global Queue_listening
 #listening_bool='False'
 Queue_listening=Queue()
+def get_api_keys():
+	api_keys_dir=os.path.join(BASE_DIR, '../api_keys.json')
+	with open(api_keys_dir, 'r') as f:
+		d=json.load(f)
+	#print(len(d))
+	#print(d['weather_api'])
+	return d
 class Asistant(Frame):
 	def __init__(self, parent, *args, **kwargs):
 		#global Queue_listening
@@ -237,7 +244,8 @@ class Vreme(Frame):
 	def getVreme(self):
 		City = "Novo mesto"
 		Country = "SI"
-		APIK = "10fe78b8435d01d64ad7203ac4b87fe8"
+		get_api=get_api_keys()
+		APIK=get_api['weather_api']
 		URL = "https://api.openweathermap.org/data/2.5/weather?q="+City+","+Country+"&appid="+APIK
 		r = requests.get(URL)
 		preberi = r.json()
@@ -265,8 +273,9 @@ class Novice(Frame):
 		Novice=""
 		News=""
 		IzborNovic=""
-		API = "fe1f07fb06114c9a94c9c8ced3f83f8d"
-		URLnews = "https://newsapi.org/v2/top-headlines?country=si&apiKey="+API
+		get_api=get_api_keys()
+		APIK=get_api['news_api']
+		URLnews = "https://newsapi.org/v2/top-headlines?country=si&apiKey="+APIK
 		News=requests.get(URLnews)
 		Novice=News.json()
 		NewsList=Novice['articles']
@@ -283,7 +292,7 @@ class Novice(Frame):
 		self.update_news(IzborNovic)
 	def update_news(self,data):
 		self.label1.config(text=data)
-class Is_Listening(Frame):
+'''class Is_Listening(Frame):
 	def __init__(self, parent, *args, **kwargs):
 		global Queue_listening
 		Frame.__init__(self, parent, bg='black')
@@ -320,7 +329,7 @@ class Is_Listening(Frame):
 		except:
 			print('QUEUE IS EMPTY')
 			pass
-		self.after(2000,self.check_if_listening)
+		self.after(2000,self.check_if_listening)'''
 
 
 		
@@ -334,8 +343,8 @@ class Camera(Frame):
 		self.labelMain.pack(anchor='w')
 		self.label1=Label(self.CamFrame, font=('Helvetica', 9), fg="white", bg="black")
 		self.label1.pack(anchor='w')
-		#self.get_home()
-		self.getCamera()
+		self.get_home()
+		#self.getCamera()
 	def getCamera(self):
 		# .local is inside home directory
 		try:
@@ -386,7 +395,7 @@ class Camera(Frame):
 									print(d)
 									#print(image_dir+'/'+d)
 									#print(file_count)
-									img_item2='./Uporabniki/'+d+'/'+d+'_'+str(file_count+1)+'.png'
+									img_item2=str(image_dir)+'/Users/'+d+'/'+d+'_'+str(file_count+1)+'.jpg'
 									cv2.imwrite(img_item2, roi_color)
 									self.update_user(tekst)
 									break# test
@@ -469,6 +478,8 @@ okno=Okno()
 #text_listening=tk.Text(okno)
 #text_listening.pack()
 okno.tk.mainloop()
+
+#get_api_keys()
 
 
 #class Okno:
