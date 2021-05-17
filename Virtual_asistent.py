@@ -7,159 +7,22 @@ except:
 import random
 import time
 import os
-import datetime
-import calendar
 import subprocess
 import webbrowser
-#import wolframalpha
 import wikipedia
 import pyttsx3 as pyttsx
 import speech_recognition as sr
-import tkinter
 import urllib.parse as urllib
-import json
 from tkinter import *
 import requests
-#import pyaudio
-#from pygsr import Pygsr
-#import smartmirror
-#import reminders
-#import muzika
-#import koledar
-#from gtts import gTTS
 new = 2
 ukaz = [""]
 izgovorjeno=[""]
 speech_engine = pyttsx.init()
-'''form_1 = pyaudio.paInt16 # 16-bit resolution
-chans = 1 # 1 channel
-samp_rate = 44100 # 44.1kHz sampling rate
-chunk = 4096 # 2^12 samples for buffer
-record_secs = 3 # seconds to record
-dev_index = 1 # device index found by p.get_device_info_by_index(ii)'''
-
-#class AI():
-    #def __init__():
-    #    GE = "Hello sir"
-    #    govor(GE)
-        #jarvis("test")
 
 def govor(besedilo):
     speech_engine.say(besedilo)
     speech_engine.runAndWait()
-def posluh():
-    r = sr.Recognizer()
-    razgovor=''
-    poslusa=0
-    while razgovor=='':
-        with sr.Microphone() as source:
-            print("Say something1234!")
-            audio = r.listen(source)
-            #print(audio)
-            # recognize speech using Google Speech Recognition
-            '''if audio=="":
-                continue
-            else:
-                break'''
-        try:
-            # for testing purposes, you're just using the default API key
-            # to use another API key, use `r.recognize_google(audio,key="GOOGLE_SPEECH_RECOGNITION_API_KEY")`
-            # instead of `r.recognize_google(audio)`
-            print("Google Speech Recognition thinks you said " + r.recognize_google(audio))
-            razgovor=r.recognize_google(audio)
-            
-        except sr.UnknownValueError:
-            print("Google Speech Recognition could not understand audio")
-        except sr.RequestError as e:
-            print("Could not request results from Google Speech Recognition service;{0}".format(e))
-    return razgovor
-    '''speech = Pygsr()
-    # duration in seconds
-    speech.record(0)
-    # select the language
-    phrase, complete_response = speech.speech_to_text('en_US')
-    print(phrase)
-    print(complete_response)'''
-    '''audio = pyaudio.PyAudio() # create pyaudio instantiation
-    go = sr.Recognizer()
-    # create pyaudio stream
-    stream = audio.open(format = form_1,rate = samp_rate,channels = chans, \
-                        input_device_index = dev_index,input = True, \
-                        frames_per_buffer=chunk)
-    print("recording")
-    frames = []
-
-    # loop through stream and append audio chunks to frame array
-    for ii in range(0,int((samp_rate/chunk)*record_secs)):
-        data = stream.read(chunk)
-        frames.append(go.recognize_google(stream))
-        
-    print (frames)
-
-    print("finished recording")
-
-    # stop the stream, close it, and terminate the pyaudio instantiation
-    stream.stop_stream()
-    stream.close()
-    audio.terminate()'''
-    '''
-    poslusa = 0
-    while poslusa < 1:
-        razgovor = ""
-        go = sr.Recognizer()
-        while True:
-            with sr.Microphone() as source:
-                print("Say something!")
-                audio = go.listen(source)
-                print(audio)
-                if go == "":
-                    continue
-                else:
-                    print('Hey')
-                    break
-        try:
-            print("You said: " + go.recognize(audio))
-            razgovor += go.recognize(audio)
-            print (razgovor)
-            razd = razgovor.split(" ")
-        except:
-            print("I didn't hear nothing.")
-            continue
-    return razgovor'''
-def start():
-    audio = pyaudio.PyAudio() # create pyaudio instantiation
-
-    # create pyaudio stream
-    stream = audio.open(format = form_1,rate = samp_rate,channels = chans, \
-                        input_device_index = dev_index,input = True, \
-                        frames_per_buffer=chunk)
-    print("recording")
-    frames = []
-
-    # loop through stream and append audio chunks to frame array
-    for ii in range(0,int((samp_rate/chunk)*record_secs)):
-        data = stream.read(chunk)
-        frames.append(data)
-    print (frames)
-
-    print("finished recording")
-
-    # stop the stream, close it, and terminate the pyaudio instantiation
-    stream.stop_stream()
-    stream.close()
-    audio.terminate()
-#def glasba():
-#    muzika.okn()
-def datoteka():
-    a = "How shuld I named the document"
-    '''govor(a)
-    ime = posluh()
-    d = "What shuld I write in the document"
-    govor(d)
-    vno = posluh
-    novdoc = gTTS(text=vno, lang='en')
-    imedat = ime + ".txt"
-    novdoc.save(imedat)'''
 def teden(mes):
     teden=("mon", "tue", "wed", "thu", "fri", "sat", "sun")
     mi = ""
@@ -213,7 +76,9 @@ def mesec(ted):
     return me
 def deset(ste):
     des = ""
-    if ste == "00":
+    if int(ste)<10:
+        des="0"+ste
+    '''if ste == "00":
         des+= "0"
     elif ste == "01":
         des+= "1"
@@ -232,71 +97,8 @@ def deset(ste):
     elif ste == "08":
         des+= "8"
     elif ste == "09":
-        des+= "9"
+        des+= "9"'''
     return des
-def wiki(elf):
-    wi = elf.split(" ")
-    for i in wi:
-        print (i)
-    return elf
-def quest():
-    vprasanja= [' ']
-    que = 0
-    while True:
-        vpras = ""
-        h = 0
-        if que == 0:
-            vr = "What is your question?"
-        else:
-            vr = "Do you have any more questions?"
-        govor(vr)
-        que+=1
-        vn = input("What is your question: ")
-        if vn == "":
-            vn = input("What is your question: ")
-        else:
-            govor(vn)
-        data = "Accesing the data. Please wait."
-        govor(data)
-        que+=1
-        vra = vn.split(" ")
-        for y in vra:
-            if y == "he" or y == "she" or y == "it":
-                if h == 0:
-                    vpras += y + " "
-                else:
-                    vp = wiki(vprasanja[len(vprasanja) - 1])
-                    vpras += vp
-            elif  y == "thank" or y == "thanks":
-                tha="You are welcome."
-                govor(tha)
-                start()
-            elif y == "question":
-                h = 0
-            else :
-                if y == vra[len(vra)-1]:
-                    vpras += y + "."
-                else:
-                    vpras += y + " "
-
-        vprasanja.append(vpras)
-        #try:
-        #    app_id = "L82GJK-J6W72HEX54"
-        #    client = wolframalpha.Client(app_id)
-        #    res = client.query(vpras)
-        #    answer = next(res.results).text
-            #govor(answer)
-        #    print answer
-        #except:
-        #wikipedia.set_lang("")
-        odgovor = wikipedia.summary(vpras, sentences = 2)
-        root=tk.Tk()
-        #root.tk.geometry("800x600")
-        FrameWiki=Label(root, text=odgovor)
-        FrameWiki.pack
-        root.mainloop()
-        govor(odgovor)
-        print (odgovor)
 def zac():
     GE = "Hello sir"
     govor(GE)
@@ -329,21 +131,17 @@ def jarvis(listening):
 
     for z in range(0,len(vneseno)):
         esa = vneseno[z]
-        if esa == "email":
-            b = random.choice(("email ok then", "ok. Whats your email adress", "what should I write in email"))
-            print (b)
-            govor(b)
-        elif esa == "hello" or esa == "Hello":
+        if "hello" in esa or "Hello" in esa:
             he = "Hello to you too"
             govor(he)
-        elif esa == "do not":
+        elif "do not" in esa:
             z+=1
-        elif esa == "don't":
+        elif "don't" in esa:
             z+=1
-        elif esa == "Jayne" or esa == "Jane":
+        elif "Jayne"  in esa or "Jane" in esa:
             h = random.choice(("Hello I am Jayne. I am waiting for your command", "Hy sir. What should I do for you"))
             govor(h)
-        elif esa == "date" or esa == "day":
+        elif "date" in esa or "day" in esa:
             a = time.asctime()
             c = a.lower()
             b = c.split(" ")
@@ -362,7 +160,7 @@ def jarvis(listening):
             izpis = "Today it is "+d+", "+m+" "+dane
             print (izpis)
             govor(izpis)
-        elif esa == "time":
+        elif "time" in esa:
             t = time.asctime()
             ti = t.split(" ")
             tim = ti[3]
@@ -395,196 +193,52 @@ def jarvis(listening):
             print t
             print g'''
             govor(g)
-        elif esa == "question":
-            quest()
-        elif esa == "morning":
+        elif "morning" in esa:
             g = "Good morning, Nejc. Have a wonderful day."
             govor(g)
             print (g)
-        elif esa == "YouTube":
-            speak = "Opening youtube"
-            govor(speak)
-            YoutubeWindow=subprocess.Popen(["python3", "youtube.py", "test"], stdin=subprocess.PIPE)
-            #url = "https://www.youtube.com/"
-            #webbrowser.open(url, new=new)
-        elif esa == "facebook":
-            speak = "Opening facebook"
-            govor(speak)
-            url = "https://www.facebook.com/"
-            webbrowser.open(url, new=new)
-        #elif esa == "calendar":
-        #    koledar.cale()
-        elif esa == "jokes":
+        elif "jokes" in esa:
             c = random.choice(("I do not know any joke", "Knock Knock"))
             print (c)
             govor(c)
-        elif esa == "problem":
-            t= random.choice(("I do not know how to help you", "What should I do about it."))
-            print (t)
-            govor(t)
-        elif esa == "web":
-            print ("opening chrome!!")
-            webspeak = "Opening webbrowser"
-            govor(webspeak)
-            url = "https://www.google.com"
-            webbrowser.open(url, new=new)
-        elif esa == "bye":
-            m = random.choice(("Goodbye", "See you later sir"))
-            print (m)
-            govor(m)
-            start()
-        elif esa == "alarm":
-            ala = "On what time should I set an alarm."
-            govor(ala)
-            al = posluh()
-            alar = str(al)
-            print (alar)
-        elif esa == "good":
+        elif "good" in esa:
             dobr = "That is very nice to hear. Should I do anything else for you?"
             govor(dobr)
             break
-        elif esa == "shutdown":
-            shut = "Shutting down ..."
-            govor(shut)
-            start()
-        elif esa == "calibrate" or esa == "calibration":
-            if "stop" not in besedilo:
-                calibrateWindow=subprocess.Popen(["python3", "calibrate.py", "test"], stdin=subprocess.PIPE)
-            else:
-                try:
-                    calibrateWindow.stdin.write(str.encode('q'))
-                except(exec):
-                    Calibnotopen="Calibration is not open"
-                    govor(Calibnotopen)
-                    print(exec)
 
-    if besedilo == "are smart ":
+    if "are smart" in besedilo:
         smartass = "Thank you sir."
         govor(smartass)
-    elif besedilo == "flip coin ":
+    elif "flip coin" in besedilo:
         coin = random.choice(("I got heads.", "I got tails."))
         govor(coin)
-    elif besedilo == "are stupid ":
+    elif "are stupid" in besedilo:
         stupido = "Well in that case you programmed me to be stupid."
         govor(stupido)
-    elif besedilo == "are getting smarter ":
+    elif "are getting smarter" in besedilo:
         sma = "I learn of my mistakes, sir."
         govor(sma)
-    elif besedilo == "name ":
+    elif "name" in besedilo:
         name = "My name is Jayne"
         govor(name)
-    elif besedilo == "search Google for ":
-        t=0
-        iskanje=""
-        for k in vnos:
-            if k == "for":
-                t+=1
-                continue
-            if t == 1:
-                if k == vnos[len(vnos)-1]:
-                    iskanje+= k
-                else:
-                    iskanje+= k+" "
-        print (iskanje)
-        encoded = urllib.quote(iskanje)
-        webbrowser.open("https://www.google.si/webhp?sourceid=chrome-instant&ion=1&espv=2&ie=UTF-8#q="+encoded)
-    elif besedilo == "search Wikipedia for ":
-        ig=0
-        wiki=""
-        for m in vnos:
-            if m == "for":
-                ig+=1
-                print (m)
-                continue
-            if ig == 1:
-                if m == vnos[len(vnos)-1]:
-                    wiki+= m
-                else:
-                    wiki+= m+" "
-        print (wiki)
-        encoded = urllib.quote(wiki)
-        webbrowser.open("https://sl.wikipedia.org/wiki/"+encoded)
-    # elif (besedilo == "start calibration" or besedilo == "calibrate") and besedilo != "stop":
-    #elif besedilo == "start calibration":
-        #calib_start=subprocess.Popen(["python3", "cv.py"])
-    #    govor("Starting to calibrate")
-    #elif besedilo == "stop calibration":
-    #    try:   
-    #        calib_start.kill()
-    #    except:
-    #        govor('Calibration is not running')
-    elif besedilo == "hate ":
+    elif "hate" in besedilo:
         sov= "I hate you to."
         govor(sov)
-    elif besedilo == "how are ":
+    elif "how are" in besedilo:
         pocutje = "I am very good. What about you?"
         govor(pocutje)
-    elif besedilo == "identify ":
+    elif "identify" in besedilo:
         description = "I am an virtual asistent made by Nejc Boltez. I can do many of things. I can tell you time date. I also can open youtube and google for you. But most important thing I can do is that I can answer your question"
         govor(description)
-    elif besedilo == "identified ":
+    elif "identified" in besedilo:
         description = "I am an virtual asistent made by Nejc Boltez. I can do many of things. I can tell you time date. I also can open youtube and google for you. But most important thing I can do is that I can answer your question"
         govor(description)
-    elif besedilo == "are doing ":
+    elif "are doing" in besedilo:
         delo = "I am waiting for your command, sir."
         govor(delo)
-    elif besedilo == "do something":
+    elif "do something" in besedilo:
         de = "What should I do for you?"
-        govor(de)
-    elif besedilo == "music ":
-        a = "playing music"
-        govor(a)
-        os.system("start C:/Users/nejcb/Desktop/seznam.xspf")
-    elif besedilo == "new file ":
-        datoteka()
-    elif besedilo == "new document ":
-        datoteka()
-    elif besedilo == "off lights living room ":
-        predvajaj = "I am not progrramed to do that yet but I will be soon."
-        govor(predvajaj)
-    elif besedilo == "on lights living room ":
-        predvajaj = "I am not progrramed to do that yet but I will be soon."
-        govor(predvajaj)
-    elif besedilo == "off lights my room ":
-        predvajaj = "I am not progrramed to do that yet but I will be soon."
-        govor(predvajaj)
-    elif besedilo == "on lights my room ":
-        predvajaj = "I am not progrramed to do that yet but I will be soon."
-        govor(predvajaj)
-    elif besedilo == "":
-        predvajaj = "I am not programed to do that yet but I will be soon."
-        govor(predvajaj)
-    #elif besedilo == "test":
-    #    continue
-    elif besedilo == "map of " or besedilo == "maps of " or besedilo == "Map of " or besedilo == "Maps of ":
-        '''mesto = ""
-        z=0
-        zemla = "Openning google maps."
-        govor(zemla)
-        for i in vnos:
-            if i == "of":
-                z+=1
-                continue
-            if z == 1:
-                if i == vnos[len(vnos)-1]:
-                    mesto+= i
-                else:
-                    mesto+= i+" "
-        city = urllib.quote(mesto)
-        zemljevid= "https://www.google.de/maps/"
-        webbrowser.open("https://www.google.de/maps/place/"+city)'''
-        location="San Francisco" 
-        url_data="http://maps.googleapis.com/maps/api/staticmap?center=%s&zoom=13&scale=false&size=1200x600&maptype=satellite&format=png" % location
-        body={'url':url_data}
-        new_url='https://www.google.com/maps/place/8000+Novo+mesto/@45.8035832,15.1346662,13z/data=!3m1!4b1!4m5!3m4!1s0x47645557e323d15f:0x102d55e340217bd4!8m2!3d45.8010824!4d15.1710089'
-        requests.post(new_url)#"http://localhost:8080/image", data=json.dumps(body))
-    elif besedilo == "thank " or besedilo == "thanks ":
+        govor(de)    
+    elif "thank " or "thanks ":
         izgovor="You are welcome"
         govor(izgovor)
-        start()
-
-'''if str(sys.argv[1]) != "":
-    index=str(sys.argv[1])
-    jarvis(index)
-else:
-    print("please put some arg")'''

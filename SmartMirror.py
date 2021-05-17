@@ -24,6 +24,7 @@ import multiprocessing
 import speech_recognition as sr
 import threading
 import send_command
+from send_command import Do_for_command
 
 
 
@@ -47,170 +48,50 @@ def get_api_keys():
 	return d
 class Asistant(Frame):
 	def __init__(self, parent, *args, **kwargs):
-		#global Queue_listening
-		#if (len(self.listening_bool)==0):
-		#	self.listening_bool=False
 		self.listening_bool : str
 		Frame.__init__(self, parent, bg='black')
-		#self.q=Queue()
 		self.PosluhFrame=Label(self, font=('Helvetica', 40), fg="white", bg="yellow", text=user)
 		self.PosluhFrame.pack(side=RIGHT)
-		#self.text_wid = Text(self, height=100,width=100)
-		#self.text_wid.pack(expand=YES,fill=BOTH)
-		#self.text_label=Label(self, font=('Helvetica', 40), fg="white", bg="yellow", text='')
-		#self.text_label.pack()
-		#self.getPosluh()
-		#self.after(1000,self.check_if_listening(self.q))
-		#self.text_wid.after(100, self.check_if_listening(self.q))#(Queue_listening))
-		#self.callListen=0
-		#if (self.callListen==0):
 		self.getPosluh()
-		#self.PosluhFrame.after(3000,self.getPosluh)
-		#	self.callListen=self.callListen+1
-		#self.getPosluh()
-		#self.Listening_test()
-		#finally:
-		#	self.text_wid.after(100, self.check_if_listening(q))
-		#self.check_if_listening()
-		#self.after(1000,self.check_if_listening(Queue_listening))
-	'''def check_if_listening(self, test):#,q):
-		#global Queue_listening,
-		#global listening_bool
-		print('TEST!"#$%&/')
-		#listen_bool=self.get_list_bool()
-		#q=Queue_listening
-		#Queue_listening.cancel_join_thread()
-		#print('TESTS QUEUE VALUE:' + q.get(1))
-		q_value=test
-		print('fdbsahfgzewrskcb xvbyxsaj')
-		try:
-			#print(q.get(0))
-			#for i in range(20):
-			#	print(q.get(i))
-			print('dsajdklsadfhas')
-			print('listen_bool 123456 ------------>' + test)
-			#print(Queue_listening.qsize())
-			#if(str(Queue_listening.empty())=='false'):
-			#	q_value = str(Queue_listening.get(1))#"test1234$(&/"#Queue_listening.get(1)
-			#else:
-			#	q_value=str(listening_bool)
-			print('IT WORKS, OH YEAH')
-			print(q_value)
-			self.text_wid.insert('end',q_value)
-		except:
-			print('QUEUE IS EMPTY')
-			pass
-		#self.after(2000,self.check_if_listening)
-		'''
 	def getPosluh(self):
-		#AI()
-		#Listen=subprocess.Popen(["python3", "posluh1.py", self.parent])
-		#subprocess.Popen(["python3", "posluh1.py"])
 		print('TEST123')
 		my_thread=threading.Thread(target=self.Listening_test)
 		my_thread.start()
-		#print('test123')
-		
-		#self.q.put([self])
-
-		'''self.start_listening=multiprocessing.Process(name="listen_function", target=listening.Listen,args=(self.PosluhFrame,))
-		self.start_listening.start()
-		self.q=multiprocessing.Queue()
-		print('TEST')
-		self.start_listening=multiprocessing.Process(name="listen_function", target=self.listening_function, args=(self.q,))
-		self.start_listening.start()
-		print('TEST ---->>>>' + self.q.get(1))
-		self.check_if_listening(str(self.q.get(1)))'''
-		#self.start_listening.map()
-
-
-
-
-		#self.start_listening.lock()
-		#self.start_listening.join()
-		#self.start_listening=Listen(self)
-		#self.start_listening.pack()
-		#listen_value=Listen.communicate()[0]
-		#print(listen_value)
-		#with subprocess.Popen(["python3", "posluh1.py"]) as Listen:#, "test"], stderr=subprocess.STDOUT, stdout=subprocess.PIPE)
-			#if (Listen.communicate())
-		#    listen_value=Listen.communicate()[0]
-		#    print(listen_value)
-	'''def set_list_bool(self,value):
-		#global listening_bool
-		self.listening_bool=value
-		print('listening_bool kfldosfoids: --------->>>>>' + str(self.listening_bool))
-		return self.listening_bool
-	def print_list_bool(self):
-		#global listening_bool
-		print('listening_bool: --------->>>>>' + str(self.listening_bool))
-	def get_list_bool(self):
-		global listening_bool
-		print('listening_bool 987654: --------->>>>>' + str(self.listening_bool))
-		return self.listening_bool'''
-	def listening_function(self):#,Queue_listening):
-		#global Queue_listening
-		#global listening_bool
-		#global text_listening
+	def listening_function(self):
 		r = sr.Recognizer()
-		#Frame.__init__(self, parent, bg='black')
-		#self.label_listen=Label(self, font=('Helvetica', 100), fg="white", bg="purple", text="THIS IS A STRING")
-		#self.label_listen.pack()#side=TOP,anchor=E)
-		#while(True):
 		razgovor=''
-		#print('OK')
 		
-		#while listened<5:
-
-		#while razgovor=='':
 		with sr.Microphone() as source:
 			print("Say something12345678!")
-			#q=Queue()
-			#print(q.get())
 			print(Frame)
 			r.adjust_for_ambient_noise(source)
 			audio = r.listen(source)
-			#audio = r.adjust_for_ambient_noise(source)
 			print(audio)
-			# recognize speech using Google Speech Recognition
 
 		try:
-			# for testing purposes, you're just using the default API key
-			# to use another API ke, use `r.recognize_google(audio,key="GOOGLE_SPEECH_RECOGNITION_API_KEY")`
-			# instead of `r.recognize_google(audio)`
 			print("Google Speech Recognition thinks you said " + r.recognize_google(audio))
 			razgovor=r.recognize_google(audio).lower()
 			razgovor_search=""
 			
 			if ("mirror" in razgovor):
-				#global Queue_listening
-				#global listening_bool
 				print('LETS GO')
-				#self.label_listen.config(text="DELA TO MI DELI")
-				#listen=1
-				#text_listening.insert("end","OK start listening")
 				Queue_listening.put("listening")
-				send_command_thread=threading.Thread(target=send_command.Do_for_command(razgovor))
-				send_command_thread.start()
-				#Queue_listening.
-				#listening_bool='True'
 				print(Queue_listening.get(1))
-				#return Queue_listening, listening_bool
+			
 		except sr.UnknownValueError:
 			print("Google Speech Recognition could not understand audio")
-			#listened+=1
 		except sr.RequestError as e:
 			print("Could not request results from Google Speech Recognition service;{0}".format(e))
-			#listened+=1
-		#return Queue_listening, listening_bool
 		return razgovor
 	def Listening_test(self):
 		while(True):
 			l=self.listening_function()
-			'''self.set_list_bool(l)
-			self.print_list_bool()'''
 			#self.check_if_listening(l)
 			self.PosluhFrame.config(text=str(l))
+			if l != "":
+				print(l)
+				send_command_thread=threading.Thread(target=send_command.Do_for_command(l.lower()))
+				send_command_thread.start()
 
 class Ura(Frame):
 	def __init__(self, parent, *args, **kwargs):

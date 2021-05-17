@@ -57,11 +57,6 @@ def govor(besedilo):
 
 
 class weather_GUI:
-	def __call__(args):
-		try: 
-			print('test:     '+args)
-		except:
-			print('')
 	def __init__(self,command):
 		#global arguments
 		#Frame.__init__(self, parent)
@@ -92,36 +87,32 @@ class weather_GUI:
 		self.data.pack(side=BOTTOM, fill=BOTH, expand= TRUE, anchor='w')
 		self.chart=Canvas(self.topFrame, bg="black", border=0, highlightthickness=0)
 		self.chart.pack(side=RIGHT, fill=BOTH, expand= TRUE, anchor='w')
-		self.get_weather_data()
-		self.populate_data(command)
-		self.tk.mainloop()
-	def get_weather_data(self):
 		'''days_table=[]
 		day_selected=""
 		#arguments = list(sys.argv)
 		#print(arguments[1])
 		days_in_week=["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
 		current_day=[]'''
-		self.City = "Novo mesto"
-		self.Country = "SI"
+		City = "Novo mesto"
+		Country = "SI"
 		get_api=get_api_keys()
-		self.APIK=get_api['weather_api']
-		self.URL = "https://api.openweathermap.org/data/2.5/forecast?q="+self.City+","+self.Country+"&appid="+self.APIK
-		self.main_URL="https://api.openweathermap.org/data/2.5/weather?q="+self.City+","+self.Country+"&appid="+self.APIK
-		self.r = requests.get(self.URL)
-		self.r_main=requests.get(self.main_URL)
-		self.preberi = self.r.json()
-		self.preberi_day=self.r_main.json()
-		self.main_icon=self.preberi_day['weather'][0]['icon']
-	def populate_data(self,command):
+		APIK=get_api['weather_api']
+		URL = "https://api.openweathermap.org/data/2.5/forecast?q="+City+","+Country+"&appid="+APIK
+		main_URL="https://api.openweathermap.org/data/2.5/weather?q="+City+","+Country+"&appid="+APIK
+		r = requests.get(URL)
+		r_main=requests.get(main_URL)
+		preberi = r.json()
+		preberi_day=r_main.json()
+		main_icon=preberi_day['weather'][0]['icon']
+		days_string=""
 		weather=''
 		t=[]
 		h=[]
 		hours=[]
 		coordinate=50
 		coordinatey=100
-		#print(str(self.preberi['list']['main']))
-		'''image_byt = urlopen("https://openweathermap.org/img/wn/"+self.main_icon+"@2x.png").read()
+		#print(str(preberi['list']['main']))
+		'''image_byt = urlopen("https://openweathermap.org/img/wn/"+main_icon+"@2x.png").read()
 		load = PIL.Image.open(io.BytesIO(image_byt))
 		image_final=load.resize((300,200), PIL.Image.ANTIALIAS)
 		render = ImageTk.PhotoImage(image_final)
@@ -129,7 +120,7 @@ class weather_GUI:
 		img.image = render
 		img.place(x=10, y=150)'''
 
-		for d in self.preberi['list']:
+		for d in preberi['list']:
 			#print (d['dt_txt']) 
 			if (str(d['dt_txt']).split(' ')[0] not in days_table):
 				days_table.append(str(d['dt_txt']).split(' ')[0])
@@ -154,7 +145,7 @@ class weather_GUI:
 			#days_table.append(str(d['dt_txt']).split(' ')[0])
 		#else:
 		#	 day_selected=days_table[0]
-		for i in self.preberi['list']:
+		for i in preberi['list']:
 			date=str(i['dt_txt']).split(' ')[0]
 			if (date == day_selected):
 				cels=self.kelvin_to_celsius(int(i['main']['temp']))
