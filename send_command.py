@@ -52,11 +52,12 @@ class Do_for_command:
 							Open_forecast.terminate()'''
 					#Open_forecast.terminate()
 					print(command_search)
-					Open_forecast=threading.Thread(target=weather_GUI(command_search))
-					Open_forecast.start()
-					'''Open_forecast=subprocess.Popen(["python3","weather.py",command_search])
+					#Open_forecast=threading.Thread(target=weather_GUI(command_search))
+					#Open_forecast=multiprocessing.Process(target=weather_GUI(command_search))
+					#Open_forecast.start()
+					Open_forecast=subprocess.Popen(["python3","weather.py",command_search])
 					open_processes.append("Open_forecast:"+str(Open_forecast.pid))
-					print(Open_forecast.pid)'''
+					print(Open_forecast.pid)
 			elif ("who" in command or "was" in command or "what" in command):
 				#subprocess.Popen(["python3","wikipedia_window.py", command])	
 				wiki_command=command.split("who was ")[1]
@@ -85,16 +86,16 @@ class Do_for_command:
 
 			elif ("calibration" in command):
 				Open_calibrate=subprocess.Popen(["python3", "calibrate.py", "test"], stdin=subprocess.PIPE)
-				open_processes.append("Open_calibrate")
+				open_processes.append("Open_calibrate:"+str(Open_calibrate.pid))
 			elif ("news" in command):
-				Open_news=threading.Thread(target=yt_search(yt_search_query))
-				Open_news.start()
-				#Open_news=subprocess.Popen(["python3", "news.py", str(show_news)])
-				#open_processes.append('Open_news')
+				#Open_news=threading.Thread(target=yt_search(yt_search_query))
+				#Open_news.start()
+				Open_news=subprocess.Popen(["python3", "news.py", str(show_news)])
+				open_processes.append("Open_news:"+str(Open_news.pid))
 			elif("picture" in command):
 				if ("take" in command):
 						take_pic=subprocess.Popen(["python3","tale_picture.py"])
-						open_processes.append("take_pic")
+						open_processes.append("take_pic:"+str(take_pic.pid))
 			elif ("home" in command):
 				for i in open_processes:
 					if("Open_news" in i):

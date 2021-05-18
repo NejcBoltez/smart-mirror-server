@@ -177,4 +177,8 @@ class yt_search:
 
 #root=Window()
 #root.tk.mainloop()
+try:
+	yt_search(arguments[1])
+except:
+	print('No arguments')
 

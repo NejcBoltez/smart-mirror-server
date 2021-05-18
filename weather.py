@@ -36,7 +36,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 days_table=[]
 day_selected=""
-#arguments = list(sys.argv)
+arguments = list(sys.argv)
 #print(arguments[1])
 days_in_week=["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
 current_day=[]
@@ -269,4 +269,8 @@ class Weather:
 class Start:
 	window=Weather()
 	window.tk.mainloop()'''
+try:
+	weather_GUI(arguments[1])
+except:
+	print('No arguments')
 

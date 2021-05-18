@@ -173,46 +173,6 @@ class Novice(Frame):
 		self.update_news(IzborNovic)
 	def update_news(self,data):
 		self.label1.config(text=data)
-'''class Is_Listening(Frame):
-	def __init__(self, parent, *args, **kwargs):
-		global Queue_listening
-		Frame.__init__(self, parent, bg='black')
-		self.PosluhFrame=Label(self, font=('Helvetica', 40), fg="white", bg="yellow", text=user)
-		self.PosluhFrame.pack(side=RIGHT)
-		self.text_wid = Text(self,height=100,width=100)
-		self.text_wid.pack(expand=YES,fill=BOTH)
-		self.check_if_listening()
-		#self.after(1000,self.check_if_listening(Queue_listening))
-	def check_if_listening(self):#,q):
-		#global Queue_listening,
-		global listening_bool
-		print('TEST!"#$%&/')
-		listen_bool=get_list_bool()
-		#q=Queue_listening
-		Queue_listening.cancel_join_thread()
-		#print('TESTS QUEUE VALUE:' + q.get(1))
-		q_value=""
-		print('fdbsahfgzewrskcb xvbyxsaj')
-		try:
-			#print(q.get(0))
-			#for i in range(20):
-			#	print(q.get(i))
-			print('dsajdklsadfhas')
-			print('listen_bool 123456 ------------>' + listen_bool)
-			print(Queue_listening.qsize())
-			if(str(Queue_listening.empty())=='false'):
-				q_value = str(Queue_listening.get(1))#"test1234$(&/"#Queue_listening.get(1)
-			else:
-				q_value=str(listening_bool)
-			print('IT WORKS, OH YEAH')
-			print(q_value)
-			self.text_wid.insert('end',q_value)
-		except:
-			print('QUEUE IS EMPTY')
-			pass
-		self.after(2000,self.check_if_listening)'''
-
-
 		
 class Camera(Frame):
 	def __init__(self, parent, *args, **kwargs):
@@ -224,8 +184,8 @@ class Camera(Frame):
 		self.labelMain.pack(anchor='w')
 		self.label1=Label(self.CamFrame, font=('Helvetica', 9), fg="white", bg="black")
 		self.label1.pack(anchor='w')
-		self.get_home()
-		#self.getCamera()
+		#self.get_home()
+		self.getCamera()
 	def getCamera(self):
 		# .local is inside home directory
 		try:
