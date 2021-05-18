@@ -20,6 +20,63 @@ listen=0
 r = sr.Recognizer()
 BASE_DIR= os.path.dirname(os.path.abspath(__file__))
 image_dir=os.path.join(BASE_DIR, '../Users')
+def check_for_user():
+	try:
+		face_front=cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+	except:
+		face_front=cv2.CascadeClassifier('../../.local/lib/python3.7/site-packages/cv2/data/haarcascade_frontalface_default.xml')
+# Capture frame-by-frame
+	global user
+	#global login
+	cap = cv2.VideoCapture(0)
+	ret, frame = cap.read()
+	tekst=''
+	#detect face
+	faces = face_front.detectMultiScale(frame, scaleFactor=1.5, minNeighbors=5)
+	for (x, y, w, h) in faces:
+		#tekst=str(x)+', '+str(y)+', '+str(w)+', '+str(h)
+		
+		#print (x)
+		roi_color=frame[y:y+h, x:x+w]
+		
+		#image = face_recognition.load_image_file('./Images/stevejobs.png')
+		image_encoding = face_recognition.face_encodings(frame)[0]
+		#while (tekst==''):
+		for root, dirs, files in os.walk(image_dir):
+			for d in dirs:
+				print(d)
+				#print(image_dir+'/'+d)
+				for root, dirs, files in os.walk(image_dir+'/'+d):
+					print(files)
+					for file in files:
+						#print('File: '+file)
+						unknown_image = face_recognition.load_image_file(image_dir+'/'+d+'/'+file)
+						#print(unknown_image)
+						unknown_encoding=face_recognition.face_encodings(unknown_image)
+						#print(len(unknown_encoding))
+						if (len(unknown_encoding)>0):
+							unknown_encoding1=face_recognition.face_encodings(unknown_image)[0]
+
+							results=face_recognition.compare_faces([image_encoding], unknown_encoding1)
+
+							if results[0]:
+								#print(file)
+								tekst=d
+								#print('tekst: '+tekst)
+								#save the image
+								path, dirs, files = next(os.walk(image_dir+'/'+d))
+								file_count = len(files)
+								print(d)
+								#print(image_dir+'/'+d)
+								#print(file_count)
+								img_item2=str(image_dir)+'/Users/'+d+'/'+d+'_'+str(file_count+1)+'.jpg'
+								cv2.imwrite(img_item2, roi_color)
+								update_user(tekst)
+								break# test
+							else:
+								continue
+		user=tekst
+		cap.release()
 def new_user_name():
 	user_name=''
 	while user_name=='':
@@ -56,7 +113,7 @@ def new_user_name():
 				dir_path=str(image_dir)+'/'+str(user_name)
 				os.mkdir(dir_path)
 				os.chmod(dir_path, 0o777)
-				create_first_user(user_name)
+				create_new_user(user_name)
 			else:
 				continue
 		except OSError as error:
@@ -118,7 +175,7 @@ def create_new_user(user_name):
 	# When everything done, release the capture
 	cap.release()
 	cv2.destroyAllWindows()
-
+'''
 def listening():
 	while (True):
 		with sr.Microphone() as source:
@@ -156,4 +213,6 @@ for root, dirs, files in os.walk(image_dir):
 		break
 	else:
 		listening()
-		break
+		break'''
+new_user_name()
+#check_for_user()
