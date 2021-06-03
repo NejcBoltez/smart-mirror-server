@@ -1,5 +1,3 @@
-weather_api=''
-
-news_api=''
-
-google_api=''
+{weather_api='',
+news_api='',
+google_api=''}
