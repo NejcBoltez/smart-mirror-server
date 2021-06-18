@@ -117,7 +117,7 @@ class Wikipedia_show:
 			FrameWiki.create_text(600,500,width=800, text=odgovor, fill='white', font=('verdana', 15))
 			wiki_api_url="http://en.wikipedia.org/w/api.php?action=query&prop=pageimages&format=json&piprop=original&titles="+str(title[0])
 			print(wiki_api_url)
-		except wikipedia.exceptions.PageError:
+		except wikipedia.exceptions.PageError as e:
 			possible_matches=wikipedia.search(vpras.replace('_', ' '))
 			matches=""
 			for i in possible_matches:
@@ -125,7 +125,7 @@ class Wikipedia_show:
 			FrameWiki.create_text(600,300, text="Sorry no matches for "+vpras.replace('_',' '), fill="white", font=("verdana", 25, "bold"))
 			FrameWiki.create_text(600,350,width=800, text="Here are some other possible matches", fill='white', font=('verdana', 15, "bold"))
 			FrameWiki.create_text(650,500,width=800, text=matches, fill='white', font=('verdana', 15))
-		#wiki_img=get_image(wiki_api_url)
+		wiki_img=get_image(wiki_api_url)
 		root.mainloop()
 arguments = list(sys.argv)
 try:

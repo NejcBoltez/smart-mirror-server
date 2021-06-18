@@ -104,15 +104,15 @@ class weather_GUI:
 		current_day=[]'''
 		self.City = "Novo mesto"
 		self.Country = "SI"
-		get_api=get_api_keys()
-		self.APIK=get_api['weather_api']
+		self.get_api=get_api_keys()
+		self.APIK=self.get_api['weather_api']
 		self.URL = "https://api.openweathermap.org/data/2.5/forecast?q="+self.City+","+self.Country+"&appid="+self.APIK
 		self.main_URL="https://api.openweathermap.org/data/2.5/weather?q="+self.City+","+self.Country+"&appid="+self.APIK
 		self.r = requests.get(self.URL)
 		self.r_main=requests.get(self.main_URL)
-		self.preberi = self.r.json()
-		self.preberi_day=self.r_main.json()
-		self.main_icon=self.preberi_day['weather'][0]['icon']
+		self.read = self.r.json()
+		self.read_day=self.r_main.json()
+		self.main_icon=self.read_day['weather'][0]['icon']
 	def populate_data(self,command):
 		weather=''
 		t=[]
@@ -120,16 +120,16 @@ class weather_GUI:
 		hours=[]
 		coordinate=50
 		coordinatey=100
-		#print(str(self.preberi['list']['main']))
-		'''image_byt = urlopen("https://openweathermap.org/img/wn/"+self.main_icon+"@2x.png").read()
+		#print(str(self.read['list']['main']))
+		image_byt = urlopen("https://openweathermap.org/img/wn/"+self.main_icon+"@2x.png").read()
 		load = PIL.Image.open(io.BytesIO(image_byt))
 		image_final=load.resize((300,200), PIL.Image.ANTIALIAS)
 		render = ImageTk.PhotoImage(image_final)
 		img = Label(self.logo, image=render, width=300, height=200, background="black")
 		img.image = render
-		img.place(x=10, y=150)'''
+		img.place(x=10, y=150)
 
-		for d in self.preberi['list']:
+		for d in self.read['list']:
 			#print (d['dt_txt']) 
 			if (str(d['dt_txt']).split(' ')[0] not in days_table):
 				days_table.append(str(d['dt_txt']).split(' ')[0])
@@ -154,7 +154,7 @@ class weather_GUI:
 			#days_table.append(str(d['dt_txt']).split(' ')[0])
 		#else:
 		#	 day_selected=days_table[0]
-		for i in self.preberi['list']:
+		for i in self.read['list']:
 			date=str(i['dt_txt']).split(' ')[0]
 			if (date == day_selected):
 				cels=self.kelvin_to_celsius(int(i['main']['temp']))
@@ -174,13 +174,13 @@ class weather_GUI:
 				self.data.create_text(coordinate+80,155, width=200, text=day_forecast, fill="white")
 				icon_id=i['weather'][0]['icon']
 				print("Icon ID: "+str(icon_id))
-				'''image_byt = urlopen("https://openweathermap.org/img/wn/"+icon_id+"@2x.png").read()
+				image_byt = urlopen("https://openweathermap.org/img/wn/"+icon_id+"@2x.png").read()
 				load = PIL.Image.open(io.BytesIO(image_byt))
 				image_final=load.resize((150,100), PIL.Image.ANTIALIAS)
 				render = ImageTk.PhotoImage(image_final)
 				img = Label(self.data, image=render, width=150, height=100, background="black")
 				img.image = render
-				img.place(x=coordinate+10, y=200)'''
+				img.place(x=coordinate+10, y=200)
 
 				coordinate=coordinate+190
 				print(coordinate)

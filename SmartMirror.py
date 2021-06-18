@@ -93,84 +93,82 @@ class Asistant(Frame):
 				send_command_thread=threading.Thread(target=send_command.Do_for_command(l.lower()))
 				send_command_thread.start()
 
-class Ura(Frame):
+class Time(Frame):
 	def __init__(self, parent, *args, **kwargs):
 		Frame.__init__(self, parent, bg='black')
 		self.label1=Label(self, font=('Helvetica', 100), fg="white", bg="black")
 		self.label1.pack(side=TOP,anchor=E)
-		self.dan=Label(self, font=('Helvetica', 15), fg="white", bg="black")
-		self.dan.pack()
-		self.pozdrav=Label(self, font=('Helvetica', 15), fg="white", bg="black")
-		self.pozdrav.pack()
-		self.klik()
-	def klik(self):
+		self.day=Label(self, font=('Helvetica', 15), fg="white", bg="black")
+		self.day.pack()
+		self.hello=Label(self, font=('Helvetica', 15), fg="white", bg="black")
+		self.hello.pack()
+		self.update_time()
+	def update_time(self):
 		ti=time.strftime('%H:%M:%S')
-		dan=time.strftime('%A')
-		self.update_clock(ti,dan)
+		day=time.strftime('%A')
+		self.update_clock(ti,day)
 		#print('TEST: ' + ti)
 		# calls itself every 1000 milliseconds to update the time display as needed could use >200 ms, but display gets jerky
-		self.label1.after(1000, self.klik)
+		self.label1.after(1000, self.update_time)
 	def update_clock(self,ti,dan):
 		self.label1.config(text=ti)
 		self.dan.config(text=dan)
-class Vreme(Frame):
+
+class Weather(Frame):
 	def __init__(self, parent, *args, **kwargs):
 		Frame.__init__(self, parent, bg='black')
-		self.LabelMain=Label(self, font=('Helvetica', 30), fg='white', bg='black', text="Vreme:")
+		self.LabelMain=Label(self, font=('Helvetica', 30), fg='white', bg='black', text="Weather:")
 		self.LabelMain.pack()
 		self.label1=Label(self, font=('Helvetica', 25), fg="white", bg="black")
 		self.label1.pack(side=LEFT, fill=BOTH, expand= TRUE, anchor='w')
-		self.getVreme()
-		self.label1.after(10000, self.getVreme)
-	def getVreme(self):
+		self.getWeather()
+		self.label1.after(10000, self.getWeather)
+	def getWeather(self):
 		City = "Novo mesto"
 		Country = "SI"
 		get_api=get_api_keys()
 		APIK=get_api['weather_api']
 		URL = "https://api.openweathermap.org/data/2.5/weather?q="+City+","+Country+"&appid="+APIK
 		r = requests.get(URL)
-		preberi = r.json()
-		temp="Temp: " + str(preberi['main']['temp'])
-		humidity="Humidity: " + str(preberi['main']['humidity'])
-		temp_min="Temp_min: " + str(preberi['main']['temp_min'])
-		temp_max="Temp_max: " + str(preberi['main']['temp_max'])
+		read_weather = r.json()
+		temp="Temp: " + str(read_weather['main']['temp'])
+		humidity="Humidity: " + str(read_weather['main']['humidity'])
+		temp_min="Temp_min: " + str(read_weather['main']['temp_min'])
+		temp_max="Temp_max: " + str(read_weather['main']['temp_max'])
 		weather=temp +'\n' + humidity + '\n' + temp_min + '\n' + temp_max
 		self.update_weather(weather)
 	def update_weather(self,data):
 		self.label1.config(text=data)
-class Novice(Frame):
+
+class News(Frame):
 	def __init__(self, parent, *args, **kwargs):
 		Frame.__init__(self, parent, bg='black')
 		self.NewsFrame=Frame(self, background='Black')
 		self.NewsFrame.pack(side=RIGHT)
-		self.labelMain=Label(self.NewsFrame, font=('Helvetica', 30), fg='white', bg='black', text="Novice:")
+		self.labelMain=Label(self.NewsFrame, font=('Helvetica', 30), fg='white', bg='black', text="News:")
 		self.labelMain.pack()
 		self.label1=Label(self.NewsFrame, font=('Helvetica', 12), fg="white", bg="black")
 		self.label1.pack(side=LEFT, fill=BOTH, expand= TRUE, anchor='w')
-		self.getNovice()
-		self.label1.after(100000, self.getNovice)
-	def getNovice(self):
+		self.getNews()
+		self.label1.after(300000, self.getNews)
+	def getNews(self):
 		NewsList=[]
-		Novice=""
 		News=""
-		IzborNovic=""
+		News=""
+		select_news=""
 		get_api=get_api_keys()
 		APIK=get_api['news_api']
 		URLnews = "https://newsapi.org/v2/top-headlines?country=si&apiKey="+APIK
 		News=requests.get(URLnews)
-		Novice=News.json()
-		NewsList=Novice['articles']
+		News=News.json()
+		NewsList=News['articles']
 		for i in NewsList:
 			Nov = str(i['title']).split("- ")
 			#print(Nov)
-			#if (Nov[1]=='24ur.com' or Nov[1]=='RTV Slovenija' or Nov[1]=='Računalniške Novice' or Nov[1]=='Siol.net'):
+			#if (Nov[1]=='24ur.com' or Nov[1]=='RTV Slovenija' or Nov[1]=='Računalniške News' or Nov[1]=='Siol.net'):
 				#self.label1.config(text="")
-			IzborNovic+=str(i['title']) + '\n'
-			#if len(IzborNovic) == 5:
-			#	break
-		   # else:
-			#    continue
-		self.update_news(IzborNovic)
+			select_news+=str(i['title']) + '\n'
+		self.update_news(select_news)
 	def update_news(self,data):
 		self.label1.config(text=data)
 		
@@ -197,18 +195,18 @@ class Camera(Frame):
 		#global login
 		cap = cv2.VideoCapture(0)
 		ret, frame = cap.read()
-		tekst=''
+		user_name=''
 		#detect face
 		faces = face_front.detectMultiScale(frame, scaleFactor=1.5, minNeighbors=5)
 		for (x, y, w, h) in faces:
-			#tekst=str(x)+', '+str(y)+', '+str(w)+', '+str(h)
+			#user_name=str(x)+', '+str(y)+', '+str(w)+', '+str(h)
 			
 			#print (x)
 			roi_color=frame[y:y+h, x:x+w]
 			
 			#image = face_recognition.load_image_file('./Images/stevejobs.png')
 			image_encoding = face_recognition.face_encodings(frame)[0]
-			#while (tekst==''):
+			#while (user_name==''):
 			for root, dirs, files in os.walk(image_dir):
 				for d in dirs:
 					print(d)
@@ -227,42 +225,26 @@ class Camera(Frame):
 								results=face_recognition.compare_faces([image_encoding], unknown_encoding1)
 
 								if results[0]:
-									#print(file)
-									tekst=d
-									#print('tekst: '+tekst)
-									#save the image
+									user_name=d
 									path, dirs, files = next(os.walk(image_dir+'/'+d))
 									file_count = len(files)
 									print(d)
-									#print(image_dir+'/'+d)
-									#print(file_count)
 									img_item2=str(image_dir)+'/Users/'+d+'/'+d+'_'+str(file_count+1)+'.jpg'
 									cv2.imwrite(img_item2, roi_color)
-									self.update_user(tekst)
+									self.update_user(user_name)
 									break# test
 								else:
 									continue
-							
-			#cv2.imwrite(img_item2, roi_color)
-			
-			#this.user=tekst
-			#self.home_window()
-			user=tekst
-			#self.labelMain.after(700, self.home_window)
-			#home=Okno()
-#             root.destroy()
-			#home.tk.mainloop()
+			user=user_name
 			cap.release()
 			self.get_home()
-			#self.labelMain.after(100, self.get_home())
-			#self.labelMain.after(1000, AI())
 			
 		if len(faces)==0:
-			self.label1.config(text='Prazno')
+			#self.label1.config(text='Empty')
 			self.label1.after(600, self.getCamera)
 	def update_user(self,user):
-		teskst123='Pozdravljen ' + user
-		self.labelMain.config(text=teskst123)
+		text123='Hello ' + user
+		self.labelMain.config(text=text123)
 		self.label1.config(text=user)
 
 	def get_home(self):
@@ -276,30 +258,19 @@ class Camera(Frame):
 		self.BottomRightFrame=Frame(self.BottomFrame, background='yellow')
 		
 		self.TopFrame.pack(side=TOP, fill=BOTH, expand=YES)
-		#self.BottomFrame.pack(side=BOTTOM, fill=BOTH, expand=YES)
 		self.TopLeftFrame.pack(side = LEFT, fill=BOTH, expand = YES)
-		#self.BottomLeftFrame.pack(side = LEFT, fill=BOTH, expand = YES)
 		self.TopRightFrame.pack(side = RIGHT, fill=BOTH, expand = YES)
-		#self.BottomRightFrame.pack(side = RIGHT, fill=BOTH, expand = YES)
 
-		self.ura=Ura(self.TopRightFrame)
+		self.ura=Time(self.TopRightFrame)
 		self.ura.pack(side=RIGHT)
-		self.vreme=Vreme(self.TopLeftFrame)
-		self.vreme.pack(side=LEFT)
-		#self.news=Novice(self.BottomRightFrame)
-		#self.news.pack(side=RIGHT, fill=BOTH, expand=YES)
-		self.news=Novice(self)
+		self.Weather=Weather(self.TopLeftFrame)
+		self.Weather.pack(side=LEFT)
+		self.news=News(self)
 		self.news.pack(side=BOTTOM)
-		#self.label1234=Label(self.BottomFrame, text="Hello2", fg="white", bg="black")
-		#self.label1234.pack()
-		#self.cam=Label(self.BottomFrame, text="Hello234", fg="white", bg="black")
-		#self.cam.pack()
 		self.asistant=Asistant(self)
 		self.asistant.pack(side=TOP)
-		#self.is_listening=Is_Listening(self)
-		#self.is_listening.pack(side=BOTTOM)
 		
-class Okno:
+class Window:
 	def __init__(self):
 		self.tk=tk.Tk()
 		self.tk.configure(background='black')
@@ -309,37 +280,12 @@ class Okno:
 		#self.fullScreenState = False
 		self.Frame=Frame(self.tk, background='Purple')
 		self.Frame.pack(fill=BOTH, expand=YES)
-		
 		self.recognize()
 	def recognize(self):
 		self.cam=Camera(self.Frame)
 		self.cam.pack()
 	
-okno=Okno()
-#text_listening=tk.Text(okno)
-#text_listening.pack()
-okno.tk.mainloop()
+win=Window()
+win.tk.mainloop()
 
-#get_api_keys()
-
-
-#class Okno:
-#def __init__(self):
-'''
-if __name__ == '__main__':
-	okno=tk.Tk()
-	
-	okno.configure(background='black')
-	okno.title("Pozdravljeni")
-	okno.geometry("1920x1000")
-	#self.tk.attributes('-fullscreen', True)  
-	#self.fullScreenState = False
-	Frame=Frame(okno, background='Purple')
-	Frame.pack(fill=BOTH, expand=YES)
-	text_listening=tk.Text(okno)
-	text_listening.pack()
-
-	cam=Camera(okno.tk)
-	cam.pack()
-	okno.tk.mainloop()'''
 	
