@@ -130,5 +130,5 @@ class Wikipedia_show:
 arguments = list(sys.argv)
 try:
 	Wikipedia_show(arguments[1])
-except EXCEPTION as e:
-	print(e)
+except:
+	print('No arguments')

@@ -23,12 +23,13 @@ class take_pic(Frame):
 		self.Frame.pack(fill=BOTH, expand=YES)
 		self.counts=Label(self.Frame, text="TEXT,", bg="white")
 		self.counts.pack()
-		self.img = Label(self.Frame, width=700, height=700, bg="green")
-		self.img.pack(padx=20, pady=20)
-		self.cap = cv2.VideoCapture(0)
-		self.get_camera_stream()
-		#self.count_thread=threading.Thread(target=self.count_seconds(10))
-		#self.count_thread.start()
+		#self.img = Label(self.Frame, width=700, height=700, bg="green")
+		#self.img.pack(padx=20, pady=20)
+		#self.cap = cv2.VideoCapture(0)
+		#self.get_camera_stream()
+		self.my_thread=threading.Thread(target=self.count_seconds(10))
+		self.my_thread.start()
+		#self.count_seconds(10)
 		#self.count_seconds(10)
 	def get_camera_stream(self):
 		
@@ -42,11 +43,17 @@ class take_pic(Frame):
 		self.img.after(10, self.get_camera_stream)
 		self.save_picture()
 	def count_seconds(self, remaining):
-		self.counts.configure(text="%d" % remaining)
-		if (remaining == 0):
-			self.get_camera_stream()
-		else:
-			self.counts.after(1000, self.count_seconds(remaining - 1))
+		#self.counts.configure(text="%d" % remaining)
+		'''if (remaining == 0):
+			self.get_camera_stream()'''
+		#else:
+		#self.counts.after(1000, self.count_seconds(remaining - 1))
+		while remaining:
+			mins, secs = divmod(remaining, 60)
+			timer = '{:02d}:{:02d}'.format(mins, secs)
+			print(timer, end="\r")
+			time.sleep(1)
+			remaining -= 1
 		#for i in range(10):
 		#    self.counts.config(text=str(i))
 		#    time.sleep(1)
@@ -71,6 +78,7 @@ class Window:
 		self.tk.geometry("1000x600")
 		self.Frame=Frame(self.tk, background='black')
 		self.Frame.pack(fill=BOTH, expand=YES)
+		#self.tk.mainloop()
 		
 		self.get_camera=take_pic(self.Frame)
 		self.get_camera.pack()

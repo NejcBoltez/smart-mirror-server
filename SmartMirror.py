@@ -18,7 +18,7 @@ import face_recognition
 import pyttsx3 as pyttsx
 import speech_recognition as sr
 import subprocess #as call
-import posluh1 as listening
+#import posluh1 as listening
 from multiprocessing import Queue
 import multiprocessing
 import speech_recognition as sr
@@ -50,8 +50,12 @@ class Asistant(Frame):
 	def __init__(self, parent, *args, **kwargs):
 		self.listening_bool : str
 		Frame.__init__(self, parent, bg='black')
-		self.PosluhFrame=Label(self, font=('Helvetica', 40), fg="white", bg="yellow", text=user)
-		self.PosluhFrame.pack(side=RIGHT)
+		#self.PosluhFrame=Label(self, font=('Helvetica', 40), fg="white", bg="yellow", text=user)
+		#self.PosluhFrame.pack(side=RIGHT)
+		self.CommandHelpHeader=Label(self,font=('Helvetica', 40), fg="white", bg="black", text='\nYou can try to say:')
+		self.CommandHelpHeader.pack()
+		self.CommandHelp=Label(self,font=('Helvetica', 12), fg="white", bg="black",text='Search youtube for\nShow me the forecast\nSearch wikipedia for\nStart the calibration')
+		self.CommandHelp.pack()
 		self.getPosluh()
 	def getPosluh(self):
 		print('TEST123')
@@ -110,16 +114,16 @@ class Time(Frame):
 		#print('TEST: ' + ti)
 		# calls itself every 1000 milliseconds to update the time display as needed could use >200 ms, but display gets jerky
 		self.label1.after(1000, self.update_time)
-	def update_clock(self,ti,dan):
+	def update_clock(self,ti,d):
 		self.label1.config(text=ti)
-		self.dan.config(text=dan)
+		self.day.config(text=d)
 
 class Weather(Frame):
 	def __init__(self, parent, *args, **kwargs):
-		Frame.__init__(self, parent, bg='black')
-		self.LabelMain=Label(self, font=('Helvetica', 30), fg='white', bg='black', text="Weather:")
+		Frame.__init__(self, parent, bg='green', padx=0, pady=0)
+		self.LabelMain=Label(self, font=('Helvetica', 40), fg='white', bg='black', text="Weather:")
 		self.LabelMain.pack()
-		self.label1=Label(self, font=('Helvetica', 25), fg="white", bg="black")
+		self.label1=Label(self, font=('Helvetica', 15), fg="white", bg="black")
 		self.label1.pack(side=LEFT, fill=BOTH, expand= TRUE, anchor='w')
 		self.getWeather()
 		self.label1.after(10000, self.getWeather)
@@ -165,9 +169,9 @@ class News(Frame):
 		for i in NewsList:
 			Nov = str(i['title']).split("- ")
 			#print(Nov)
-			#if (Nov[1]=='24ur.com' or Nov[1]=='RTV Slovenija' or Nov[1]=='Računalniške News' or Nov[1]=='Siol.net'):
+			if (Nov[1]=='24ur.com' or Nov[1]=='RTV Slovenija' or Nov[1]=='Računalniške News' or Nov[1]=='Siol.net'):
 				#self.label1.config(text="")
-			select_news+=str(i['title']) + '\n'
+				select_news+=str(i['title']) + '\n'
 		self.update_news(select_news)
 	def update_news(self,data):
 		self.label1.config(text=data)
@@ -182,8 +186,8 @@ class Camera(Frame):
 		self.labelMain.pack(anchor='w')
 		self.label1=Label(self.CamFrame, font=('Helvetica', 9), fg="white", bg="black")
 		self.label1.pack(anchor='w')
-		#self.get_home()
-		self.getCamera()
+		self.get_home()
+		#self.getCamera()
 	def getCamera(self):
 		# .local is inside home directory
 		try:
@@ -250,21 +254,21 @@ class Camera(Frame):
 	def get_home(self):
 		#time.sleep(10)
 		self.labelMain.config(text='')
-		self.TopFrame = Frame(self, background='red')
-		self.BottomFrame = Frame(self, background='yellow')
-		self.TopLeftFrame=Frame(self.TopFrame, background='red')
-		self.BottomLeftFrame=Frame(self.BottomFrame, background='yellow')
-		self.TopRightFrame=Frame(self.TopFrame, background='red')
-		self.BottomRightFrame=Frame(self.BottomFrame, background='yellow')
+		self.TopFrame = Frame(self, background='black', padx=0, pady=0)
+		#self.BottomFrame = Frame(self, background='yellow')
+		self.TopLeftFrame=Frame(self.TopFrame, background='black')
+		#self.BottomLeftFrame=Frame(self.BottomFrame, background='yellow')
+		self.TopRightFrame=Frame(self.TopFrame, background='black')
+		#self.BottomRightFrame=Frame(self.BottomFrame, background='yellow')
 		
-		self.TopFrame.pack(side=TOP, fill=BOTH, expand=YES)
-		self.TopLeftFrame.pack(side = LEFT, fill=BOTH, expand = YES)
-		self.TopRightFrame.pack(side = RIGHT, fill=BOTH, expand = YES)
+		self.TopFrame.pack(side=TOP, fill=BOTH)
+		self.TopLeftFrame.pack(side = LEFT, fill=BOTH, padx=50)
+		self.TopRightFrame.pack(side = RIGHT, fill=BOTH)
 
 		self.ura=Time(self.TopRightFrame)
-		self.ura.pack(side=RIGHT)
+		self.ura.pack(side=TOP)
 		self.Weather=Weather(self.TopLeftFrame)
-		self.Weather.pack(side=LEFT)
+		self.Weather.pack(side=TOP)
 		self.news=News(self)
 		self.news.pack(side=BOTTOM)
 		self.asistant=Asistant(self)
