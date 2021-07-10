@@ -16,6 +16,7 @@ except:
 
 arguments = list(sys.argv)
 BASE_DIR= os.path.dirname(os.path.abspath(__file__))
+print(arguments)
 if (len(arguments)==2):
 	displayed=int(arguments[1])
 else:
@@ -29,10 +30,21 @@ def get_api_keys():
 	#print(d['weather_api'])
 	return d
 
-class display_news(Frame):
-	def __init__(self, parent, *args, **kwargs):
-		Frame.__init__(self, parent, bg='black')
-		global displayed
+class display_news:#(Frame):
+	def __call__(args):
+		try: 
+			print('test:     '+args)
+		except:
+			print('')
+	def __init__(self, displayed):
+		#Frame.__init__(self, parent, bg='black')
+		#global displayed
+		self.tk=tk.Tk()
+		self.tk.configure(background='black')
+		self.tk.title("Pozdravljeni")
+		self.tk.geometry("1920x1080")
+		self.Frame=Frame(self.tk, background='black')
+		self.Frame.pack(fill=BOTH, expand=YES)
 		n=0
 		NewsList=[]
 		Novice=""
@@ -46,7 +58,7 @@ class display_news(Frame):
 		NewsList=Novice['articles']
 		w=350
 		h=600
-		self.NewsFrame=Frame(self, width=1800, height=1000, background="black")
+		self.NewsFrame=Frame(self.Frame, width=1800, height=1000, background="black")
 		self.NewsFrame.pack(fill=BOTH, expand= TRUE, anchor='w', pady=200)
 		self.NewsDir1=Canvas(self.NewsFrame, width=w, height=h)
 		self.NewsDir1.pack(side=LEFT, padx=10) 
@@ -65,14 +77,18 @@ class display_news(Frame):
 				NewsList=NewsList+i
 			n+=1'''
 		NewsD=1
+		displayed=int(displayed)
 		start= displayed-5
 		end=displayed
 		for i in NewsList:
 			Nov = str(i['title']).split("- ")
 			##print(n)
 			#if n > displayed-5 and n < displayed:
-			#print(displayed)
-			if displayed-6<n<displayed:
+			print(displayed)
+			print(n)
+			print(start<=n and n<end)
+			if start<=n<end:
+			#if displayed-6<n<displayed:
 				#print('test')
 			##print(Nov)
 			#if (Nov[1]=='24ur.com' or Nov[1]=='RTV Slovenija' or Nov[1]=='Računalniške Novice' or Nov[1]=='Siol.net'):
@@ -83,6 +99,7 @@ class display_news(Frame):
 				image_byt = urlopen(image_url).read()
 				image_b64 = base64.encodestring(image_byt)'''
 				#print(n)
+				print('test')
 				image_url=str(i['urlToImage'])
 				render=''
 				try:
@@ -178,6 +195,7 @@ class display_news(Frame):
 		'''self.NewsDir=Canvas(self)
 		self.NewsDir.create_text()
 		self.NewsDir.pack()'''
+		self.tk.mainloop()
 		   
 
 class News:
@@ -194,6 +212,8 @@ class News:
 		self.news_label.pack()
 		#get_news(self)
 		
-
-window=News()
-window.tk.mainloop()
+try:
+	display_news(arguments[1])
+except:
+	print('No arguments')
+#display_news(arguments[1])

@@ -38,7 +38,7 @@ class Video(Frame):
         self.media.get_mrl()
         self.player.set_media(self.media)
         self.player.play()
-        time.sleep(1)
+        #time.sleep(1)
         #self.player.pause()
         #self.start_animation()
     def start_animation(self):

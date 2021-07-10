@@ -1,3 +1,13 @@
-{weather_api='',
-news_api='',
-google_api=''}
+[{
+        "weather_api": "",
+        "news_api": "",
+        "google_api": "",
+        "user": "",
+        "user_home_dir": ""
+    },
+    {
+        weather_api = '',
+        news_api = '',
+        google_api = ''
+    }
+]

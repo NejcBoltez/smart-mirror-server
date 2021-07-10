@@ -16,19 +16,40 @@ except:
 
 from threading import Thread
 seconds_left=11
-class take_pic(Frame):
-	def __init__(self, parent, *args, **kwargs):
-		Frame.__init__(self, parent, background='Black')
+arguments = list(sys.argv)
+class take_pic:
+	def __call__(args):
+		try: 
+			print('test:     '+args)
+		except:
+			print('')
+	def __init__(self,user):
+		#seconds_left=11
+		self.user=user
+		self.tk=tk.Tk()
+		self.seconds_left=11
+		self.tk.configure(background='black')
+		self.tk.title("Pozdravljeni")
+		self.tk.geometry("1000x600")
+		self.Frame=Frame(self.tk, background='black')
+		self.Frame.pack(fill=BOTH, expand=YES)
+		
 		self.Frame=Frame(self, background='black')
 		self.Frame.pack(fill=BOTH, expand=YES)
-		self.counts=Label(self.Frame, text="TEXT,", bg="white")
+		self.counts=Label(self.Frame,font=('Helvetica', 40), text="", bg="black", fg="white")
 		self.counts.pack()
-		#self.img = Label(self.Frame, width=700, height=700, bg="green")
-		#self.img.pack(padx=20, pady=20)
-		#self.cap = cv2.VideoCapture(0)
-		#self.get_camera_stream()
-		self.my_thread=threading.Thread(target=self.count_seconds(10))
-		self.my_thread.start()
+		self.img = Label(self.Frame, width=700, height=700, bg="green")
+		self.img.pack(padx=20, pady=20)
+		self.cap = cv2.VideoCapture(0)
+		self.count_number=10
+		self.count=-10
+		self.camera_stream=threading.Thread(target=self.get_camera_stream)
+		self.camera_stream.start()
+		self.tk.mainloop()
+		
+		#time.sleep(10)
+		#self.my_thread=threading.Thread(target=self.count_seconds(10))
+		#self.my_thread.start()
 		#self.count_seconds(10)
 		#self.count_seconds(10)
 	def get_camera_stream(self):
@@ -40,8 +61,23 @@ class take_pic(Frame):
 
 		self.img.imgtk = render
 		self.img.configure(image=render)
-		self.img.after(10, self.get_camera_stream)
-		self.save_picture()
+		self.count=self.count+10
+		print(self.count_number)
+		
+		#self.my_thread=threading.Thread(target=self.count_seconds(10))
+		#self.my_thread.start()
+
+		if (self.count==100 and self.count_number>=0):
+				self.counts.configure(text=self.count_number)
+				self.count_number=self.count_number-1
+				#if (self.count_number>0):
+				self.count=0
+		elif (self.count_number==0):
+				self.save_picture()
+		if(self.count_number>=0):
+			print("test")
+			self.img.after(10, self.get_camera_stream)
+		#self.save_picture()
 	def count_seconds(self, remaining):
 		#self.counts.configure(text="%d" % remaining)
 		'''if (remaining == 0):
@@ -51,7 +87,8 @@ class take_pic(Frame):
 		while remaining:
 			mins, secs = divmod(remaining, 60)
 			timer = '{:02d}:{:02d}'.format(mins, secs)
-			print(timer, end="\r")
+			#print(timer, end="\r")
+			self.counts.configure(text=timer)
 			time.sleep(1)
 			remaining -= 1
 		#for i in range(10):
@@ -62,13 +99,13 @@ class take_pic(Frame):
 	   #     self.save_picture()
 	   # return seconds_left
 	def save_picture(self):
-		save_as="../Users/nejc/nejc(1).jpg"
+		save_as="../taken_pictures/"+str(self.user)+"/"+self.user+".jpg"
 		cv2.imwrite(save_as, self.frame_image)
 		#if()
 		#time.sleep(15)
 		#self.cap.release()
 		#cv2.destroyAllWindows()
-class Window:
+'''class Window:
 	def __init__(self):
 		seconds_left=11
 		self.tk=tk.Tk()
@@ -81,7 +118,7 @@ class Window:
 		#self.tk.mainloop()
 		
 		self.get_camera=take_pic(self.Frame)
-		self.get_camera.pack()
+		self.get_camera.pack()'''
 		#self.counts.after(1000, self.count_seconds)
 		#self.count_seconds(10)
 		#self.img.after(1000, self.save_picture)
@@ -90,6 +127,9 @@ class Window:
 		#for
 	
 		
-
-window=Window()
-window.tk.mainloop()
+try:
+	take_pic(arguments[1])
+except Exception as e:
+	print(e)
+#window=Window()
+#window.tk.mainloop()

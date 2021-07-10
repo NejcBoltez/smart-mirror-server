@@ -88,14 +88,20 @@ class Asistant(Frame):
 			print("Could not request results from Google Speech Recognition service;{0}".format(e))
 		return razgovor
 	def Listening_test(self):
+		global user
+		start_to_listen=False
 		while(True):
 			l=self.listening_function()
 			#self.check_if_listening(l)
-			self.PosluhFrame.config(text=str(l))
-			if l != "":
+			#self.PosluhFrame.config(text=str(l))
+			if (l=="mirror"):
+				start_to_listen=True
+			elif (l != "" and l.lower() != "mirror" and start_to_listen==True):
 				print(l)
-				send_command_thread=threading.Thread(target=send_command.Do_for_command(l.lower()))
+				print(user)
+				send_command_thread=threading.Thread(target=send_command.Do_for_command(l.lower(), user))
 				send_command_thread.start()
+				start_to_listen=False
 
 class Time(Frame):
 	def __init__(self, parent, *args, **kwargs):
@@ -186,8 +192,8 @@ class Camera(Frame):
 		self.labelMain.pack(anchor='w')
 		self.label1=Label(self.CamFrame, font=('Helvetica', 9), fg="white", bg="black")
 		self.label1.pack(anchor='w')
-		self.get_home()
-		#self.getCamera()
+		#self.get_home()
+		self.getCamera()
 	def getCamera(self):
 		# .local is inside home directory
 		try:
@@ -197,7 +203,7 @@ class Camera(Frame):
 # Capture frame-by-frame
 		global user
 		#global login
-		cap = cv2.VideoCapture(0)
+		cap = cv2.VideoCapture(-1)
 		ret, frame = cap.read()
 		user_name=''
 		#detect face
@@ -242,10 +248,12 @@ class Camera(Frame):
 			user=user_name
 			cap.release()
 			self.get_home()
+			#return user
 			
 		if len(faces)==0:
 			#self.label1.config(text='Empty')
 			self.label1.after(600, self.getCamera)
+		#return user
 	def update_user(self,user):
 		text123='Hello ' + user
 		self.labelMain.config(text=text123)

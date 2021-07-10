@@ -117,6 +117,7 @@ class weather_GUI:
 		weather=''
 		t=[]
 		h=[]
+		ws=[]
 		hours=[]
 		coordinate=50
 		coordinatey=100
@@ -140,7 +141,7 @@ class weather_GUI:
 			b_string= str(day_name.strftime("%A")) + '\n' + str(f)
 			d_n=str(day_name.strftime("%A")) 
 			print("test: " + d_n.lower())
-			if (str(day_name.strftime("%A")).lower()==command):
+			if (str(day_name.strftime("%A")).lower()==command or command=="today"):
 				print("It is working")
 				self.daysb=Button(self.days, text=b_string, width=15, height=7, bg="silver", fg="black")
 				self.daysb.pack()
@@ -167,6 +168,7 @@ class weather_GUI:
 				
 				t.append(cels)
 				h.append(int(i['main']['humidity']))
+				ws.append(float(i['wind']['speed']))
 				hours.append(str(i['dt_txt']).split(' ')[1])
 				#self.data.create_text(coordinate,500, text=weather, width=100, fill="white")
 				#self.data.create_window(285, 280, window=frm, anchor=CENTER)
@@ -187,7 +189,7 @@ class weather_GUI:
 				#print(weather)
 		#self.data.create_text(150,500, text=weather, width=200, fill="white")
 		
-		self.create_graph(hours, t, h)
+		self.create_graph(hours, t, h, ws)
 	def day_position(self, arg):
 		day_number=0
 		print(days_table)
@@ -228,11 +230,12 @@ class weather_GUI:
 		print(round(self.celsius,2))
 		return round(self.celsius,2)
 
-	def create_graph(self,hours,t,h):
+	def create_graph(self,hours,t,h,ws):
 		f = Figure(figsize=(8, 4), dpi=100,facecolor='black', edgecolor="black")
 		temp = f.add_subplot(111,facecolor='black')
 		temp.scatter(hours,t, color='red', marker="X", s=200)
 		temp.scatter(hours,h, color='purple', marker="X", s=200)
+		temp.scatter(hours,ws, color='blue', marker="X", s=200)
 		#temp.spines['bottom'].set_color('red')
 		#temp.xaxis.label.set_color('red')
 		temp.xaxis.label.set_color('white')#set x axis value color to white        https://stackoverflow.com/questions/4761623/how-to-change-the-color-of-the-axis-ticks-and-labels-for-a-plot-in-matplotlib
@@ -244,6 +247,7 @@ class weather_GUI:
 		temp.set_ylabel('VALUES',color="white")
 		temp.plot(hours,t, color='red',linewidth=3,label="temp")
 		temp.plot(hours,h,color='purple',linewidth=3,label="humidity")
+		temp.plot(hours,ws,color='blue',linewidth=3,label="wind speed")
 		temp.legend()
 		f.tight_layout()
 
@@ -270,7 +274,13 @@ class Start:
 	window=Weather()
 	window.tk.mainloop()'''
 try:
-	weather_GUI(arguments[1])
+	if (len(arguments)>1):
+		print(len(arguments))
+		weather_GUI(arguments[1])
+		if (arguments[1]=='today'):
+			weather_GUI('')
+		else:
+			weather_GUI(arguments[1])
 except:
 	print('No arguments')
 
