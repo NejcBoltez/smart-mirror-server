@@ -66,7 +66,7 @@ class Create_new_user(Frame):
 					dir_path=str(image_dir)+'/'+str(user_name)
 					os.mkdir(dir_path)
 					os.chmod(dir_path, 0o777)
-					self.create_first_user(user_name)
+					create_first_user(user_name)
 				else:
 					continue
 			except OSError as error:
@@ -79,57 +79,57 @@ class Create_new_user(Frame):
 
 
 
-	def create_first_user(user_name):
-		#try:
-		#	face_front=cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
-		#except:
-		face_front=cv2.CascadeClassifier('../../.local/lib/python3.7/site-packages/cv2/data/haarcascade_frontalface_default.xml')
-		cap = cv2.VideoCapture(-1)
+def create_first_user(user_name):
+	#try:
+	#	face_front=cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+	#except:
+	face_front=cv2.CascadeClassifier('../../.local/lib/python3.7/site-packages/cv2/data/haarcascade_frontalface_default.xml')
+	cap = cv2.VideoCapture(-1)
 
+	ret, frame = cap.read()
+	count=0
+	found_faces=[10]
+	while(count<10):
+		# Capture frame-by-frame
 		ret, frame = cap.read()
-		count=0
-		found_faces=[10]
-		while(count<10):
-			# Capture frame-by-frame
-			ret, frame = cap.read()
 
-			# Our operations on the frame come here
-			gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+		# Our operations on the frame come here
+		gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-			faces = face_front.detectMultiScale(frame, scaleFactor=1.5, minNeighbors=5)
-			# Display the resulting frame
-			for (x, y, w, h) in faces:
-				face_coordinates=str(x)+", "+str(y)+","+str(w)+", "+str(h)
-				if face_coordinates not in found_faces:
-					print (x,y,w,h)
-					found_face=[w,h]
-					count+=1
-					roi_gray=gray[y:y+h, x:x+w]
-					roi_color=frame[y:y+h, x:x+w]
-					img_item='../Users/'+user_name+'/'+user_name+'.png'
+		faces = face_front.detectMultiScale(frame, scaleFactor=1.5, minNeighbors=5)
+		# Display the resulting frame
+		for (x, y, w, h) in faces:
+			face_coordinates=str(x)+", "+str(y)+","+str(w)+", "+str(h)
+			if face_coordinates not in found_faces:
+				print (x,y,w,h)
+				found_face=[w,h]
+				count+=1
+				roi_gray=gray[y:y+h, x:x+w]
+				roi_color=frame[y:y+h, x:x+w]
+				img_item='../Users/'+user_name+'/'+user_name+'.png'
 
-					#save the image
-					cv2.imwrite(img_item, roi_color)
+				#save the image
+				cv2.imwrite(img_item, roi_color)
 
-					# frame
-					color=(255,0,0)
-					stroke=2
-					width=x+y
-					height=y+h
-					cv2.rectangle(frame, (x, y), (width, height), color, stroke)
-					found_faces.append(face_coordinates)
+				# frame
+				color=(255,0,0)
+				stroke=2
+				width=x+y
+				height=y+h
+				cv2.rectangle(frame, (x, y), (width, height), color, stroke)
+				found_faces.append(face_coordinates)
 
 
-				#recognize
-			#time.sleep(100)
-			cv2.imshow('frame',frame)
-			#cv2.moveWindow(winname, 500,500)
-			if (cv2.waitKey(1) & 0xFF == ord('q')) or sys.stdin == str.encode('q') :
-				break
+			#recognize
+		#time.sleep(100)
+		cv2.imshow('frame',frame)
+		#cv2.moveWindow(winname, 500,500)
+		if (cv2.waitKey(1) & 0xFF == ord('q')) or sys.stdin == str.encode('q') :
+			break
 
-		# When everything done, release the capture
-		cap.release()
-		cv2.destroyAllWindows()
+	# When everything done, release the capture
+	cap.release()
+	cv2.destroyAllWindows()
 
 class new_user_GUI:
 	def __init__(self):

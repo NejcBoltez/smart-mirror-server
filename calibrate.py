@@ -16,7 +16,7 @@ def getCamera():
         face_front=cv2.CascadeClassifier('../../.local/lib/python3.7/site-packages/cv2/data/haarcascade_frontalface_default.xml')
     # Capture frame-by-frame
     #global login
-    cap = cv2.VideoCapture(-1)
+    cap = cv2.VideoCapture(0)
     ret, frame = cap.read()
     tekst=''
     #detect face
