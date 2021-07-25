@@ -4,7 +4,7 @@ import sys
 import time
 from PIL import ImageTk
 import PIL.Image
-import multiprocessing
+#import multiprocessing
 import threading
 try:
 	import tkinter as tk
@@ -34,8 +34,8 @@ class take_pic:
 		self.Frame=Frame(self.tk, background='black')
 		self.Frame.pack(fill=BOTH, expand=YES)
 		
-		self.Frame=Frame(self, background='black')
-		self.Frame.pack(fill=BOTH, expand=YES)
+		#self.Frame=Frame(self, background='black')
+		#self.Frame.pack(fill=BOTH, expand=YES)
 		self.counts=Label(self.Frame,font=('Helvetica', 40), text="", bg="black", fg="white")
 		self.counts.pack()
 		self.img = Label(self.Frame, width=700, height=700, bg="green")
@@ -53,7 +53,7 @@ class take_pic:
 		#self.count_seconds(10)
 		#self.count_seconds(10)
 	def get_camera_stream(self):
-		
+		print("test123")
 		self.rec, self.frame_image = self.cap.read()
 		self.cv2image = cv2.cvtColor(self.frame_image, cv2.COLOR_BGR2RGBA)
 		self.image = PIL.Image.fromarray(self.cv2image)
@@ -68,12 +68,23 @@ class take_pic:
 		#self.my_thread.start()
 
 		if (self.count==100 and self.count_number>=0):
-				self.counts.configure(text=self.count_number)
-				self.count_number=self.count_number-1
-				#if (self.count_number>0):
-				self.count=0
-		elif (self.count_number==0):
-				self.save_picture()
+			self.counts.configure(text=self.count_number)
+			self.count_number=self.count_number-1
+			#if (self.count_number>0):
+			self.count=0
+			print (self.count_number)
+		if (str(self.count_number)=='-1'):
+			self.counts.configure(text='0')
+			self.save_picture()
+				#print("SAVING_PICTURES")
+				#save_as="../taken_pictures/"+str(self.user)+"/"+self.user+".jpg"
+				#cv2.imwrite(save_as, self.frame_image)
+				#if()
+				#time.sleep(5)
+				#print("PIC SAVED")
+					#
+				#self.tk.destroy()
+					#self.camera_stream.join()
 		if(self.count_number>=0):
 			print("test")
 			self.img.after(10, self.get_camera_stream)
@@ -99,12 +110,18 @@ class take_pic:
 	   #     self.save_picture()
 	   # return seconds_left
 	def save_picture(self):
-		save_as="../taken_pictures/"+str(self.user)+"/"+self.user+".jpg"
-		cv2.imwrite(save_as, self.frame_image)
-		#if()
-		#time.sleep(15)
-		#self.cap.release()
-		#cv2.destroyAllWindows()
+		try:
+			print("SAVING_PICTURES")
+			save_as="../taken_pictures/"+str(self.user)+"/"+self.user+".jpg"
+			cv2.imwrite(save_as, self.frame_image)
+			#if()
+			time.sleep(5)
+			print("PIC SAVED")
+			self.cap.release()
+			cv2.destroyAllWindows()
+			self.tk.destroy()
+		except Exception as e:
+			print(e)
 '''class Window:
 	def __init__(self):
 		seconds_left=11

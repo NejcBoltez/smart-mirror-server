@@ -7,6 +7,7 @@ import cv2
 import time
 import multiprocessing
 from multiprocessing import Queue
+from face_recognize import Get_face
 try:
 	import tkinter as tk
 	from tkinter import *
@@ -21,7 +22,8 @@ r = sr.Recognizer()
 BASE_DIR= os.path.dirname(os.path.abspath(__file__))
 image_dir=os.path.join(BASE_DIR, '../Users')
 def check_for_user():
-	try:
+	new_user=Get_face.getUser()
+	'''try:
 		face_front=cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 	except:
 		face_front=cv2.CascadeClassifier('../../.local/lib/python3.7/site-packages/cv2/data/haarcascade_frontalface_default.xml')
@@ -76,7 +78,7 @@ def check_for_user():
 							else:
 								continue
 		user=tekst
-		cap.release()
+		cap.release()'''
 def new_user_name():
 	user_name=''
 	while user_name=='':
@@ -113,12 +115,13 @@ def new_user_name():
 				dir_path=str(image_dir)+'/'+str(user_name)
 				os.mkdir(dir_path)
 				os.chmod(dir_path, 0o777)
-				create_new_user(user_name)
+				user_create=Get_face.User_creation(user_name)
+				#create_new_user(user_name)
 			else:
 				continue
 		except OSError as error:
 			print('test')
-			print(str(sys.exc_info()[0]))
+			#print(str(sys.exc_info()[0]))
 			print(error)
 			continue
 

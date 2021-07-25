@@ -7,24 +7,25 @@ except:
 import time
 import json
 import requests
-import urllib
-import cv2
-import numpy as np
+#import urllib
+#import cv2
+#import numpy as np
 from urllib3 import *
-from PIL import Image, ImageTk
-import dlib
+#from PIL import Image, ImageTk
+#import dlib
 import os
-import face_recognition
+#import face_recognition
 import pyttsx3 as pyttsx
 import speech_recognition as sr
-import subprocess #as call
+#import subprocess #as call
 #import posluh1 as listening
 from multiprocessing import Queue
-import multiprocessing
+#import multiprocessing
 import speech_recognition as sr
 import threading
 import send_command
 from send_command import Do_for_command
+from face_recognize import Get_face
 
 
 
@@ -87,21 +88,36 @@ class Asistant(Frame):
 		except sr.RequestError as e:
 			print("Could not request results from Google Speech Recognition service;{0}".format(e))
 		return razgovor
+	def popup_window(self):
+		print("POPUP WINDOW")
+		self.popup = tk.Tk()
+		self.popup.geometry("500x100")
+		self.label = tk.Label(self.popup, text='Start to listen')
+		self.label.pack(side="top", fill="x", pady=10)
+		self.popup.mainloop()
 	def Listening_test(self):
 		global user
 		start_to_listen=False
+		start_popup=None
 		while(True):
+			print('START LISTENING WHILE LOOP')
 			l=self.listening_function()
 			#self.check_if_listening(l)
 			#self.PosluhFrame.config(text=str(l))
-			if (l=="mirror"):
+			if ("mirror" in l.lower()):
 				start_to_listen=True
-			elif (l != "" and l.lower() != "mirror" and start_to_listen==True):
-				print(l)
+				start_popup=threading.Thread(target=self.popup_window)
+				start_popup.start()
+				
+			elif (l.lower() != "" and l.lower() != "mirror" and start_to_listen==True):
+				print(l.lower())
 				print(user)
 				send_command_thread=threading.Thread(target=send_command.Do_for_command(l.lower(), user))
 				send_command_thread.start()
 				start_to_listen=False
+				#print(start_to_listen)
+				self.popup.destroy()
+				#start_popup.join()
 
 class Time(Frame):
 	def __init__(self, parent, *args, **kwargs):
@@ -193,72 +209,12 @@ class Camera(Frame):
 		self.label1=Label(self.CamFrame, font=('Helvetica', 9), fg="white", bg="black")
 		self.label1.pack(anchor='w')
 		#self.get_home()
-		self.getCamera()
-	def getCamera(self):
-		# .local is inside home directory
-		try:
-			face_front=cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
-		except:
-			face_front=cv2.CascadeClassifier('../../.local/lib/python3.7/site-packages/cv2/data/haarcascade_frontalface_default.xml')
-# Capture frame-by-frame
-		global user
-		#global login
-		cap = cv2.VideoCapture(-1)
-		ret, frame = cap.read()
-		user_name=''
-		#detect face
-		faces = face_front.detectMultiScale(frame, scaleFactor=1.5, minNeighbors=5)
-		for (x, y, w, h) in faces:
-			#user_name=str(x)+', '+str(y)+', '+str(w)+', '+str(h)
-			
-			#print (x)
-			roi_color=frame[y:y+h, x:x+w]
-			
-			#image = face_recognition.load_image_file('./Images/stevejobs.png')
-			image_encoding = face_recognition.face_encodings(frame)[0]
-			#while (user_name==''):
-			for root, dirs, files in os.walk(image_dir):
-				for d in dirs:
-					print(d)
-					#print(image_dir+'/'+d)
-					for root, dirs, files in os.walk(image_dir+'/'+d):
-						print(files)
-						for file in files:
-							#print('File: '+file)
-							unknown_image = face_recognition.load_image_file(image_dir+'/'+d+'/'+file)
-							#print(unknown_image)
-							unknown_encoding=face_recognition.face_encodings(unknown_image)
-							#print(len(unknown_encoding))
-							if (len(unknown_encoding)>0):
-								unknown_encoding1=face_recognition.face_encodings(unknown_image)[0]
-
-								results=face_recognition.compare_faces([image_encoding], unknown_encoding1)
-
-								if results[0]:
-									user_name=d
-									path, dirs, files = next(os.walk(image_dir+'/'+d))
-									file_count = len(files)
-									print(d)
-									img_item2=str(image_dir)+'/Users/'+d+'/'+d+'_'+str(file_count+1)+'.jpg'
-									cv2.imwrite(img_item2, roi_color)
-									self.update_user(user_name)
-									break# test
-								else:
-									continue
-			user=user_name
-			cap.release()
-			self.get_home()
-			#return user
-			
-		if len(faces)==0:
-			#self.label1.config(text='Empty')
-			self.label1.after(600, self.getCamera)
-		#return user
-	def update_user(self,user):
-		text123='Hello ' + user
-		self.labelMain.config(text=text123)
-		self.label1.config(text=user)
-
+		#self.getCamera()
+		while (True):
+			self.get_user=Get_face.getUser()
+			if (self.get_user is not None):
+				self.get_home()
+				break
 	def get_home(self):
 		#time.sleep(10)
 		self.labelMain.config(text='')

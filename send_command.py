@@ -3,8 +3,8 @@ import subprocess
 import os
 import signal
 import Virtual_asistent as asistant
-import time
-import multiprocessing
+#import time
+#import multiprocessing
 from multiprocessing import Queue
 import threading
 try:
@@ -14,12 +14,12 @@ except:
 	import Tkinter as tk
 	from Tkinter import *
 from wikipedia_window import Wikipedia_show
-from news import display_news
+#from news import display_news
 #import weather
-from weather import weather_GUI
+#from weather import weather_GUI
 #from youtube_search_GUI import yt_search
-import youtube_search_GUI as yt_search_GUI
-from youtube_search_GUI import yt_search
+#import youtube_search_GUI as yt_search_GUI
+#from youtube_search_GUI import yt_search
 #from .other_GUIs import weather
 #command:str
 open_processes=[]
@@ -29,13 +29,16 @@ class Do_for_command:
 				print('test:     '+args)
 			except:
 				print('')
-	def __init__(self, command, user, display):
+	def __init__(self, command, user):
 
 		print('WE HAVE IT')
 		numbers_int=["1","2","3","4","5","6","7","8","9","10"]
 		numbers_string=["one","two","three","four","five","six","seven","eight","nine","ten"]
 		position=["first", "second","thirth","fourth","fifth","sixth","seventh","eighth","nineth","tenth"]
 		#Open_news=''
+		
+		
+
 		show_news=5
 		command=command.lower()
 		command_search=""
