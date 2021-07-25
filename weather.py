@@ -18,6 +18,8 @@ import sys
 import pyttsx3 as pyttsx
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import seaborn as sns
+import asyncio
+from aiohttp import ClientSession
 
 
 #from tkinter.ttk import *
@@ -57,6 +59,8 @@ def govor(besedilo):
 
 
 class weather_GUI:
+	def __enter__(self):
+		return self
 	def __call__(args):
 		try: 
 			print('test:     '+args)
@@ -109,6 +113,48 @@ class weather_GUI:
 		self.URL = "https://api.openweathermap.org/data/2.5/forecast?q="+self.City+","+self.Country+"&appid="+self.APIK
 		self.main_URL="https://api.openweathermap.org/data/2.5/weather?q="+self.City+","+self.Country+"&appid="+self.APIK
 		self.r = requests.get(self.URL)
+		self.send_data={
+			"API_key" : self.APIK
+		}
+
+		#self.r_post=requests.post(url='http://localhost:8080/home', data=self.send_data)
+		#print(self.r_post.status_code)
+		#res=self.r_post.json()
+		#print(res['session'])
+		#session=requests.Session()
+		#sess=session.get('http://localhost:8080/home/')
+		#print('session: {}'.format(sess.text))
+		with ClientSession() as session:
+			async def Hello_world():
+				websocket=await session.ws_connect('http://localhost:8080/home/')
+				websocket.send_str("Hello_world")
+				print("Received: ", (await websocket.receive()).data)
+				await websocket.close()
+			loop=asyncio.get_event_loop()
+			loop.run_until_complete(Hello_world())
+
+		'''		session = requests.session()
+		session.trust_env = True
+		token = session.get('http://localhost:8080/home/')
+		print("SESSION:"+ str(token.text))
+		session.post('http://localhost:8080/home/',
+					data={
+						'username': 'USER',
+						'password': 'PASSWORD',
+						'csrfmiddlewaretoken': token})
+
+		token = session.get('http://localhost:8080/home/')
+		data = json.dumps({'test': 'value'})
+		print(str(data))
+		session.post('http://localhost:8080/home/',
+			 data={
+				 'test' : 'TEST'})
+				 #'csrfmiddlewaretoken': token,
+				 #'data': data})
+		session_get = session.get('http://localhost:8080/home/')
+		#print(str(session_get.))
+		#session_get.
+		# '''
 		self.r_main=requests.get(self.main_URL)
 		self.read = self.r.json()
 		self.read_day=self.r_main.json()
@@ -275,7 +321,7 @@ class Start:
 	window.tk.mainloop()'''
 try:
 	if (len(arguments)>1):
-		print(len(arguments))
+    		print(len(arguments))
 		weather_GUI(arguments[1])
 		if (arguments[1]=='today'):
 			weather_GUI('')
@@ -283,4 +329,6 @@ try:
 			weather_GUI(arguments[1])
 except:
 	print('No arguments')
+
+weather_GUI(arguments[1])
 
