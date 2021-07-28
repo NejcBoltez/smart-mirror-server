@@ -20,12 +20,13 @@ import speech_recognition as sr
 #import subprocess #as call
 #import posluh1 as listening
 from multiprocessing import Queue
-#import multiprocessing
-import speech_recognition as sr
+import multiprocessing
 import threading
 import send_command
 from send_command import Do_for_command
 from face_recognize import Get_face
+import signal
+import subprocess
 
 
 
@@ -40,6 +41,8 @@ speech_engine = pyttsx.init()
 global Queue_listening
 #listening_bool='False'
 Queue_listening=Queue()
+#win=None
+
 def get_api_keys():
 	api_keys_dir=os.path.join(BASE_DIR, '../api_keys.json')
 	with open(api_keys_dir, 'r') as f:
@@ -47,6 +50,26 @@ def get_api_keys():
 	#print(len(d))
 	#print(d['weather_api'])
 	return d
+
+def restart_window():
+	global win
+	#print(win.tk.title)
+	#win.join()
+	win.tk.destroy
+	win=Window()
+	win.tk.mainloop()
+	return win
+
+class Popup_window(Frame):
+	def __init__(self):	
+		print("POPUP WINDOW")
+		self.popup = tk.Tk()
+		self.popup.geometry("500x100")
+		self.label = tk.Label(self.popup, text='Start to listen')
+		self.label.pack(side="top", fill="x", pady=10)
+		self.popup.mainloop()
+	def close(self):
+		self.popup.destroy()
 class Asistant(Frame):
 	def __init__(self, parent, *args, **kwargs):
 		self.listening_bool : str
@@ -65,6 +88,7 @@ class Asistant(Frame):
 	def listening_function(self):
 		r = sr.Recognizer()
 		razgovor=''
+		print("Say something12345678--TEST!")
 		
 		with sr.Microphone() as source:
 			print("Say something12345678!")
@@ -88,36 +112,80 @@ class Asistant(Frame):
 		except sr.RequestError as e:
 			print("Could not request results from Google Speech Recognition service;{0}".format(e))
 		return razgovor
-	def popup_window(self):
+
+	def popup_win(self):
+		#self.popup=Popup_window()
+		#return popup
 		print("POPUP WINDOW")
 		self.popup = tk.Tk()
 		self.popup.geometry("500x100")
 		self.label = tk.Label(self.popup, text='Start to listen')
 		self.label.pack(side="top", fill="x", pady=10)
 		self.popup.mainloop()
+		return self.popup
+		#time.wait(10)
+		#self.popup.destroy()
+    		
 	def Listening_test(self):
 		global user
+		global win
 		start_to_listen=False
-		start_popup=None
-		while(True):
-			print('START LISTENING WHILE LOOP')
-			l=self.listening_function()
-			#self.check_if_listening(l)
-			#self.PosluhFrame.config(text=str(l))
-			if ("mirror" in l.lower()):
-				start_to_listen=True
-				start_popup=threading.Thread(target=self.popup_window)
-				start_popup.start()
-				
-			elif (l.lower() != "" and l.lower() != "mirror" and start_to_listen==True):
-				print(l.lower())
-				print(user)
-				send_command_thread=threading.Thread(target=send_command.Do_for_command(l.lower(), user))
-				send_command_thread.start()
-				start_to_listen=False
-				#print(start_to_listen)
-				self.popup.destroy()
-				#start_popup.join()
+		self.popup_id=''
+		l=''
+		try:
+			while(True):
+				print('START LISTENING WHILE LOOP')
+				l=self.listening_function()
+				#self.check_if_listening(l)
+				#self.PosluhFrame.config(text=str(l))
+				if ("mirror" in l.lower()):
+					start_to_listen=True
+					#self.start_popup=threading.Thread(target=self.popup_win)
+					#self.start_popup.setDaemon(True)
+					#self.start_popup.start()
+					#print("IS active:"+str(threading.get_ident()))
+					start_popup=subprocess.Popen(["python3", "show_popup.py"])
+					#Open_news.start()
+					self.popup_id=str(start_popup.pid)
+					#open_processes.append("Open_news:"+str(Open_news.pid))
+					
+				elif (l.lower() != "" and l.lower() != "mirror" and start_to_listen==True):
+					print(l.lower())
+					print(user)
+					if('log out' in l.lower() or 'log off' in l.lower() or 'exit' in l.lower()):
+						if (len(self.popup_id)>0):
+							os.kill(int(self.popup_id), signal.SIGKILL)
+						#win.tk.destroy()
+						#restart_window()
+						#print(str(self.master.destroy()))
+						#self.master.destroy()
+						self.master.master.destroy()
+						#print(str(self.master.name))
+						#self.master.get_camera()
+						#self.close()
+						#self.tk.destroy()
+						print('TEST')
+						#win=Window()
+						#win.tk.mainloop()
+					else:
+						self.send_command_thread=threading.Thread(target=send_command.Do_for_command(l.lower(), user))
+						self.send_command_thread.start()
+					start_to_listen=False
+					print(start_to_listen)
+					#self.popup.destroy()
+					#continue
+					#self.popup.close()
+					#print()
+					#os.kill(threading.get_ident(), signal.SIGKILL)
+					
+					#self.start_popup.join()
+					#self.start_popup.
+					#print("IS active:"+str(self.start_popup.get_ident()))
+					print("test")
+					#continue
+
+		except Exception as e:
+			print(e)
 
 class Time(Frame):
 	def __init__(self, parent, *args, **kwargs):
@@ -209,10 +277,11 @@ class Camera(Frame):
 		self.label1=Label(self.CamFrame, font=('Helvetica', 9), fg="white", bg="black")
 		self.label1.pack(anchor='w')
 		#self.get_home()
-		#self.getCamera()
+		self.get_camera()
+	def get_camera(self):
 		while (True):
-			self.get_user=Get_face.getUser()
-			if (self.get_user is not None):
+			self.get_user=Get_face.User_auth()
+			if (self.get_user is not None and len(self.get_user)>0):
 				self.get_home()
 				break
 	def get_home(self):
@@ -246,14 +315,22 @@ class Window:
 		self.tk.geometry("1920x1000")
 		#self.tk.attributes('-fullscreen', True)  
 		#self.fullScreenState = False
-		self.Frame=Frame(self.tk, background='Purple')
+		self.Frame=Frame(self.tk, background='black')
 		self.Frame.pack(fill=BOTH, expand=YES)
+		#self.tk.mainloop()
 		self.recognize()
+		#self.tk.mainloop()
 	def recognize(self):
 		self.cam=Camera(self.Frame)
 		self.cam.pack()
+	def close(self):
+		print(win.tk.title)
+		list = self.tk.grid_slaves()
+		for l in list:
+			l.destroy()
+		#self.master.quit()
 	
 win=Window()
 win.tk.mainloop()
-
-	
+#win=multiprocessing.Process(target=Window(), args=(10,))
+#win.start()

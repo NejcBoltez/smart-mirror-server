@@ -103,7 +103,7 @@ class Wikipedia_show:
 		p=''
 		title=['']
 		root=tk.Tk()
-		root.geometry("1900x1000")
+		root.geometry("1920x1080")
 		FrameWiki=Canvas(root, background="black")
 		FrameWiki.pack(fill=BOTH, expand= TRUE, anchor='w')
 		try:

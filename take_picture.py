@@ -30,7 +30,7 @@ class take_pic:
 		self.seconds_left=11
 		self.tk.configure(background='black')
 		self.tk.title("Pozdravljeni")
-		self.tk.geometry("1000x600")
+		self.tk.geometry("1920x1080")
 		self.Frame=Frame(self.tk, background='black')
 		self.Frame.pack(fill=BOTH, expand=YES)
 		
@@ -38,7 +38,7 @@ class take_pic:
 		#self.Frame.pack(fill=BOTH, expand=YES)
 		self.counts=Label(self.Frame,font=('Helvetica', 40), text="", bg="black", fg="white")
 		self.counts.pack()
-		self.img = Label(self.Frame, width=700, height=700, bg="green")
+		self.img = Label(self.Frame, width=700, height=700, bg="black")
 		self.img.pack(padx=20, pady=20)
 		self.cap = cv2.VideoCapture(0)
 		self.count_number=10
@@ -96,6 +96,7 @@ class take_pic:
 		#else:
 		#self.counts.after(1000, self.count_seconds(remaining - 1))
 		while remaining:
+			print('TEST')
 			mins, secs = divmod(remaining, 60)
 			timer = '{:02d}:{:02d}'.format(mins, secs)
 			#print(timer, end="\r")
