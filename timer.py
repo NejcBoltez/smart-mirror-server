@@ -55,10 +55,11 @@ class Timer():
 			time.sleep(2)
 			self.tk.destroy()
 
-arguments = list(sys.argv)
+arg = list(sys.argv)
+arguments=arg[1].split(' ')
 try:
-	if(arguments[1].isnumeric()):
-		Timer(int(arguments[1]))
+	if(arguments[0].isnumeric()):
+		Timer(int(arguments[0]))
 	else:
 		print("Provide numeric argument")
 except Exception as e:

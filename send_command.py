@@ -14,6 +14,7 @@ except:
 	import Tkinter as tk
 	from Tkinter import *
 from wikipedia_window import Wikipedia_show
+import pyttsx3 as pyttsx
 #from news import display_news
 #import weather
 #from weather import weather_GUI
@@ -23,6 +24,13 @@ from wikipedia_window import Wikipedia_show
 #from .other_GUIs import weather
 #command:str
 open_processes=[]
+
+speech_engine = pyttsx.init()
+
+def to_say(besedilo):
+    print(besedilo)
+    speech_engine.say(besedilo)
+    speech_engine.runAndWait()
 class Do_for_command:
 	def __call__(args):
 			try: 
@@ -113,6 +121,10 @@ class Do_for_command:
 				if ("take" in command):
 						take_pic=subprocess.Popen(["python3","take_picture.py",user])
 						open_processes.append("take_pic:"+str(take_pic.pid))
+			elif("timer" in command):
+				start_timer=subprocess.Popen(["python3","timer.py",command_search])
+				open_processes.append("take_pic:"+str(start_timer.pid))
+				to_say("Setting a timer for " + str(command_search))
 			elif ("home" in command):
 				for i in open_processes:
 					if("Open_news" in i):

@@ -51,6 +51,11 @@ def get_api_keys():
 	#print(d['weather_api'])
 	return d
 
+
+def to_say(besedilo):
+    print(besedilo)
+    speech_engine.say(besedilo)
+    speech_engine.runAndWait()
 def restart_window():
 	global win
 	#print(win.tk.title)
@@ -140,6 +145,7 @@ class Asistant(Frame):
 				#self.PosluhFrame.config(text=str(l))
 				if ("mirror" in l.lower()):
 					start_to_listen=True
+					to_say('OK. I AM LISTENING.')
 					#self.start_popup=threading.Thread(target=self.popup_win)
 					#self.start_popup.setDaemon(True)
 					#self.start_popup.start()
@@ -165,24 +171,13 @@ class Asistant(Frame):
 						#self.close()
 						#self.tk.destroy()
 						print('TEST')
-						#win=Window()
-						#win.tk.mainloop()
 					else:
 						self.send_command_thread=threading.Thread(target=send_command.Do_for_command(l.lower(), user))
 						self.send_command_thread.start()
 					start_to_listen=False
 					print(start_to_listen)
-					#self.popup.destroy()
-					#continue
-					#self.popup.close()
-					#print()
-					#os.kill(threading.get_ident(), signal.SIGKILL)
-					
-					#self.start_popup.join()
-					#self.start_popup.
-					#print("IS active:"+str(self.start_popup.get_ident()))
-					print("test")
-					#continue
+					if (len(self.popup_id)>0):
+						os.kill(int(self.popup_id), signal.SIGKILL)
 
 		except Exception as e:
 			print(e)
