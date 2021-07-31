@@ -107,8 +107,8 @@ class Asistant(Frame):
 		return razgovor
     		
 	def Listening_test(self):
-		global user
-		global win
+		#global user
+		#global win
 		start_to_listen=False
 		self.popup_id=''
 		l=''
@@ -116,8 +116,6 @@ class Asistant(Frame):
 			while(True):
 				print('START LISTENING WHILE LOOP')
 				l=self.listening_function()
-				#self.check_if_listening(l)
-				#self.PosluhFrame.config(text=str(l))
 				if ("mirror" in l.lower()):
 					start_to_listen=True
 					Speaking.to_say('OK. I AM LISTENING.')
@@ -136,15 +134,7 @@ class Asistant(Frame):
 					if('log out' in l.lower() or 'log off' in l.lower() or 'exit' in l.lower()):
 						if (len(self.popup_id)>0):
 							os.kill(int(self.popup_id), signal.SIGKILL)
-						#win.tk.destroy()
-						#restart_window()
-						#print(str(self.master.destroy()))
-						#self.master.destroy()
 						self.master.master.destroy()
-						#print(str(self.master.name))
-						#self.master.get_camera()
-						#self.close()
-						#self.tk.destroy()
 						print('TEST')
 					else:
 						self.send_command_thread=threading.Thread(target=send_command.Do_for_command(l.lower(), user))
@@ -168,9 +158,9 @@ class Time(Frame):
 		self.hello.pack()
 		self.update_time()
 	def update_time(self):
-		ti=time.strftime('%H:%M:%S')
-		day=time.strftime('%A')
-		self.update_clock(ti,day)
+		self.ti=time.strftime('%H:%M:%S')
+		selfday=time.strftime('%A')
+		self.update_clock(self.ti,self.day)
 		#print('TEST: ' + ti)
 		# calls itself every 1000 milliseconds to update the time display as needed could use >200 ms, but display gets jerky
 		self.label1.after(1000, self.update_time)
@@ -296,11 +286,11 @@ class Window:
 	def recognize(self):
 		self.cam=Camera(self.Frame)
 		self.cam.pack()
-	def close(self):
+	'''def close(self):
 		print(win.tk.title)
 		list = self.tk.grid_slaves()
 		for l in list:
-			l.destroy()
+			l.destroy()'''
 		#self.master.quit()
 	
 win=Window()
