@@ -31,6 +31,28 @@ def to_say(besedilo):
     print(besedilo)
     speech_engine.say(besedilo)
     speech_engine.runAndWait()
+def print_process_to_file(p_id, p_name):
+	BASE_DIR= os.path.dirname(os.path.abspath(__file__))
+	open_processes=os.path.join(BASE_DIR, '../open_processes.txt')
+	with open(open_processes, 'r+') as f:
+		f_read=f.read()
+		f.write(str(f_read)+'\n'+p_name+':'+p_id)
+
+def remove_process_from_file(p_id, p_name):
+	BASE_DIR= os.path.dirname(os.path.abspath(__file__))
+	open_processes=os.path.join(BASE_DIR, '../open_processes.txt')
+	with open(open_processes, 'rw') as f:
+		f_read=f.read()
+		f.write(str(f_read)+'\n'+p_name+':'+p_id)
+
+def read_process_from_file():
+	BASE_DIR= os.path.dirname(os.path.abspath(__file__))
+	open_processes=os.path.join(BASE_DIR, '../open_processes.txt')
+	with open(open_processes, 'r') as f:
+		f_read=f.read()
+	return f_read
+		
+
 class Do_for_command:
 	def __call__(args):
 			try: 
@@ -56,8 +78,10 @@ class Do_for_command:
 			if("forecast" in command or "weather" in command):
 				if (command_search==""):
 					#Open_forecast=multiprocessing.Process()
-					Open_forecast=subprocess.Popen(["python3","weather.py"])
+					Open_forecast=subprocess.Popen(["python3","weather.py"], name = "Forecast_process")
 					open_processes.append("Open_forecast:"+str(Open_forecast.pid))
+					Open_forecast.name = "Forecast_process"
+					print_process_to_file(str(Open_forecast.pid), "Open_forecast")
 					print(Open_forecast.pid)
 				else:
 					'''for p in open_processes:
@@ -71,7 +95,9 @@ class Do_for_command:
 					Open_forecast=subprocess.Popen(["python3","weather.py",command_search])
 					#Open_forecast=multiprocessing.Process(target=weather_GUI(command_search))
 					#Open_forecast.start()
+					Open_forecast.name = "Forecast_process"
 					open_processes.append("Open_forecast:"+str(Open_forecast.pid))
+					print_process_to_file(str(Open_forecast.pid), "Open_forecast")
 					print(Open_forecast.pid)
 			elif ("who" in command or "was" in command or "what" in command):
 				#subprocess.Popen(["python3","wikipedia_window.py", command])
@@ -92,6 +118,7 @@ class Do_for_command:
 				if ("search" in command):
 					Open_yt_search=subprocess.Popen(["python3","youtube.py", command_search])
 					open_processes.append("Open_yt_search")
+					print_process_to_file(str(Open_yt_search.pid), "Open_yt_search")
 					print('SEARCH YOUTUBE')
 					'''try:
 						yt_search_query=command_search
@@ -105,10 +132,12 @@ class Do_for_command:
 				elif ("play" in command):
 					Open_yt=subprocess.Popen(["python3","youtube_stream.py", command])
 					open_processes.append("Open_yt")
+					print_process_to_file(str(Open_yt.pid), "Open_yt")
 
 			elif ("calibration" in command):
 				Open_calibrate=subprocess.Popen(["python3", "calibrate.py", user])
 				open_processes.append("Open_calibrate:"+str(Open_calibrate.pid))
+				print_process_to_file(str(Open_calibrate.pid), "Open_calibrate")
 			elif ("news" in command):
 				#Open_news=threading.Thread(target=yt_search(yt_search_query))
 				#Open_news.start()
@@ -116,6 +145,7 @@ class Do_for_command:
 				Open_news=subprocess.Popen(["python3", "news.py", str(show_news)])
 				#Open_news.start()
 				open_processes.append("Open_news:"+str(Open_news.pid))
+				print_process_to_file(str(Open_news.pid), "Open_news")
 				#return Open_news
 			elif("picture" in command):
 				if ("take" in command):
@@ -125,30 +155,32 @@ class Do_for_command:
 				start_timer=subprocess.Popen(["python3","timer.py",command_search])
 				open_processes.append("take_pic:"+str(start_timer.pid))
 				to_say("Setting a timer for " + str(command_search))
+				print_process_to_file(str(start_timer.pid), "Start_timer")
 			elif ("home" in command):
-				for i in open_processes:
+				processes=read_process_from_file()
+				for i in processes:
 					if("Open_news" in i):
 						#Open_news.terminate()
 						get_id=i.split(":")
-						os.kill(int(get_id[1]), signal.SIGKILL) # should be int for process id
-						open_processes.remove(i)
+						os.kill(int(get_id[0]), signal.SIGKILL) # should be int for process id
+						#open_processes.remove(i)
 						
 					elif("Open_yt_search" in i):
 						get_id=i.split(":")
-						os.kill(int(get_id[1]), signal.SIGKILL) # should be int for process id
-						open_processes.remove(i)
+						os.kill(int(get_id[0]), signal.SIGKILL) # should be int for process id
+						#open_processes.remove(i)
 						'''Open_yt_search.terminate()
 						open_processes.remove(i)'''
 					elif("Open_yt" in i):
 						get_id=i.split(":")
-						os.kill(int(get_id[1]), signal.SIGKILL) # should be int for process id
-						open_processes.remove(i)
+						os.kill(int(get_id[0]), signal.SIGKILL) # should be int for process id
+						#open_processes.remove(i)
 						'''Open_yt.terminate()
 						open_processes.remove(i)'''							
 					elif("Open_calibrate" in i):
 						get_id=i.split(":")
-						os.kill(int(get_id[1]), signal.SIGKILL) # should be int for process id
-						open_processes.remove(i)
+						os.kill(int(get_id[0]), signal.SIGKILL) # should be int for process id
+						#open_processes.remove(i)
 						'''Open_calibrate.terminate()
 						open_processes.remove(i)'''
 					else:

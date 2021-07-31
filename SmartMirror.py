@@ -27,6 +27,8 @@ from send_command import Do_for_command
 from face_recognize import Get_face
 import signal
 import subprocess
+import psutil
+from speech_listen import Speaking
 
 
 
@@ -52,10 +54,6 @@ def get_api_keys():
 	return d
 
 
-def to_say(besedilo):
-    print(besedilo)
-    speech_engine.say(besedilo)
-    speech_engine.runAndWait()
 def restart_window():
 	global win
 	#print(win.tk.title)
@@ -65,16 +63,6 @@ def restart_window():
 	win.tk.mainloop()
 	return win
 
-class Popup_window(Frame):
-	def __init__(self):	
-		print("POPUP WINDOW")
-		self.popup = tk.Tk()
-		self.popup.geometry("500x100")
-		self.label = tk.Label(self.popup, text='Start to listen')
-		self.label.pack(side="top", fill="x", pady=10)
-		self.popup.mainloop()
-	def close(self):
-		self.popup.destroy()
 class Asistant(Frame):
 	def __init__(self, parent, *args, **kwargs):
 		self.listening_bool : str
@@ -117,19 +105,6 @@ class Asistant(Frame):
 		except sr.RequestError as e:
 			print("Could not request results from Google Speech Recognition service;{0}".format(e))
 		return razgovor
-
-	def popup_win(self):
-		#self.popup=Popup_window()
-		#return popup
-		print("POPUP WINDOW")
-		self.popup = tk.Tk()
-		self.popup.geometry("500x100")
-		self.label = tk.Label(self.popup, text='Start to listen')
-		self.label.pack(side="top", fill="x", pady=10)
-		self.popup.mainloop()
-		return self.popup
-		#time.wait(10)
-		#self.popup.destroy()
     		
 	def Listening_test(self):
 		global user
@@ -145,14 +120,14 @@ class Asistant(Frame):
 				#self.PosluhFrame.config(text=str(l))
 				if ("mirror" in l.lower()):
 					start_to_listen=True
-					to_say('OK. I AM LISTENING.')
-					#self.start_popup=threading.Thread(target=self.popup_win)
-					#self.start_popup.setDaemon(True)
-					#self.start_popup.start()
-					#print("IS active:"+str(threading.get_ident()))
+					Speaking.to_say('OK. I AM LISTENING.')
 					start_popup=subprocess.Popen(["python3", "show_popup.py"])
-					#Open_news.start()
 					self.popup_id=str(start_popup.pid)
+					for proc in psutil.process_iter():
+						print(proc.name())
+						'''if 'Forecast_process' in proc.name():
+							pid = proc.pid
+							print(proc.name()+" : "+pid)'''
 					#open_processes.append("Open_news:"+str(Open_news.pid))
 					
 				elif (l.lower() != "" and l.lower() != "mirror" and start_to_listen==True):
@@ -213,19 +188,19 @@ class Weather(Frame):
 		self.getWeather()
 		self.label1.after(10000, self.getWeather)
 	def getWeather(self):
-		City = "Novo mesto"
-		Country = "SI"
-		get_api=get_api_keys()
-		APIK=get_api['weather_api']
-		URL = "https://api.openweathermap.org/data/2.5/weather?q="+City+","+Country+"&appid="+APIK
-		r = requests.get(URL)
-		read_weather = r.json()
-		temp="Temp: " + str(read_weather['main']['temp'])
-		humidity="Humidity: " + str(read_weather['main']['humidity'])
-		temp_min="Temp_min: " + str(read_weather['main']['temp_min'])
-		temp_max="Temp_max: " + str(read_weather['main']['temp_max'])
-		weather=temp +'\n' + humidity + '\n' + temp_min + '\n' + temp_max
-		self.update_weather(weather)
+		self.City = "Novo mesto"
+		self.Country = "SI"
+		self.get_api=get_api_keys()
+		self.APIK=self.get_api['weather_api']
+		self.URL = "https://api.openweathermap.org/data/2.5/weather?q="+self.City+","+self.Country+"&appid="+self.APIK
+		self.r = requests.get(self.URL)
+		self.read_weather = self.r.json()
+		self.temp="Temp: " + str(self.read_weather['main']['temp'])
+		self.humidity="Humidity: " + str(self.read_weather['main']['humidity'])
+		self.temp_min="Temp_min: " + str(self.read_weather['main']['temp_min'])
+		self.temp_max="Temp_max: " + str(self.read_weather['main']['temp_max'])
+		self.weather=self.temp +'\n' + self.humidity + '\n' + self.temp_min + '\n' + self.temp_max
+		self.update_weather(self.weather)
 	def update_weather(self,data):
 		self.label1.config(text=data)
 
@@ -241,23 +216,26 @@ class News(Frame):
 		self.getNews()
 		self.label1.after(300000, self.getNews)
 	def getNews(self):
-		NewsList=[]
-		News=""
-		News=""
-		select_news=""
-		get_api=get_api_keys()
-		APIK=get_api['news_api']
-		URLnews = "https://newsapi.org/v2/top-headlines?country=si&apiKey="+APIK
-		News=requests.get(URLnews)
-		News=News.json()
-		NewsList=News['articles']
-		for i in NewsList:
-			Nov = str(i['title']).split("- ")
+		self.NewsList=[]
+		self.News=""
+		self.News=""
+		self.select_news=""
+		self.get_api=get_api_keys()
+		self.APIK=self.get_api['news_api']
+		self.URLnews = "https://newsapi.org/v2/top-headlines?country=si&apiKey="+self.APIK
+		self.News=requests.get(self.URLnews)
+		self.News=News.json()
+		self.NewsList=self.News['articles']
+		for i in range(len(self.NewsList)):
+			Nov = str(self.NewsList[i]['title']).split("- ")
 			#print(Nov)
 			if (Nov[1]=='24ur.com' or Nov[1]=='RTV Slovenija' or Nov[1]=='Računalniške News' or Nov[1]=='Siol.net'):
 				#self.label1.config(text="")
-				select_news+=str(i['title']) + '\n'
-		self.update_news(select_news)
+				self.select_news+=str(self.NewsList[i]['title']) + '\n'
+			if (i==10):
+				break
+			
+		self.update_news(self.select_news)
 	def update_news(self,data):
 		self.label1.config(text=data)
 		
@@ -327,5 +305,3 @@ class Window:
 	
 win=Window()
 win.tk.mainloop()
-#win=multiprocessing.Process(target=Window(), args=(10,))
-#win.start()

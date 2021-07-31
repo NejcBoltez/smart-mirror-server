@@ -44,6 +44,7 @@ pip3 install svglib
 pip3 install reportlab
 pip3 install PyAudio
 pip3 install seaborn
+pip3 install putils
 
 #create folder for user pictures
 cd ..
