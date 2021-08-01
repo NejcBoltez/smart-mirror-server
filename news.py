@@ -131,8 +131,8 @@ class display_news:#(Frame):
 					#print(1)
 					
 					self.NewsDir1.create_rectangle(3,3, w-1, h-1,fill='black')
-					self.NewsDir1.create_text(20, 50, width=w-20, text=str(i['title']).replace(' - ', '\n'),fill='white', font=('verdana', 12, 'bold'), anchor=W)
-					#self.NewsDir1.create_text(width=w-15, text=str(i['description']), fill="white", font=('verdana', 12, 'bold'), anchor=W)
+					self.NewsDir1.create_text(20, 50, width=w-20, text=str(i['title']).replace(' - ', '\n'),fill='white', font=('verdana', 12, 'bold'), anchor='W')
+					#self.NewsDir1.create_text(width=w-15, text=str(i['description']), fill="white", font=('verdana', 12, 'bold'), anchor='W')
 					#l=Label(self.NewsDir1, image=img)
 					#self.NewsDir1.create_image(30,50, image=img, width=w-20, anchor=CENTER)
 					img = Label(self.NewsDir1, image=render, width=310, height=200)
@@ -140,48 +140,48 @@ class display_news:#(Frame):
 					img.place(x=20, y=100)
 					#print(str(i['description']))
 					desc=str(i['description'])
-					self.NewsDir1.create_text(30,400,width=w-30, text=str(i['description']), fill="white", font=('verdana', 12), anchor=W)
+					self.NewsDir1.create_text(30,400,width=w-30, text=str(i['description']), fill="white", font=('verdana', 12), anchor='W')
 					
 
 				elif NewsD==2:
 					#print(2)
 					self.NewsDir2.create_rectangle(3,3, w-1, h-1,fill='black')
-					self.NewsDir2.create_text(20,50, width=w-20, text=str(i['title']),fill='white', font=('verdana',12, 'bold'), anchor=W)#NewsList[i+1])
+					self.NewsDir2.create_text(20,50, width=w-20, text=str(i['title']),fill='white', font=('verdana',12, 'bold'), anchor='W')#NewsList[i+1])
 					#self.NewsDir2.create_text(width=w-15, text=str(i['description']), fill="white", font=('verdana', 12, 'bold'), anchor='W')
 					img = Label(self.NewsDir2, image=render, width=310, height=200)
 					img.image = render
 					img.place(x=20, y=100)
-					self.NewsDir2.create_text(30,400,width=w-30, text=str(i['description']), fill="white", font=('verdana', 12), anchor=W)
+					self.NewsDir2.create_text(30,400,width=w-30, text=str(i['description']), fill="white", font=('verdana', 12), anchor='W')
 
 				elif NewsD==3:
 					#print(3)
 					self.NewsDir3.create_rectangle(3,3, w-1, h-1,fill='black')
-					self.NewsDir3.create_text(20,50, width=w-20, text=str(i['title']),fill='white', font=('verdana', 12, 'bold'), anchor=W)#NewsList[i+2])
-					#self.NewsDir3.create_text(width=w-15, text=str(i['description']), fill="white", font=('verdana', 12, 'bold'), anchor=W)
+					self.NewsDir3.create_text(20,50, width=w-20, text=str(i['title']),fill='white', font=('verdana', 12, 'bold'), anchor='W')#NewsList[i+2])
+					#self.NewsDir3.create_text(width=w-15, text=str(i['description']), fill="white", font=('verdana', 12, 'bold'), anchor='W')
 					img = Label(self.NewsDir3, image=render, width=310, height=200)
 					img.image = render
 					#img.size(370,200)
 					img.place(x=20, y=100)
-					self.NewsDir3.create_text(30,400,width=w-30, text=str(i['description']), fill="white", font=('verdana', 12), anchor=W)
+					self.NewsDir3.create_text(30,400,width=w-30, text=str(i['description']), fill="white", font=('verdana', 12), anchor='W')
 
 				elif NewsD==4:
 					#print(4)
 					self.NewsDir4.create_rectangle(3,3, w-1, h-1,fill='black')
-					self.NewsDir4.create_text(20,50, width=w-20, text=str(i['title']),fill='white', font=('verdana', 12, 'bold'), anchor=W)#NewsList[i+3])
+					self.NewsDir4.create_text(20,50, width=w-20, text=str(i['title']),fill='white', font=('verdana', 12, 'bold'), anchor='W')#NewsList[i+3])
 					img = Label(self.NewsDir4, image=render, width=310, height=200)
 					img.image = render
 					img.place(x=20, y=100)
-					self.NewsDir4.create_text(30,400,width=w-30, text=str(i['description']), fill="white", font=('verdana', 12), anchor=W)
+					self.NewsDir4.create_text(30,400,width=w-30, text=str(i['description']), fill="white", font=('verdana', 12), anchor='W')
 
 				elif NewsD==5:
 					#print(5)
 
 					self.NewsDir5.create_rectangle(3,3, w-1, h-1,fill='black')
-					self.NewsDir5.create_text(20,50, width=w-20, text=str(i['title']),fill='white', font=('verdana', 12, 'bold'), anchor=W)#NewsList[i+4])
+					self.NewsDir5.create_text(20,50, width=w-20, text=str(i['title']),fill='white', font=('verdana', 12, 'bold'), anchor='W')#NewsList[i+4])
 					img = Label(self.NewsDir5, image=render, width=310, height=200)
 					img.image = render
 					img.place(x=20, y=100)
-					self.NewsDir5.create_text(30,400,width=w-30, text=str(i['content']), fill="white", font=('verdana', 12), anchor=W)
+					self.NewsDir5.create_text(30,400,width=w-30, text=str(i['content']), fill="white", font=('verdana', 12), anchor='W')
 				NewsD=NewsD+1
 				n=n+1
 			
@@ -216,4 +216,3 @@ try:
 	display_news(arguments[1])
 except:
 	print('No arguments')
-#display_news(arguments[1])

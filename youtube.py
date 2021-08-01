@@ -26,22 +26,24 @@ from urllib.request import urlopen
 
 
 arguments = list(sys.argv)
+
+def get_yt_data(search_for):
+    results = YoutubeSearch(str(search_for).replace('_', ' '), max_results=20).to_json()
+    get_results=json.loads(results)
+    return get_results
+
 class yt_search(Frame):
     def __init__(self, parent, *args, **kwargs):
         Frame.__init__(self, parent)
-#okno.delete('1.0', END)
-        #self.search_frame=Canvas(self, width=18, height=8, background="black", borderwidth=0, highlightthickness=0)
-        self.search_frame=Frame(self, width=1800, height=800, background="black", borderwidth=0, highlightthickness=0)
+        self.search_frame=Frame(self, width=1800, height=800, bg="black", bd=0, highlightthickness=0)
         self.search_frame.pack(fill=BOTH, expand=YES)
-        self.search_text=Label(self.search_frame, text=str(arguments[1]).replace('_', ' ').upper(), font=('verdana', 30, 'bold'), fg="white", background="black", borderwidth=0, highlightthickness=0)
-        self.search_text.pack(side=TOP, anchor="center")
-        self.search_frame_top=Canvas(self.search_frame,width=1700, height=400, background="black", borderwidth=0, highlightthickness=0)
-        #self.search_frame_top=self.search_frame.create_window((10,10, 1710, 3410,fill="black", outline="white")# borderwidth=0, highlightthickness=0)
+        self.search_text=Label(self.search_frame, text=str(arguments[1]).replace('_', ' ').upper(), font=('verdana', 30, 'bold'), fg="white", bg="black", bd=0, highlightthickness=0, anchor="center")
+        self.search_text.pack(side=TOP)
+        self.search_frame_top=Canvas(self.search_frame,width=1700, height=400, bg="black", bd=0, highlightthickness=0)
         self.search_frame_top.pack(side=TOP, fill=BOTH, expand= TRUE)
-        self.search_frame_bottom=Canvas(self.search_frame, width=1700, height=400, background="black", borderwidth=0, highlightthickness=0)
+        self.search_frame_bottom=Canvas(self.search_frame, width=1700, height=400, bg="black", bd=0, highlightthickness=0)
         self.search_frame_bottom.pack(side=BOTTOM, fill=BOTH, expand= TRUE)
-        self.results = YoutubeSearch(str(arguments[1]).replace('_', ' '), max_results=20).to_json()
-        self.get_json=json.loads(self.results)
+        self.get_json=get_yt_data(arguments[1])
         self.yt=self.get_json['videos']
         self.position_x=1500
         self.x=0
@@ -65,11 +67,7 @@ class yt_search(Frame):
                     coordinate=coordinate+320
                     c=c+1
                 except:
-                    #c=c-1
                     continue
-                
-                #print(i['id']+'\n'+i['title']+'\n'+i['thumbnails'][0])
-                #c=c+1
             elif (c==10):
                 break
             else:
@@ -89,10 +87,6 @@ class yt_search(Frame):
                     continue
             print(c)
             print(i)
-                
-                #print(i['id']+'\n'+i['title']+'\n'+i['thumbnails'][0])
-                #c=c+1
-        #time.sleep(1)
         
         self.resize_animation()
         #time.sleep(7)
@@ -143,7 +137,7 @@ class Window:
         self.Frame.pack(fill=BOTH, expand=YES)
         self.Canvas=Canvas(self.Frame)
         #self.Canvas.pack()
-        self.Canvas.grid(padx=150, pady=150, sticky=W)
+        self.Canvas.grid(padx=150, pady=150)
         self.yt=yt_search(self.Canvas)
         self.yt.pack()
 

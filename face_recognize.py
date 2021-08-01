@@ -77,7 +77,7 @@ class user_auth_GUI:
 		self.win.destroy()
 
 class Get_face:
-	def user_auth_GUI():
+	'''def user_auth_GUI():
     			#try:
 		#	face_front=cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 		#except:
@@ -127,63 +127,46 @@ class Get_face:
 
 		# When everything done, release the capture
 		cap.release()
-		cv2.destroyAllWindows()
+		cv2.destroyAllWindows()'''
 	def User_auth():
 		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
 		image_dir=os.path.join(BASE_DIR, '../Users')
 			# .local is inside home directory
-		try:
+		'''try:
 			face_front=cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 		except:
-			face_front=cv2.CascadeClassifier('../../.local/lib/python3.7/site-packages/cv2/data/haarcascade_frontalface_default.xml')
-		# Capture frame-by-frame
-		#global login
+			face_front=cv2.CascadeClassifier('../../.local/lib/python3.7/site-packages/cv2/data/haarcascade_frontalface_default.xml')'''
+		face_front=cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+		
 		cap = cv2.VideoCapture(-1)
 		ret, frame = cap.read()
 		user_name=''
-		#detect face
 		faces = face_front.detectMultiScale(frame, scaleFactor=1.5, minNeighbors=5)
 		for (x, y, w, h) in faces:
-			#user_name=str(x)+', '+str(y)+', '+str(w)+', '+str(h)
-			
-			#print (x)
 			roi_color=frame[y:y+h, x:x+w]
-			
-			#image = face_recognition.load_image_file('./Images/stevejobs.png')
 			image_encoding = face_recognition.face_encodings(frame)[0]
-			#while (user_name==''):
 			for root, dirs, files in os.walk(image_dir):
 				for d in dirs:
-					print(d)
-					#print(image_dir+'/'+d)
 					for root, dirs, files in os.walk(image_dir+'/'+d):
-						print(files)
 						for file in files:
-							#print('File: '+file)
 							unknown_image = face_recognition.load_image_file(image_dir+'/'+d+'/'+file)
-							#print(unknown_image)
 							unknown_encoding=face_recognition.face_encodings(unknown_image)
-							#print(len(unknown_encoding))
 							if (len(unknown_encoding)>0):
 								unknown_encoding1=face_recognition.face_encodings(unknown_image)[0]
-
 								results=face_recognition.compare_faces([image_encoding], unknown_encoding1)
-
 								if results[0]:
-									user_name=d
-									print(user_name)
-									path, dirs, files = next(os.walk(image_dir+'/'+d))
+									if (user_name==''):
+										user_name=d
+									root, dirs, files = next(os.walk(image_dir+'/'+d))
 									file_count = len(files)
-									print(d)
-									img_item2=str(image_dir)+'/Users/'+d+'/'+d+'_'+str(file_count+1)+'.jpg'
-									cv2.imwrite(img_item2, roi_color)
-									break# test
+									img_item=str(image_dir)+'/Users/'+d+'/'+d+'_'+str(file_count+1)+'.jpg'
+									cv2.imwrite(img_item, roi_color)
+									break
 								else:
 									continue
-			#user=user_name
+			
 			cap.release()
 			return user_name
-			#return user
 
 	
 

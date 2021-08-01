@@ -29,6 +29,7 @@ import signal
 import subprocess
 import psutil
 from speech_listen import Speaking
+from datetime import datetime
 
 
 
@@ -67,8 +68,6 @@ class Asistant(Frame):
 	def __init__(self, parent, *args, **kwargs):
 		self.listening_bool : str
 		Frame.__init__(self, parent, bg='black')
-		#self.PosluhFrame=Label(self, font=('Helvetica', 40), fg="white", bg="yellow", text=user)
-		#self.PosluhFrame.pack(side=RIGHT)
 		self.CommandHelpHeader=Label(self,font=('Helvetica', 40), fg="white", bg="black", text='\nYou can try to say:')
 		self.CommandHelpHeader.pack()
 		self.CommandHelp=Label(self,font=('Helvetica', 12), fg="white", bg="black",text='Search youtube for\nShow me the forecast\nSearch wikipedia for\nStart the calibration')
@@ -107,8 +106,6 @@ class Asistant(Frame):
 		return razgovor
     		
 	def Listening_test(self):
-		#global user
-		#global win
 		start_to_listen=False
 		self.popup_id=''
 		l=''
@@ -148,35 +145,32 @@ class Asistant(Frame):
 			print(e)
 
 class Time(Frame):
-	def __init__(self, parent, *args, **kwargs):
+	def __init__(self, parent):
 		Frame.__init__(self, parent, bg='black')
 		self.label1=Label(self, font=('Helvetica', 100), fg="white", bg="black")
 		self.label1.pack(side=TOP,anchor=E)
-		self.day=Label(self, font=('Helvetica', 15), fg="white", bg="black")
-		self.day.pack()
-		self.hello=Label(self, font=('Helvetica', 15), fg="white", bg="black")
-		self.hello.pack()
+		self.day_label=Label(self, font=('Helvetica', 20), fg="white", bg="black")
+		self.day_label.pack()
 		self.update_time()
 	def update_time(self):
 		self.ti=time.strftime('%H:%M:%S')
-		selfday=time.strftime('%A')
+		self.day=time.strftime('%Y.%m.%d - %A')
 		self.update_clock(self.ti,self.day)
-		#print('TEST: ' + ti)
 		# calls itself every 1000 milliseconds to update the time display as needed could use >200 ms, but display gets jerky
 		self.label1.after(1000, self.update_time)
 	def update_clock(self,ti,d):
 		self.label1.config(text=ti)
-		self.day.config(text=d)
+		self.day_label.config(text=d)
 
 class Weather(Frame):
 	def __init__(self, parent, *args, **kwargs):
 		Frame.__init__(self, parent, bg='green', padx=0, pady=0)
 		self.LabelMain=Label(self, font=('Helvetica', 40), fg='white', bg='black', text="Weather:")
 		self.LabelMain.pack()
-		self.label1=Label(self, font=('Helvetica', 15), fg="white", bg="black")
-		self.label1.pack(side=LEFT, fill=BOTH, expand= TRUE, anchor='w')
+		self.weather_data=Label(self, font=('Helvetica', 15), fg="white", bg="black")
+		self.weather_data.pack(side=LEFT, fill=BOTH, expand= TRUE, anchor='w')
 		self.getWeather()
-		self.label1.after(10000, self.getWeather)
+		self.weather_data.after(10000, self.getWeather)
 	def getWeather(self):
 		self.City = "Novo mesto"
 		self.Country = "SI"
@@ -192,7 +186,7 @@ class Weather(Frame):
 		self.weather=self.temp +'\n' + self.humidity + '\n' + self.temp_min + '\n' + self.temp_max
 		self.update_weather(self.weather)
 	def update_weather(self,data):
-		self.label1.config(text=data)
+		self.weather_data.config(text=data)
 
 class News(Frame):
 	def __init__(self, parent, *args, **kwargs):
@@ -213,14 +207,12 @@ class News(Frame):
 		self.get_api=get_api_keys()
 		self.APIK=self.get_api['news_api']
 		self.URLnews = "https://newsapi.org/v2/top-headlines?country=si&apiKey="+self.APIK
-		self.News=requests.get(self.URLnews)
-		self.News=News.json()
+		self.News_request=requests.get(self.URLnews)
+		self.News=self.News_request.json()
 		self.NewsList=self.News['articles']
 		for i in range(len(self.NewsList)):
 			Nov = str(self.NewsList[i]['title']).split("- ")
-			#print(Nov)
 			if (Nov[1]=='24ur.com' or Nov[1]=='RTV Slovenija' or Nov[1]=='Računalniške News' or Nov[1]=='Siol.net'):
-				#self.label1.config(text="")
 				self.select_news+=str(self.NewsList[i]['title']) + '\n'
 			if (i==10):
 				break
@@ -235,12 +227,12 @@ class Camera(Frame):
 		self.pack(side=LEFT, fill=BOTH, expand=YES)
 		self.CamFrame=Frame(self, background='Black')
 		self.CamFrame.pack(side=TOP,anchor=E)
-		self.labelMain=Label(self.CamFrame, font=('Helvetica', 60), fg='white', bg='black', text="Please LOGIN")
-		self.labelMain.pack(anchor='w')
-		self.label1=Label(self.CamFrame, font=('Helvetica', 9), fg="white", bg="black")
-		self.label1.pack(anchor='w')
-		#self.get_home()
-		self.get_camera()
+		self.labelMain=Label(self.CamFrame, font=('Helvetica', 60), fg='white', bg='black', text="Please LOGIN",anchor='w')
+		self.labelMain.pack()
+		self.label1=Label(self.CamFrame, font=('Helvetica', 9), fg="white", bg="black",anchor='w')
+		self.label1.pack()
+		self.get_home()
+		#self.get_camera()
 	def get_camera(self):
 		while (True):
 			self.get_user=Get_face.User_auth()
@@ -248,14 +240,10 @@ class Camera(Frame):
 				self.get_home()
 				break
 	def get_home(self):
-		#time.sleep(10)
 		self.labelMain.config(text='')
 		self.TopFrame = Frame(self, background='black', padx=0, pady=0)
-		#self.BottomFrame = Frame(self, background='yellow')
 		self.TopLeftFrame=Frame(self.TopFrame, background='black')
-		#self.BottomLeftFrame=Frame(self.BottomFrame, background='yellow')
 		self.TopRightFrame=Frame(self.TopFrame, background='black')
-		#self.BottomRightFrame=Frame(self.BottomFrame, background='yellow')
 		
 		self.TopFrame.pack(side=TOP, fill=BOTH)
 		self.TopLeftFrame.pack(side = LEFT, fill=BOTH, padx=50)
@@ -267,8 +255,8 @@ class Camera(Frame):
 		self.Weather.pack(side=TOP)
 		self.news=News(self)
 		self.news.pack(side=BOTTOM)
-		self.asistant=Asistant(self)
-		self.asistant.pack(side=TOP)
+		#self.asistant=Asistant(self)
+		#self.asistant.pack(side=TOP)
 		
 class Window:
 	def __init__(self):
@@ -280,18 +268,10 @@ class Window:
 		#self.fullScreenState = False
 		self.Frame=Frame(self.tk, background='black')
 		self.Frame.pack(fill=BOTH, expand=YES)
-		#self.tk.mainloop()
 		self.recognize()
-		#self.tk.mainloop()
 	def recognize(self):
 		self.cam=Camera(self.Frame)
 		self.cam.pack()
-	'''def close(self):
-		print(win.tk.title)
-		list = self.tk.grid_slaves()
-		for l in list:
-			l.destroy()'''
-		#self.master.quit()
 	
 win=Window()
 win.tk.mainloop()
