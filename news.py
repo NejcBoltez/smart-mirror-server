@@ -1,7 +1,6 @@
 import json
 import io
 import requests
-import base64
 from urllib.request import urlopen
 from PIL import ImageTk
 import PIL.Image
@@ -15,204 +14,147 @@ except:
 	from Tkinter import *
 
 arguments = list(sys.argv)
-BASE_DIR= os.path.dirname(os.path.abspath(__file__))
-print(arguments)
-if (len(arguments)==2):
-	displayed=int(arguments[1])
-else:
-	displayed=5
+
+
+displayed=0
 
 def get_api_keys():
-	api_keys_dir=os.path.join(BASE_DIR, '../api_keys.json')
-	with open(api_keys_dir, 'r') as f:
-		d=json.load(f)
-	#print(len(d))
-	#print(d['weather_api'])
-	return d
+	read_api=""
+	BASE_DIR= os.path.dirname(os.path.abspath(__file__))
+	api_keys_dir=os.path.join(BASE_DIR, "../api_keys.json")
+	with open(api_keys_dir, "r") as f_api:
+		read_api=json.load(f_api)
+	return read_api
 
-class display_news:#(Frame):
+class display_news:
 	def __call__(args):
 		try: 
-			print('test:     '+args)
+			print("test:     "+args)
 		except:
-			print('')
+			print("")
 	def __init__(self, displayed):
-		#Frame.__init__(self, parent, bg='black')
-		#global displayed
 		self.tk=tk.Tk()
-		self.tk.configure(background='black')
+		self.tk.configure(background="black")
 		self.tk.title("Pozdravljeni")
 		self.tk.geometry("1920x1080")
-		self.Frame=Frame(self.tk, background='black')
+		self.Frame=Frame(self.tk, background="black")
 		self.Frame.pack(fill=BOTH, expand=YES)
-		n=0
-		NewsList=[]
-		Novice=""
-		News=""
-		IzborNovic=""
-		get_api=get_api_keys()
-		APIK=get_api['news_api']
-		URLnews = "https://newsapi.org/v2/top-headlines?country=si&apiKey="+APIK
-		News=requests.get(URLnews)
-		Novice=News.json()
-		NewsList=Novice['articles']
-		w=350
-		h=600
-		self.NewsFrame=Frame(self.Frame, width=1800, height=1000, background="black")
-		self.NewsFrame.pack(fill=BOTH, expand= TRUE, anchor='w', pady=200)
-		self.NewsDir1=Canvas(self.NewsFrame, width=w, height=h)
-		self.NewsDir1.pack(side=LEFT, padx=10) 
-		self.NewsDir2=Canvas(self.NewsFrame, width=w, height=h)
-		self.NewsDir2.pack(side=LEFT, fill=BOTH, expand= TRUE, anchor='w', padx=10)
-		self.NewsDir3=Canvas(self.NewsFrame, width=w, height=h)
+		self.title=Label(self.Frame, font=("Helvetica", 60), fg="white", bg="black", text="NEWS",anchor="w")
+		self.title.pack(padx=0, pady=25)
+		self.n=0
+		self.NewsList=[]
+		self.Novice=""
+		self.News=""
+		self.IzborNovic=""
+		self.get_api=get_api_keys()
+		self.APIK=self.get_api["news_api"]
+		self.URLnews = "https://newsapi.org/v2/top-headlines?country=si&apiKey="+self.APIK
+		self.News=requests.get(self.URLnews)
+		self.Novice=self.News.json()
+		self.NewsList=self.Novice["articles"]
+		self.w=350
+		self.h=600
+		self.NewsFrame=Frame(self.Frame, width=1920, height=1000, bg="black",padx=25,pady=50)
+		self.NewsFrame.pack()
+		self.NewsDir1=Canvas(self.NewsFrame, width=self.w, height=self.h, bg="black")
+		self.NewsDir1.pack(side=LEFT, padx=10, pady=0) 
+		self.NewsDir2=Canvas(self.NewsFrame, width=self.w, height=self.h, bg="black")
+		self.NewsDir2.pack(side=LEFT, padx=10)
+		self.NewsDir3=Canvas(self.NewsFrame, width=self.w, height=self.h, bg="black")
 		self.NewsDir3.pack(side=LEFT, padx=10) 
-		self.NewsDir4=Canvas(self.NewsFrame, width=w, height=h)
+		self.NewsDir4=Canvas(self.NewsFrame, width=self.w, height=self.h, bg="black")
 		self.NewsDir4.pack(side=LEFT, padx=10)
-		self.NewsDir5=Canvas(self.NewsFrame, width=w, height=h)
+		self.NewsDir5=Canvas(self.NewsFrame, width=self.w, height=self.h, bg="black")
 		self.NewsDir5.pack(side=LEFT, padx=10)
 
-
-		'''for i in Novice['articles']:
-			if n < 5 or n <10 or n <15:
-				NewsList=NewsList+i
-			n+=1'''
-		NewsD=1
-		displayed=int(displayed)
-		start= displayed-5
-		end=displayed
-		for i in NewsList:
-			Nov = str(i['title']).split("- ")
-			##print(n)
-			#if n > displayed-5 and n < displayed:
-			print(displayed)
-			print(n)
-			print(start<=n and n<end)
-			if start<=n<end:
-			#if displayed-6<n<displayed:
-				#print('test')
-			##print(Nov)
-			#if (Nov[1]=='24ur.com' or Nov[1]=='RTV Slovenija' or Nov[1]=='Računalniške Novice' or Nov[1]=='Siol.net'):
-				#self.label1.config(text="")
+		self.NewsD=1
+		self.displayed=int(displayed)
+		self.start= self.displayed-5
+		self.end=self.displayed
+		for i in self.NewsList:
+			Nov = str(i["title"]).split("- ")
+			if self.start<=self.n<self.end:
 				
-				'''IzborNovic+=str(i['title']) + '\n'
-				image_url = "http://i46.tinypic.com/r9oh0j.gif"
-				image_byt = urlopen(image_url).read()
-				image_b64 = base64.encodestring(image_byt)'''
-				#print(n)
-				print('test')
-				image_url=str(i['urlToImage'])
-				render=''
+				self.news_title=str(i["title"]).split("-")
+				self.image_url=str(i["urlToImage"])
+				self.render=""
 				try:
-					if ("https" in image_url):
-						#image_url = "https://images.24ur.com/media//images/600xX/Jan2021/f861ec2c611cba45038d_62508806.jpg?v=1611159757"
-						image_byt = urlopen(image_url).read()
-						#image_b64 = base64.encodestring(image_byt)
-						load = PIL.Image.open(io.BytesIO(image_byt))
-						#load1 = Image.
-						image_final=load.resize((370,200), PIL.Image.ANTIALIAS)
-						render = ImageTk.PhotoImage(image_final)
-						#img = PhotoImage(data='images_icons_linux-bsd.gif')
-						#img = ImageTk.PhotoImage(Image.open("images_icons_linux-bsd.gif"))
-					elif ("//" in image_url):
-						image_byt = urlopen('https:'+image_url).read()
-						load = PIL.Image.open(io.BytesIO(image_byt))
-						image_final=load.resize((370,200), PIL.Image.ANTIALIAS)
-						render = ImageTk.PhotoImage(image_final)
-					elif("dnevnik" in str(i['url'])):
-						image_byt = urlopen('https://www.dnevnik.si'+image_url).read()
-						load = PIL.Image.open(io.BytesIO(image_byt))
-						image_final=load.resize((370,200), PIL.Image.ANTIALIAS)
-						render = ImageTk.PhotoImage(image_final)
+					if ("https" in self.image_url):
+						self.image_byt = urlopen(self.image_url).read()
+						self.load = PIL.Image.open(io.BytesIO(self.image_byt))
+						self.image_final=self.load.resize((300,200), PIL.Image.BOX, reducing_gap=1)
+						self.render = ImageTk.PhotoImage(self.image_final)
+					elif ("//" in self.image_url):
+						self.image_byt = urlopen("https:"+self.image_url).read()
+						self.load = PIL.Image.open(io.BytesIO(self.image_byt))
+						self.image_final=self.load.resize((300,200), PIL.Image.BOX, reducing_gap=1)
+						self.render = ImageTk.PhotoImage(self.image_final)
+					elif("dnevnik" in str(i["url"])):
+						self.image_byt = urlopen("https://www.dnevnik.si"+self.image_url).read()
+						self.load = PIL.Image.open(io.BytesIO(self.image_byt))
+						self.image_final=self.load.resize((300,200), PIL.Image.ANTIALIAS)
+						self.render = ImageTk.PhotoImage(self.image_final)
 				except:
-					load = PIL.Image.open("jaz_color.png")
-					render = ImageTk.PhotoImage(load)
+					self.load = PIL.Image.open("jaz_color.png")
+					self.render = ImageTk.PhotoImage(self.load)
 				
-				if NewsD==1:
-					#print(1)
-					
-					self.NewsDir1.create_rectangle(3,3, w-1, h-1,fill='black')
-					self.NewsDir1.create_text(20, 50, width=w-20, text=str(i['title']).replace(' - ', '\n'),fill='white', font=('verdana', 12, 'bold'), anchor='W')
-					#self.NewsDir1.create_text(width=w-15, text=str(i['description']), fill="white", font=('verdana', 12, 'bold'), anchor='W')
-					#l=Label(self.NewsDir1, image=img)
-					#self.NewsDir1.create_image(30,50, image=img, width=w-20, anchor=CENTER)
-					img = Label(self.NewsDir1, image=render, width=310, height=200)
-					img.image = render
-					img.place(x=20, y=100)
-					#print(str(i['description']))
-					desc=str(i['description'])
-					self.NewsDir1.create_text(30,400,width=w-30, text=str(i['description']), fill="white", font=('verdana', 12), anchor='W')
+				if self.NewsD==1:
+					self.NewsDir1.create_rectangle(1,1, self.w-1, self.h-1,fill="black")
+					self.NewsDir1.create_text(20, 50, width=self.w-20, text=self.news_title[0],fill="white", font=("verdana", 12, "bold"), anchor="w")
+					self.NewsDir1.create_text(20, 90, width=self.w-20, text=self.news_title[len(self.news_title) - 1],fill="white", font=("verdana", 12), anchor="w")
+					self.img = Label(self.NewsDir1, image=self.render, width=310, height=200)
+					self.img.image = self.render
+					self.img.place(x=20, y=110)
+					self.NewsDir1.create_text(30,400,width=self.w-30, text=str(i["description"]), fill="white", font=("verdana", 12), anchor="w")
 					
 
-				elif NewsD==2:
-					#print(2)
-					self.NewsDir2.create_rectangle(3,3, w-1, h-1,fill='black')
-					self.NewsDir2.create_text(20,50, width=w-20, text=str(i['title']),fill='white', font=('verdana',12, 'bold'), anchor='W')#NewsList[i+1])
-					#self.NewsDir2.create_text(width=w-15, text=str(i['description']), fill="white", font=('verdana', 12, 'bold'), anchor='W')
-					img = Label(self.NewsDir2, image=render, width=310, height=200)
-					img.image = render
-					img.place(x=20, y=100)
-					self.NewsDir2.create_text(30,400,width=w-30, text=str(i['description']), fill="white", font=('verdana', 12), anchor='W')
+				elif self.NewsD==2:
+					self.NewsDir2.create_rectangle(3,3, self.w-1, self.h-1,fill="black")
+					self.NewsDir2.create_text(20, 50, width=self.w-20, text=self.news_title[0],fill="white", font=("verdana", 12, "bold"), anchor="w")
+					self.NewsDir2.create_text(20, 90, width=self.w-20, text=self.news_title[len(self.news_title) - 1],fill="white", font=("verdana", 12), anchor="w")
+					self.img = Label(self.NewsDir2, image=self.render, width=310, height=200)
+					self.img.image = self.render
+					self.img.place(x=20, y=110)
+					self.NewsDir2.create_text(30,400,width=self.w-30, text=str(i["description"]), fill="white", font=("verdana", 12), anchor="w")
 
-				elif NewsD==3:
-					#print(3)
-					self.NewsDir3.create_rectangle(3,3, w-1, h-1,fill='black')
-					self.NewsDir3.create_text(20,50, width=w-20, text=str(i['title']),fill='white', font=('verdana', 12, 'bold'), anchor='W')#NewsList[i+2])
-					#self.NewsDir3.create_text(width=w-15, text=str(i['description']), fill="white", font=('verdana', 12, 'bold'), anchor='W')
-					img = Label(self.NewsDir3, image=render, width=310, height=200)
-					img.image = render
-					#img.size(370,200)
-					img.place(x=20, y=100)
-					self.NewsDir3.create_text(30,400,width=w-30, text=str(i['description']), fill="white", font=('verdana', 12), anchor='W')
+				elif self.NewsD==3:
+					self.NewsDir3.create_rectangle(3,3, self.w-1, self.h-1,fill="black")
+					self.NewsDir3.create_text(20, 50, width=self.w-20, text=self.news_title[0],fill="white", font=("verdana", 12, "bold"), anchor="w")
+					self.NewsDir3.create_text(20, 90, width=self.w-20, text=self.news_title[len(self.news_title) - 1],fill="white", font=("verdana", 12), anchor="w")
+					self.img = Label(self.NewsDir3, image=self.render, width=310, height=200)
+					self.img.image = self.render
+					self.img.place(x=20, y=110)
+					self.NewsDir3.create_text(30,400,width=self.w-30, text=str(i["description"]).replace(" - ", "\n"), fill="white", font=("verdana", 12), anchor="w")
 
-				elif NewsD==4:
-					#print(4)
-					self.NewsDir4.create_rectangle(3,3, w-1, h-1,fill='black')
-					self.NewsDir4.create_text(20,50, width=w-20, text=str(i['title']),fill='white', font=('verdana', 12, 'bold'), anchor='W')#NewsList[i+3])
-					img = Label(self.NewsDir4, image=render, width=310, height=200)
-					img.image = render
-					img.place(x=20, y=100)
-					self.NewsDir4.create_text(30,400,width=w-30, text=str(i['description']), fill="white", font=('verdana', 12), anchor='W')
+				elif self.NewsD==4:
+					self.NewsDir4.create_rectangle(3,3, self.w-1, self.h-1,fill="black")
+					self.NewsDir4.create_text(20, 50, width=self.w-20, text=self.news_title[0],fill="white", font=("verdana", 12, "bold"), anchor="w")
+					self.NewsDir4.create_text(20, 90, width=self.w-20, text=self.news_title[len(self.news_title) - 1],fill="white", font=("verdana", 12), anchor="w")
+					self.img = Label(self.NewsDir4, image=self.render, width=310, height=200)
+					self.img.image = self.render
+					self.img.place(x=20, y=110)
+					self.NewsDir4.create_text(30,400,width=self.w-30, text=str(i["description"]).replace(" - ", "\n"), fill="white", font=("verdana", 12), anchor="w")
 
-				elif NewsD==5:
-					#print(5)
-
-					self.NewsDir5.create_rectangle(3,3, w-1, h-1,fill='black')
-					self.NewsDir5.create_text(20,50, width=w-20, text=str(i['title']),fill='white', font=('verdana', 12, 'bold'), anchor='W')#NewsList[i+4])
-					img = Label(self.NewsDir5, image=render, width=310, height=200)
-					img.image = render
-					img.place(x=20, y=100)
-					self.NewsDir5.create_text(30,400,width=w-30, text=str(i['content']), fill="white", font=('verdana', 12), anchor='W')
-				NewsD=NewsD+1
-				n=n+1
-			
-			#NewsD=NewsD+1
-			# else:
-			#    continue
+				elif self.NewsD==5:
+					self.NewsDir5.create_rectangle(3,3, self.w-1, self.h-1,fill="black")
+					self.NewsDir5.create_text(20, 50, width=self.w-20, text=self.news_title[0],fill="white", font=("verdana", 12, "bold"), anchor="w")
+					self.NewsDir5.create_text(20, 90, width=self.w-20, text=self.news_title[len(self.news_title) - 1],fill="white", font=("verdana", 12), anchor="w")
+					self.img = Label(self.NewsDir5, image=self.render, width=310, height=200)
+					self.img.image = self.render
+					self.img.place(x=20, y=110)
+					self.NewsDir5.create_text(30,400,width=self.w-30, text=str(i["content"]), fill="white", font=("verdana", 12), anchor="w")
+				self.NewsD=self.NewsD+1
+				self.n=self.n+1
 			else:
-				n=n+1
-			#return n
-		#self.news_label.config(text=IzborNovic)
-		'''self.NewsDir=Canvas(self)
-		self.NewsDir.create_text()
-		self.NewsDir.pack()'''
+				self.n=self.n+1
 		self.tk.mainloop()
-		   
 
-class News:
-	def __init__(self):
-		self.tk=tk.Tk()
-		self.tk.configure(background='black')
-		self.tk.title("Pozdravljeni")
-		#self.tk.geometry("1000x600")
-		self.Frame=Frame(self.tk, background='black')
-		self.Frame.pack(fill=BOTH, expand=YES)
-		#self.video=Canvas(self.Frame, background="black", width="600", height="400")
-		#self.video.pack()
-		self.news_label=display_news(self.Frame)
-		self.news_label.pack()
-		#get_news(self)
-		
+if (len(arguments)==2):
+    displayed=int(arguments[1])
+else:
+	displayed=5		
+
 try:
-	display_news(arguments[1])
-except:
-	print('No arguments')
+	display_news(displayed)
+except Exception as e:
+	print(e)

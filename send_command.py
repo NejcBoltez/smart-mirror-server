@@ -1,65 +1,19 @@
-import speech_recognition as sr
 import subprocess
 import os
 import signal
 import Virtual_asistent as asistant
-#import time
-#import multiprocessing
-from multiprocessing import Queue
-import threading
-try:
-	import tkinter as tk
-	from tkinter import *
-except:
-	import Tkinter as tk
-	from Tkinter import *
-from wikipedia_window import Wikipedia_show
-import pyttsx3 as pyttsx
-#from news import display_news
-#import weather
-#from weather import weather_GUI
-#from youtube_search_GUI import yt_search
-#import youtube_search_GUI as yt_search_GUI
-#from youtube_search_GUI import yt_search
-#from .other_GUIs import weather
-#command:str
+import multiprocessing
+from working_with_files import Work_with_files
+from speech_listen import Speaking
 open_processes=[]
-
-speech_engine = pyttsx.init()
-
-def to_say(besedilo):
-    print(besedilo)
-    speech_engine.say(besedilo)
-    speech_engine.runAndWait()
-def print_process_to_file(p_id, p_name):
-	BASE_DIR= os.path.dirname(os.path.abspath(__file__))
-	open_processes=os.path.join(BASE_DIR, '../open_processes.txt')
-	with open(open_processes, 'r+') as f:
-		f_read=f.read()
-		f.write(str(f_read)+'\n'+p_name+':'+p_id)
-
-def remove_process_from_file(p_id, p_name):
-	BASE_DIR= os.path.dirname(os.path.abspath(__file__))
-	open_processes=os.path.join(BASE_DIR, '../open_processes.txt')
-	with open(open_processes, 'rw') as f:
-		f_read=f.read()
-		f.write(str(f_read)+'\n'+p_name+':'+p_id)
-
-def read_process_from_file():
-	BASE_DIR= os.path.dirname(os.path.abspath(__file__))
-	open_processes=os.path.join(BASE_DIR, '../open_processes.txt')
-	with open(open_processes, 'r') as f:
-		f_read=f.read()
-	return f_read
 		
-
 class Do_for_command:
 	def __call__(args):
 			try: 
 				print('test:     '+args)
 			except:
 				print('')
-	def __init__(self, command, user):
+	def __init__(self, command, user, displayed, previous_search):
 
 		print('WE HAVE IT')
 		numbers_int=["1","2","3","4","5","6","7","8","9","10"]
@@ -78,153 +32,106 @@ class Do_for_command:
 			if("forecast" in command or "weather" in command):
 				if (command_search==""):
 					#Open_forecast=multiprocessing.Process()
-					Open_forecast=subprocess.Popen(["python3","weather.py"], name = "Forecast_process")
-					open_processes.append("Open_forecast:"+str(Open_forecast.pid))
-					Open_forecast.name = "Forecast_process"
-					print_process_to_file(str(Open_forecast.pid), "Open_forecast")
-					print(Open_forecast.pid)
+					Open_forecast=subprocess.Popen(["python3","weather.py"], 'today')
+					Work_with_files.print_process_to_file(str(Open_forecast.pid), "Open_forecast")
+					
 				else:
 					'''for p in open_processes:
 						if ("Open_forecast" in p):
 							Open_forecast.terminate()'''
-					#Open_forecast.terminate()
-					print(command_search)
-					#Open_forecast=threading.Thread(target=weather_GUI(command_search))
-					#Open_forecast=multiprocessing.Process(target=weather_GUI(command_search))
-					#Open_forecast.start()
 					Open_forecast=subprocess.Popen(["python3","weather.py",command_search])
-					#Open_forecast=multiprocessing.Process(target=weather_GUI(command_search))
-					#Open_forecast.start()
-					Open_forecast.name = "Forecast_process"
-					open_processes.append("Open_forecast:"+str(Open_forecast.pid))
-					print_process_to_file(str(Open_forecast.pid), "Open_forecast")
-					print(Open_forecast.pid)
+					Work_with_files.print_process_to_file(str(Open_forecast.pid), "Open_forecast")
+					
 			elif ("who" in command or "was" in command or "what" in command):
 				#subprocess.Popen(["python3","wikipedia_window.py", command])
 				wiki_command=""
 				if ("who" in command):
 					wiki_command=command.split("who was ")[1]
 				elif ("what" in command):
-					wiki_command=command.split("what is")[1]
+					wiki_command=command.split("what is ")[1]
 				elif ("was" in command):
-					wiki_command=command.split("was")
-				Open_wiki=threading.Thread(target=Wikipedia_show(wiki_command.replace(" ","_")))
-				Open_wiki.start()
+					wiki_command=command.split("was ")
+				Open_wiki=subprocess.Popen(["python3","wikipedia_window.py",wiki_command.replace(" ","_")])
+				Work_with_files.print_process_to_file(str(Open_wiki.pid), "Open_wiki")
+				
 
 			elif ("youtube" in command):
-				#if ("open" in command):
-				#Openyt=multiprocessing.Process(target=youtube.yt())
-				#Openyt.start()
 				if ("search" in command):
 					Open_yt_search=subprocess.Popen(["python3","youtube.py", command_search])
 					open_processes.append("Open_yt_search")
-					print_process_to_file(str(Open_yt_search.pid), "Open_yt_search")
-					print('SEARCH YOUTUBE')
-					'''try:
-						yt_search_query=command_search
-						Open_yt_search=threading.Thread(target=yt_search(yt_search_query))
-						Open_yt_search.start()
-					except Exception as e:
-						print(e)'''
-					#self.Frame.delete('1.0', END)
-					#AskMirror=multiprocessing.Process(target=yt_search(self.Frame))
-					#AskMirror.start()
+					Work_with_files.print_process_to_file(str(Open_yt_search.pid), "Open_yt_search")
 				elif ("play" in command):
 					Open_yt=subprocess.Popen(["python3","youtube_stream.py", command])
 					open_processes.append("Open_yt")
-					print_process_to_file(str(Open_yt.pid), "Open_yt")
+					Work_with_files.print_process_to_file(str(Open_yt.pid), "Open_yt")
 
 			elif ("calibration" in command):
 				Open_calibrate=subprocess.Popen(["python3", "calibrate.py", user])
-				open_processes.append("Open_calibrate:"+str(Open_calibrate.pid))
-				print_process_to_file(str(Open_calibrate.pid), "Open_calibrate")
+				Work_with_files.print_process_to_file(str(Open_calibrate.pid), "Open_calibrate")
+
 			elif ("news" in command):
-				#Open_news=threading.Thread(target=yt_search(yt_search_query))
-				#Open_news.start()
-				#Open_news=threading.Thread(target=display_news(show_news))
 				Open_news=subprocess.Popen(["python3", "news.py", str(show_news)])
-				#Open_news.start()
-				open_processes.append("Open_news:"+str(Open_news.pid))
-				print_process_to_file(str(Open_news.pid), "Open_news")
-				#return Open_news
+				Work_with_files.print_process_to_file(str(Open_news.pid), "Open_news")
+				
 			elif("picture" in command):
 				if ("take" in command):
 						take_pic=subprocess.Popen(["python3","take_picture.py",user])
 						open_processes.append("take_pic:"+str(take_pic.pid))
 			elif("timer" in command):
 				start_timer=subprocess.Popen(["python3","timer.py",command_search])
-				open_processes.append("take_pic:"+str(start_timer.pid))
-				to_say("Setting a timer for " + str(command_search))
-				print_process_to_file(str(start_timer.pid), "Start_timer")
+				Speaking.to_say("Setting a timer for " + str(command_search))
+				Work_with_files.print_process_to_file(str(start_timer.pid), "Start_timer")
+			
 			elif ("home" in command):
-				processes=read_process_from_file()
-				for i in processes:
-					if("Open_news" in i):
-						#Open_news.terminate()
-						get_id=i.split(":")
-						os.kill(int(get_id[0]), signal.SIGKILL) # should be int for process id
-						#open_processes.remove(i)
-						
-					elif("Open_yt_search" in i):
-						get_id=i.split(":")
-						os.kill(int(get_id[0]), signal.SIGKILL) # should be int for process id
-						#open_processes.remove(i)
-						'''Open_yt_search.terminate()
-						open_processes.remove(i)'''
-					elif("Open_yt" in i):
-						get_id=i.split(":")
-						os.kill(int(get_id[0]), signal.SIGKILL) # should be int for process id
-						#open_processes.remove(i)
-						'''Open_yt.terminate()
-						open_processes.remove(i)'''							
-					elif("Open_calibrate" in i):
-						get_id=i.split(":")
-						os.kill(int(get_id[0]), signal.SIGKILL) # should be int for process id
-						#open_processes.remove(i)
-						'''Open_calibrate.terminate()
-						open_processes.remove(i)'''
-					else:
+				processes=Work_with_files.read_process_from_file()
+				print(type(processes))
+				for name, value in processes.items():
+					print(name+':'+str(value))
+					try:
+						os.kill(int(value), signal.SIGKILL)
+					except:
 						continue
+				Work_with_files.remove_all_processes_from_file()
 			
 			elif ("close" in command):
-				if("Open_news" in open_processes[len(open_processes)-1]):
-					i=open_processes[len(open_processes)-1]
-					get_id=i.split(":")
-					os.kill(int(get_id[1]), signal.SIGKILL) # should be int for process id
-					open_processes.remove(i)
-					#Open_news.terminate()
-					#open_processes.remove([len(open_processes)-1])
-				elif("Open_yt_search" in open_processes[len(open_processes)-1]):
-					i=open_processes[len(open_processes)-1]
-					get_id=i.split(":")
-					os.kill(int(get_id[1]), signal.SIGKILL) # should be int for process id
-					open_processes.remove(i)
-					#Open_yt_search.terminate()
-					#open_processes.remove("Open_yt_search")
-				elif("Open_yt" in open_processes[len(open_processes)-1]):
-					i=open_processes[len(open_processes)-1]
-					get_id=i.split(":")
-					os.kill(int(get_id[1]), signal.SIGKILL) # should be int for process id
-					open_processes.remove(i)
-					#Open_yt.terminate()
-					#open_processes.remove("Open_yt")    								
-				elif("Open_calibrate" in open_processes[len(open_processes)-1]):
-					i=open_processes[len(open_processes)-1]
-					get_id=i.split(":")
-					os.kill(int(get_id[1]), signal.SIGKILL) # should be int for process id
-					open_processes.remove(i)
-					#Open_calibrate.terminate()
-					#open_processes.remove([len(open_processes)-1])
-				elif("take_pic" in open_processes[len(open_processes)-1]):
-					i=open_processes[len(open_processes)-1]
-					get_id=i.split(":")
-					os.kill(int(get_id[1]), signal.SIGKILL) # should be int for process id
-					open_processes.remove(i)
-					#	take_pic.terminate()
-					#	open_processes.remove([len(open_processes)-1])
-
-			'''elif(command in numbers_int or command in numbers_string or command in position):
-				if (command in numbers_int):
+				processes=Work_with_files.read_process_from_file()
+				id_to_kill=''
+				for name, value in processes.items():
+						id_to_kill=value
+						print(id_to_kill)
+				os.kill(int(id_to_kill), signal.SIGKILL)
+				Work_with_files.remove_process_from_file(id_to_kill)
+			elif ("next" in command):
+					processes=Work_with_files.read_process_from_file()
+					p_name=''
+					p_id=''
+					for name, value in processes.items():
+						p_name=name
+						p_id=value
+					if("Open_news" in p_name):
+						Open_news=subprocess.Popen(["python3", "news.py", displayed])
+						Work_with_files.print_process_to_file(str(Open_news.pid), "Open_news")
+						os.kill(int(p_id), signal.SIGKILL)
+						Work_with_files.remove_process_from_file(p_id)
+					'''if("Open_news" in p_name):
+						Open_news=subprocess.Popen(["python3", "news.py", displayed])
+						Work_with_files.print_process_to_file(str(Open_news.pid), "Open_news")
+					if("Open_news" in p_name):
+						Open_news=subprocess.Popen(["python3", "news.py", displayed])
+						Work_with_files.print_process_to_file(str(Open_news.pid), "Open_news")
+						#show_news=show_news+5'''
+			elif (command in numbers_int or command in numbers_string or command in position):
+				processes=Work_with_files.read_process_from_file()
+				p_name=''
+				p_id=''
+				for name, value in processes.items():
+					p_name=name
+					p_id=value
+				if ("Open_yt_search" in p_name):
+					str_to_search=previous_search.split('for ')[1].replace(' ','_')
+					Open_yt=subprocess.Popen(["python3","youtube_stream.py", str_to_search, command])
+					Work_with_files.print_process_to_file(str(Open_yt.pid), "Open_yt")
+				'''if (command in numbers_int):
 					ni = numbers_int.index(command)
 					print(yt_search_query)
 					print(str(show_news-(5-int(ni))))
@@ -232,32 +139,9 @@ class Do_for_command:
 						Open_news=subprocess.Popen(["python3", "show_news.py", str(show_news-(5-int(ni)))])
 					elif("Open_yt" in open_processes[len(open_processes)-1]):
 						Open_yt=subprocess.Popen(["python3","youtube_stream.py", yt_search_query, str(ni)])
-						
-				elif (command in numbers_string):
-					ns = numbers_string.index(command)
-					print(str(show_news-(5-int(ns))))
-					print(yt_search_query)
-					if("Open_news" in open_processes[len(open_processes)-1]):
-						Open_news=subprocess.Popen(["python3", "show_news.py", str(show_news-(5-int(ns)))])
-					elif("Open_yt" in open_processes[len(open_processes)-1]):
-						Open_yt=subprocess.Popen(["python3","youtube_stream.py", yt_search_query, str(ns)])
-					
-				elif (command in position):
-					po = position.index(command)  	
-					print(yt_search_query)
-					print(str(show_news-(5-int(po))))
-					if("Open_news" in open_processes[len(open_processes)-1]):
-						Open_news=subprocess.Popen(["python3", "show_news.py", str(show_news-(5-int(po)))])
-					elif("Open_yt" in open_processes[len(open_processes)-1]):
-						Open_yt=subprocess.Popen(["python3","youtube_stream.py", yt_search_query, str(po)])'''
-		
-			'''elif ("next" in command):
-				if("Open_news" in open_processes[len(open_processes)-1]):
-					Open_news.terminate()
-					Open_news=subprocess.Popen(["python3", "news.py", show_news+5])
-					show_news=show_news+5			
+						'''	
 			else:
 				AskMirror=multiprocessing.Process(target=asistant.jarvis(command))
-				AskMirror.start()'''
+				AskMirror.start()
 				#AskMirror.join()
 				#subprocess.Popen(["python3","Virtual_asistent.py", command])

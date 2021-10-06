@@ -46,7 +46,7 @@ class Timer():
 		print(self.timer)
 		if (self.mins>0 or self.secs>0):
 			self.counts.configure(text=self.timer)
-			time.sleep(0.25)
+			time.sleep(1)
 			self.remaining=self.remaining-1
 			self.counts.after(1000, self.start_timer())
 		elif(self.mins==0 and self.secs==0):

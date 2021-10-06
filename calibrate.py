@@ -1,22 +1,24 @@
-import sys
-import os
-from face_recognize import Get_face, User_calibration
+import face_recognize
+import threading
+try:
+	import tkinter as tk
+	from tkinter import *
+except:
+	import Tkinter as tk
+	from Tkinter import *
 
-arguments = list(sys.argv)
-BASE_DIR= os.path.dirname(os.path.abspath(__file__))
-image_dir=os.path.join(BASE_DIR, '../Uporabniki')
-tekst123=''
-class Calibrate:
+class Calibrate():
 	def __init__(self):
-	#def getCamera(self):
-		while (True):
-			get_user="nejc"#Get_face.user_auth_GUI()
-			if (get_user is not None):
-				self.calibrate(get_user)
-				break
-	#face_front=cv2.CascadeClassifier('../../.local/lib/python3.7/site-packages/cv2/data/haarcascade_frontalface_default.xml')
-	#face_front=cv2.CascadeClassifier('C:/Users/nejcb/AppData/Local/Programs/Python/Python37-32/Lib/site-packages/cv2/data/haarcascade_frontalface_default.xml')
-	#face_eye=cv2.CascadeClassifier('/home/nejc/anaconda3/lib/python3.7/site-packages/cv2/data/haarcascade_profileface.xml')'''
-	def calibrate(self,user):
-		self.calibrate_user=User_calibration(user)
+		self.tk=tk.Tk()
+		self.tk.geometry("1920x1080")
+		self.Frame=Frame(self.tk, background='Black')
+		self.Frame.pack(fill=BOTH, expand= TRUE)
+		self.auth_label=Label(self.Frame, font=('Helvetica', 30), fg='white', bg='black', text="User calibration")
+		self.auth_label.pack(side=TOP,fill=BOTH, expand= TRUE)
+		my_thread=threading.Thread(target=self.start_user_calib())
+		my_thread.start()
+		self.tk.mainloop()
+	def start_user_calib(self):
+		face_recognize.User_auth_GUI(self.Frame).pack()
+
 Calibrate()

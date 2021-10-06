@@ -1,0 +1,64 @@
+import os
+import json
+
+class Work_with_files:
+	def get_api_keys():
+		read_api=""
+		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
+		api_keys_dir=os.path.join(BASE_DIR, "../api_keys.json")
+		with open(api_keys_dir, "r") as f_api:
+			read_api=json.load(f_api)
+		return read_api
+
+	def print_process_to_file(p_id, p_name):
+		p='{'
+		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
+		open_processes=os.path.join(BASE_DIR, '../open_processes.json')
+		
+		with open(open_processes, 'r') as f_r:
+			f_read=f_r.read()
+			p=p+f_read.replace('{','').replace('}','')
+			print("Read lines:"+str(p))
+
+		p_to_file='"'+p_name+'": "'+p_id+'"}'
+		if (p=='{'):
+			p=p+p_to_file
+		else:
+			p=p+','+p_to_file
+		print(p)
+		with open(open_processes,'w') as f_w:
+			f_w.write(str(p))
+
+	def remove_process_from_file(p_id):
+		p='{'
+		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
+		open_processes=os.path.join(BASE_DIR, '../open_processes.json')
+		with open(open_processes, 'r') as f_r:
+			f_read=f_r.read()
+			p=p+f_read.replace('{','').replace('}','')
+		p_split=p.split(',')
+		p_new='{'
+		for s in p_split:
+			if (p_id in s):
+				continue
+			else:
+				p_new=p_new+','+s
+		p_new=p_new+'}'
+		with open(open_processes, 'w') as f_w:
+			f_w.write(p_new)
+
+	def read_process_from_file():
+		r_p=''
+		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
+		open_processes=os.path.join(BASE_DIR, '../open_processes.json')
+		with open(open_processes, 'r') as f_r:
+			#f_read=f.read()
+			r_p=json.load(f_r)
+		return r_p
+
+	def remove_all_processes_from_file():
+		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
+		open_processes=os.path.join(BASE_DIR, '../open_processes.json')
+		with open(open_processes, 'w') as f:
+			f.write('')
+		#return f_read

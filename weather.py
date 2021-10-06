@@ -6,6 +6,7 @@ import base64
 from urllib.request import urlopen
 from PIL import ImageTk
 import PIL.Image
+import time
 import io
 import os
 try:
@@ -69,6 +70,8 @@ class weather_GUI:
 	def __init__(self,command):
 		#global arguments
 		#Frame.__init__(self, parent)
+		self.BASE_DIR= os.path.dirname(os.path.abspath(__file__))
+		self.image_dir=os.path.join(self.BASE_DIR, 'Weather_widgets')
 		self.tk=tk.Tk()
 		self.tk.configure(background='black')
 		self.tk.title("Pozdravljeni")
@@ -109,9 +112,10 @@ class weather_GUI:
 		self.City = "Novo mesto"
 		self.Country = "SI"
 		self.get_api=get_api_keys()
+		print(self.get_api)
 		self.APIK=self.get_api['weather_api']
-		self.URL = "https://api.openweathermap.org/data/2.5/forecast?q="+self.City+","+self.Country+"&appid="+self.APIK
-		self.main_URL="https://api.openweathermap.org/data/2.5/weather?q="+self.City+","+self.Country+"&appid="+self.APIK
+		self.URL = "https://api.openweathermap.org/data/2.5/forecast?q="+self.City+","+self.Country+"&appid="+self.APIK+'&units=metric'
+		self.main_URL="https://api.openweathermap.org/data/2.5/weather?q="+self.City+","+self.Country+"&appid="+self.APIK+'&units=metric'
 		self.r = requests.get(self.URL)
 		self.r_main=requests.get(self.main_URL)
 		self.read = self.r.json()
@@ -126,8 +130,9 @@ class weather_GUI:
 		coordinate=50
 		coordinatey=100
 		#print(str(self.read['list']['main']))
-		image_byt = urlopen("https://openweathermap.org/img/wn/"+self.main_icon+"@2x.png").read()
-		load = PIL.Image.open(io.BytesIO(image_byt))
+		print(self.image_dir+'/'+self.main_icon+'.png')
+		image_byt = str(self.image_dir+'/'+self.main_icon+'.PNG')# urlopen("https://openweathermap.org/img/wn/"+self.main_icon+"@2x.png").read()
+		load = PIL.Image.open(image_byt)
 		image_final=load.resize((300,200), PIL.Image.ANTIALIAS)
 		render = ImageTk.PhotoImage(image_final)
 		img = Label(self.logo, image=render, width=300, height=200, background="black")
@@ -135,26 +140,27 @@ class weather_GUI:
 		img.place(x=10, y=150)
 
 		for d in self.read['list']:
-			#print (d['dt_txt']) 
 			if (str(d['dt_txt']).split(' ')[0] not in days_table):
 				days_table.append(str(d['dt_txt']).split(' ')[0])
-			#break
-		#print(days_table)
+				
 		for f in days_table:
 			day_name=datetime.datetime.strptime(f, '%Y-%m-%d')
 			b_string= str(day_name.strftime("%A")) + '\n' + str(f)
 			d_n=str(day_name.strftime("%A")) 
-			print("test: " + d_n.lower())
-			if (str(day_name.strftime("%A")).lower()==command or command=="today"):
-				print("It is working")
+			print(time.strftime('%A')+" test: " + d_n.lower())
+			if (str(day_name.strftime("%A")).lower()==command):
 				self.daysb=Button(self.days, text=b_string, width=15, height=7, bg="silver", fg="black")
 				self.daysb.pack()
+			elif(command=="today" and str(day_name.strftime("%A")).lower()==time.strftime('%A').lower()):
+				self.daysb=Button(self.days, text=b_string, width=15, height=7, bg="silver", fg="black")
+				self.daysb.pack()	
+			elif(command=="tommorow"):
+				self.daysb=Button(self.days, text=b_string, width=15, height=7, bg="silver", fg="black")
+				self.daysb.pack()	
 			else:
 				self.daysb=Button(self.days, text=b_string, width=15, height=7, bg="black", fg="white")
 				self.daysb.pack()
-			#print(f.strftime("%A"))
-		#if (len(command)==2):
-		#	day_selected=self.day_position(arguments[1])#days_table[1]
+
 		day_selected=self.day_position(command)
 			#days_table.append(str(d['dt_txt']).split(' ')[0])
 		#else:
@@ -162,7 +168,7 @@ class weather_GUI:
 		for i in self.read['list']:
 			date=str(i['dt_txt']).split(' ')[0]
 			if (date == day_selected):
-				cels=self.kelvin_to_celsius(int(i['main']['temp']))
+				cels=int(i['main']['temp'])
 				temp="Temp: " + str(cels)
 				humidity="Humidity: " + str(i['main']['humidity'])
 				temp_min="Temp_min: " + str(i['main']['temp_min'])
@@ -179,7 +185,7 @@ class weather_GUI:
 				self.data.create_rectangle(coordinate,50, coordinate+170, 350, fill="black", outline="white")#create_rectangle(startx,starty,endx,endy, fill="blue", outline="red")
 				self.data.create_text(coordinate+80,155, width=200, text=day_forecast, fill="white")
 				icon_id=i['weather'][0]['icon']
-				print("Icon ID: "+str(icon_id))
+				#print("Icon ID: "+str(icon_id))
 				image_byt = urlopen("https://openweathermap.org/img/wn/"+icon_id+"@2x.png").read()
 				load = PIL.Image.open(io.BytesIO(image_byt))
 				image_final=load.resize((150,100), PIL.Image.ANTIALIAS)
@@ -189,7 +195,7 @@ class weather_GUI:
 				img.place(x=coordinate+10, y=200)
 
 				coordinate=coordinate+190
-				print(coordinate)
+				#print(coordinate)
 				#print(weather)
 		#self.data.create_text(150,500, text=weather, width=200, fill="white")
 		
@@ -202,7 +208,7 @@ class weather_GUI:
 		if (arg=="tomorrow"):
 			#day_selected=days_table[1]
 			day_number=1
-		elif(arg==""):
+		elif(arg=="today"):
 			day_number=0
 		elif (arg!=""):
 			day_index=days_in_week.index(day_name_txt)
@@ -226,13 +232,6 @@ class weather_GUI:
 		print(day_number)
 
 		return days_table[int(day_number)]
-	def kelvin_to_celsius(self,k):
-		
-		self.celsius=k-273.15 #273.15K − 273.15 = 0C
-		print('Kelvins to celsius')
-		print(k)
-		print(round(self.celsius,2))
-		return round(self.celsius,2)
 
 	def create_graph(self,hours,t,h,ws):
 		f = Figure(figsize=(8, 4), dpi=100,facecolor='black', edgecolor="black")
@@ -265,8 +264,10 @@ try:
 			weather_GUI('')
 		else:
 			weather_GUI(arguments[1])
-except:
-	print('No arguments')
+	else: 
+		weather_GUI('today')
+except EXCEPTION as e:
+	print(e)
 
 #weather_GUI(arguments[1])
 

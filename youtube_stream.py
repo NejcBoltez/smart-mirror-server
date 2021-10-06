@@ -27,7 +27,7 @@ class Video(Frame):
         self.video_play=Frame(self.videoframe, background="black", width=1400, height=650)
         self.video_play.pack(fill=BOTH, expand=YES)
         #self.url= self.get_URL()
-        self.url="https://www.youtube.com/watch?v=xAg7z6u4NE8"
+        self.url="https://www.youtube.com/watch?v=EUBWcad1U0c"#=xAg7z6u4NE8"
         self.video=pafy.new(self.url) #pip3 install youtube-dl    
         self.best=self.video.getbest()
         self.playurl=self.best.url
