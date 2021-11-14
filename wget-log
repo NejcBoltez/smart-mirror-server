@@ -1,0 +1,11 @@
+--2021-10-21 16:05:59--  https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Royal_coat_of_arms_of_the_Netherlands.svg/455px-Royal_coat_of_arms_of_the_Netherlands.svg.png
+Razreševanje upload.wikimedia.org (upload.wikimedia.org) ...91.198.174.208, 2620:0:862:ed1a::2:b
+Povezovanje na upload.wikimedia.org (upload.wikimedia.org)|91.198.174.208|:443 ... povezano.
+HTTP zahteva poslana, čakanje na odgovor ... 200 OK
+Dolžina: 280434 (274K) [image/png]
+Shranjevanje v: `wiki.png'
+
+wiki.png              0%[                    ]       0  --.-KB/s               wiki.png            100%[===================>] 273,86K  1,77MB/s    in 0,2s    
+
+2021-10-21 16:05:59 (1,77 MB/s) - `wiki.png' shranjeno [280434/280434]
+

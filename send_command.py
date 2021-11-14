@@ -19,11 +19,11 @@ class Do_for_command:
 		numbers_int=["1","2","3","4","5","6","7","8","9","10"]
 		numbers_string=["one","two","three","four","five","six","seven","eight","nine","ten"]
 		position=["first", "second","thirth","fourth","fifth","sixth","seventh","eighth","nineth","tenth"]
-		#Open_news=''
 		
 		
 
-		show_news=5
+		show_news=displayed
+
 		command=command.lower()
 		command_search=""
 		if (" for " in command):
@@ -31,19 +31,14 @@ class Do_for_command:
 		if (command!=""):
 			if("forecast" in command or "weather" in command):
 				if (command_search==""):
-					#Open_forecast=multiprocessing.Process()
 					Open_forecast=subprocess.Popen(["python3","weather.py"], 'today')
 					Work_with_files.print_process_to_file(str(Open_forecast.pid), "Open_forecast")
 					
 				else:
-					'''for p in open_processes:
-						if ("Open_forecast" in p):
-							Open_forecast.terminate()'''
 					Open_forecast=subprocess.Popen(["python3","weather.py",command_search])
 					Work_with_files.print_process_to_file(str(Open_forecast.pid), "Open_forecast")
 					
 			elif ("who" in command or "was" in command or "what" in command):
-				#subprocess.Popen(["python3","wikipedia_window.py", command])
 				wiki_command=""
 				if ("who" in command):
 					wiki_command=command.split("who was ")[1]
@@ -101,6 +96,7 @@ class Do_for_command:
 						print(id_to_kill)
 				os.kill(int(id_to_kill), signal.SIGKILL)
 				Work_with_files.remove_process_from_file(id_to_kill)
+
 			elif ("next" in command):
 					processes=Work_with_files.read_process_from_file()
 					p_name=''

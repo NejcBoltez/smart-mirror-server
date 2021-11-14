@@ -37,12 +37,16 @@ class Work_with_files:
 			f_read=f_r.read()
 			p=p+f_read.replace('{','').replace('}','')
 		p_split=p.split(',')
+		print(p_split)
 		p_new='{'
 		for s in p_split:
 			if (p_id in s):
 				continue
 			else:
-				p_new=p_new+','+s
+				if(p_new=='{'):
+					p_new=p_new+s	
+				else:
+					p_new=p_new+','+s
 		p_new=p_new+'}'
 		with open(open_processes, 'w') as f_w:
 			f_w.write(p_new)

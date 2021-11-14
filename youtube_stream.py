@@ -4,6 +4,7 @@ import pafy
 import sys
 from youtube_search import YoutubeSearch
 import json
+from youtube import get_yt_data
 try:
     import tkinter as tk
     from tkinter import *
