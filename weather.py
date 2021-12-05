@@ -16,12 +16,11 @@ except:
 	import Tkinter as tk
 	from Tkinter import *
 import sys
-import pyttsx3 as pyttsx
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import seaborn as sns
 import asyncio
 #from aiohttp import ClientSession
-
+from working_with_files import Work_with_files
 
 #from tkinter.ttk import *
 
@@ -44,19 +43,6 @@ arguments = list(sys.argv)
 days_in_week=["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
 current_day=[]
 BASE_DIR= os.path.dirname(os.path.abspath(__file__))
-def get_api_keys():
-	api_keys_dir=os.path.join(BASE_DIR, '../api_keys.json')
-	with open(api_keys_dir, 'r') as f:
-		d=json.load(f)
-	#print(len(d))
-	#print(d['weather_api'])
-	return d
-
-
-def govor(besedilo):
-	speech_engine = pyttsx.init()
-	speech_engine.say(besedilo)
-	speech_engine.runAndWait()
 
 
 class weather_GUI:
@@ -111,7 +97,7 @@ class weather_GUI:
 		current_day=[]'''
 		self.City = "Novo mesto"
 		self.Country = "SI"
-		self.get_api=get_api_keys()
+		self.get_api=Work_with_files.get_api_keys()
 		print(self.get_api)
 		self.APIK=self.get_api['weather_api']
 		self.URL = "https://api.openweathermap.org/data/2.5/forecast?q="+self.City+","+self.Country+"&appid="+self.APIK+'&units=metric'

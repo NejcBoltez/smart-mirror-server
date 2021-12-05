@@ -28,34 +28,34 @@ class Wikipedia_show:
 		except:
 			print('')
 	def __init__(self, command):
-
 		def save_image(url_of_image):
 			response = requests.get(url_of_image)
 			url_split=url_of_image.split('.')
 			file_end=url_split[len(url_split)-1]
 			BASE_DIR= os.path.dirname(os.path.abspath(__file__))
-			wiki=os.path.join(BASE_DIR, 'wiki.jpg')
+			wiki=os.path.join(BASE_DIR, './wiki_pictures/wiki.jpg')
 			with open(wiki, 'w') as f_w:
 				f_w.write(str(response.content))
 			file_path='wiki.jpg'
-			file_name='wiki.'+str(file_end)
+			file_name='./wiki_pictures/wiki.'+str(file_end)
 			if(os.path.isfile(file_name)):
 				os.remove(file_name)
 			try:
 				start_popup=subprocess.Popen(["wget", "-O",file_name, url_of_image])
+				start_popup.wait() #WAIT FOR THE PROCESS TO FINISH
 			except Exception as e:
 				print(url_of_image)
 				print(e)
-			time.sleep(10)
+			#time.sleep(0.1)
 			place_image(file_name)
 
 		def place_image(file_name):
 			load = Image.open(file_name)
-			image_final=load.resize((450,300), Image.ANTIALIAS)
+			image_final=load.resize((500,400), Image.ANTIALIAS)
 			render = ImageTk.PhotoImage(image_final)
-			img = Label(FrameWiki, image=render, width=450, height=300, background="black")
+			img = Label(FrameWiki, image=render, width=500, height=400, background="black")
 			img.image = render
-			img.place(x=1100, y=350)
+			img.place(x=1100, y=300)
 
 		def govor(besedilo):
 			speech_engine.say(besedilo)
@@ -66,12 +66,12 @@ class Wikipedia_show:
 
 		title=['']
 		root=tk.Tk()
-		tabControl = ttk.Notebook(root)
+		'''tabControl = ttk.Notebook(root)
 		tab1 = ttk.Frame(tabControl)
 		tabControl.add(tab1, text ='Tab 1')
 		tab2 = ttk.Frame(tabControl)
 		tabControl.add(tab2, text ='Tab 2')
-		tabControl.pack(expand = 1, fill ="both")
+		tabControl.pack(expand = 1, fill ="both")'''
 		root.geometry("1920x1080")
 		FrameWiki=Canvas(root, background="black")
 		FrameWiki.pack(fill=BOTH, expand= TRUE, anchor='w')

@@ -38,7 +38,7 @@ class Do_for_command:
 					Open_forecast=subprocess.Popen(["python3","weather.py",command_search])
 					Work_with_files.print_process_to_file(str(Open_forecast.pid), "Open_forecast")
 					
-			elif ("who" in command or "was" in command or "what" in command):
+			elif (("who" in command or "was" in command or "what" in command) and ("date" not in command)):
 				wiki_command=""
 				if ("who" in command):
 					wiki_command=command.split("who was ")[1]
@@ -137,7 +137,8 @@ class Do_for_command:
 						Open_yt=subprocess.Popen(["python3","youtube_stream.py", yt_search_query, str(ni)])
 						'''	
 			else:
-				AskMirror=multiprocessing.Process(target=asistant.jarvis(command))
-				AskMirror.start()
+				asistant.jarvis(command)
+				#AskMirror=multiprocessing.Process(target=asistant.jarvis(command))
+				#AskMirror.start()
 				#AskMirror.join()
 				#subprocess.Popen(["python3","Virtual_asistent.py", command])

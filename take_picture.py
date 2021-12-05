@@ -116,38 +116,14 @@ class take_pic:
 			save_as="../taken_pictures/"+str(self.user)+"/"+self.user+".jpg"
 			cv2.imwrite(save_as, self.frame_image)
 			#if()
-			time.sleep(5)
+			time.sleep(2)
 			print("PIC SAVED")
 			self.cap.release()
 			cv2.destroyAllWindows()
 			self.tk.destroy()
 		except Exception as e:
 			print(e)
-'''class Window:
-	def __init__(self):
-		seconds_left=11
-		self.tk=tk.Tk()
-		self.seconds_left=11
-		self.tk.configure(background='black')
-		self.tk.title("Pozdravljeni")
-		self.tk.geometry("1000x600")
-		self.Frame=Frame(self.tk, background='black')
-		self.Frame.pack(fill=BOTH, expand=YES)
-		#self.tk.mainloop()
-		
-		self.get_camera=take_pic(self.Frame)
-		self.get_camera.pack()'''
-		#self.counts.after(1000, self.count_seconds)
-		#self.count_seconds(10)
-		#self.img.after(1000, self.save_picture)
-
-	
-		#for
-	
-		
 try:
 	take_pic(arguments[1])
 except Exception as e:
 	print(e)
-#window=Window()
-#window.tk.mainloop()
