@@ -21,6 +21,7 @@ import seaborn as sns
 import asyncio
 #from aiohttp import ClientSession
 from working_with_files import Work_with_files
+from speech_listen import Speaking
 
 #from tkinter.ttk import *
 
@@ -200,7 +201,7 @@ class weather_GUI:
 			day_index=days_in_week.index(day_name_txt)
 			print(day_index)
 			if (arg==days_in_week[day_index-1]):
-				govor("I don't have Data for that day")
+				Speaking.to_say("I don't have Data for that day")
 				#self.tk.destroy
 			else:
 				for day in days_in_week:
