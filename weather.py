@@ -1,8 +1,6 @@
-import json
 import requests
 import datetime
-from PIL import ImageTk, Image
-import base64
+from PIL import ImageTk
 from urllib.request import urlopen
 from PIL import ImageTk
 import PIL.Image
@@ -17,18 +15,9 @@ except:
 	from Tkinter import *
 import sys
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-import seaborn as sns
-import asyncio
-#from aiohttp import ClientSession
 from working_with_files import Work_with_files
 from speech_listen import Speaking
-
-#from tkinter.ttk import *
-
-import matplotlib
 import matplotlib.pyplot as plt
-#matplotlib.use("TkAgg")
-#import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
@@ -40,7 +29,6 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 days_table=[]
 day_selected=""
 arguments = list(sys.argv)
-#print(arguments[1])
 days_in_week=["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
 current_day=[]
 BASE_DIR= os.path.dirname(os.path.abspath(__file__))

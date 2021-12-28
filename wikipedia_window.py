@@ -57,10 +57,6 @@ class Wikipedia_show:
 			img.image = render
 			img.place(x=1100, y=300)
 
-		def govor(besedilo):
-			speech_engine.say(besedilo)
-			speech_engine.runAndWait()
-
 		vpras=command
 		print("Vprasanje: "+vpras)
 

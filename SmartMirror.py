@@ -97,7 +97,7 @@ class Asistant(Frame):
 					if(self.l not in self.save_p_search):
 						self.previous_search=self.l
 					else:
- 						continue
+						continue
 
 		except Exception as e:
 			print(e)

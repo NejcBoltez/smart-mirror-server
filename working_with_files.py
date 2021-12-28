@@ -2,6 +2,18 @@ import os
 import json
 
 class Work_with_files:
+	def create_dir_for_user(new_user):
+		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
+		image_dir=os.path.join(BASE_DIR, '../Users')
+		dir_path=str(image_dir)+'/'+str(new_user)
+		os.mkdir(dir_path)
+		os.chmod(dir_path, 0o777)
+	def remove_file(file_path):
+		os.remove(file_path)	    	
+	def get_last_mod_file(path):
+		files = os.listdir(path)
+		paths = [os.path.join(path, basename) for basename in files]
+		return min(paths, key=os.path.getctime)
 	def get_api_keys():
 		read_api=""
 		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
@@ -11,58 +23,58 @@ class Work_with_files:
 		return read_api
 
 	def print_process_to_file(p_id, p_name):
-		p='{'
+		p="{"
 		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
-		open_processes=os.path.join(BASE_DIR, '../open_processes.json')
+		open_processes=os.path.join(BASE_DIR, "../open_processes.json")
 		
-		with open(open_processes, 'r') as f_r:
+		with open(open_processes, "r") as f_r:
 			f_read=f_r.read()
-			p=p+f_read.replace('{','').replace('}','')
+			p=p+f_read.replace("{","").replace("}","")
 			print("Read lines:"+str(p))
 
-		p_to_file='"'+p_name+'": "'+p_id+'"}'
-		if (p=='{'):
+		p_to_file="'"+p_name+"': '"+p_id+"'}"
+		if (p=="{"):
 			p=p+p_to_file
 		else:
-			p=p+','+p_to_file
+			p=p+","+p_to_file
 		print(p)
-		with open(open_processes,'w') as f_w:
+		with open(open_processes,"w") as f_w:
 			f_w.write(str(p))
 
 	def remove_process_from_file(p_id):
-		p='{'
+		p="{"
 		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
-		open_processes=os.path.join(BASE_DIR, '../open_processes.json')
-		with open(open_processes, 'r') as f_r:
+		open_processes=os.path.join(BASE_DIR, "../open_processes.json")
+		with open(open_processes, "r") as f_r:
 			f_read=f_r.read()
-			p=p+f_read.replace('{','').replace('}','')
-		p_split=p.split(',')
+			p=p+f_read.replace("{","").replace("}","")
+		p_split=p.split(",")
 		print(p_split)
-		p_new='{'
+		p_new="{"
 		for s in p_split:
 			if (p_id in s):
 				continue
 			else:
-				if(p_new=='{'):
+				if(p_new=="{"):
 					p_new=p_new+s	
 				else:
-					p_new=p_new+','+s
-		p_new=p_new+'}'
-		with open(open_processes, 'w') as f_w:
+					p_new=p_new+","+s
+		p_new=p_new+"}"
+		with open(open_processes, "w") as f_w:
 			f_w.write(p_new)
 
 	def read_process_from_file():
-		r_p=''
+		r_p=""
 		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
-		open_processes=os.path.join(BASE_DIR, '../open_processes.json')
-		with open(open_processes, 'r') as f_r:
+		open_processes=os.path.join(BASE_DIR, "../open_processes.json")
+		with open(open_processes, "r") as f_r:
 			#f_read=f.read()
 			r_p=json.load(f_r)
 		return r_p
 
 	def remove_all_processes_from_file():
 		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
-		open_processes=os.path.join(BASE_DIR, '../open_processes.json')
-		with open(open_processes, 'w') as f:
-			f.write('')
+		open_processes=os.path.join(BASE_DIR, "../open_processes.json")
+		with open(open_processes, "w") as f:
+			f.write("")
 		#return f_read
