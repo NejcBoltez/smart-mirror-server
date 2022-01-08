@@ -7,6 +7,11 @@ import cv2
 import time
 import multiprocessing
 from multiprocessing import Queue
+from speech_listen import Listening
+import threading
+from working_with_files import Work_with_files
+import SmartMirror
+from face_recognize import Get_face
 try:
 	import tkinter as tk
 	from tkinter import *
@@ -15,175 +20,83 @@ except:
 	from Tkinter import *
 
 
-listen=0
-r = sr.Recognizer()
 BASE_DIR= os.path.dirname(os.path.abspath(__file__))
-image_dir=os.path.join(BASE_DIR, '../Users')
-class Create_new_user(Frame):
-	def __init__(self, parent, *args, **kwargs):
-		Frame.__init__(self, parent, bg='black')
-		self.label=Label(self, font=('Helvetica', 30), fg="white", bg="black", text='Plase say or spell your name without spaces')
-		self.label.pack()
-		self.get_user_name=Label(self, font=('Helvetica', 30), fg="white", bg="black", text='')
-		#time.sleep(5)
+users_dir=os.path.join(BASE_DIR, '../Users')
+path, dirs, files = next(os.walk(users_dir))
+print(path)
+print(dirs)
+print(files)
+count_users= len(dirs)
 
-		#self.get_user_name.after(1000,self.new_user_name())
-		self.get_user_name.bind('<Map>', self.new_user_name())
-	def new_user_name(self):
-		user_name=''
-		while user_name=='':
-			with sr.Microphone() as source:
-				print("Plase say your name without spaces")
-				#q=Queue()
-				#print(q.get())
-				print(Frame)
-				r.adjust_for_ambient_noise(source)
-				audio = r.listen(source)
-				#audio = r.adjust_for_ambient_noise(source)
-				print(audio)
-				# recognize speech using Google Speech Recognition
+print(count_users)
 
-			try:
-				# for testing purposes, you're just using the default API key
-				# to use another API key, use `r.recognize_google(audio,key="GOOGLE_SPEECH_RECOGNITION_API_KEY")`
-				# instead of `r.recognize_google(audio)`
-				print("Your name would be " + r.recognize_google(audio).replace(' ', '') + ".Is that OK?")
-				user_test=r.recognize_google(audio).replace(' ', '')
-				self.get_user_name.configure(text=user_test)
-				with sr.Microphone() as source:
-					print("Plase say your name without spaces")
-					#q=Queue()
-					#print(q.get())
-					print(Frame)
-					r.adjust_for_ambient_noise(source)
-					audio = r.listen(source)
-					#audio = r.adjust_for_ambient_noise(source)
-					print(audio)
-				ok_name=r.recognize_google(audio).replace(' ', '')
-				if('yes' in ok_name):
-					print('Good name')
-					user_name=user_test
-					dir_path=str(image_dir)+'/'+str(user_name)
-					os.mkdir(dir_path)
-					os.chmod(dir_path, 0o777)
-					create_first_user(user_name)
-				else:
-					continue
-			except OSError as error:
-				print('test')
-				print(str(sys.exc_info()[0]))
-				print(error)
-				continue
-		self.unbind('<Map>')
+start_window=tk.Tk()
+start_window.geometry("1920x1080")
+Frame=Frame(start_window, background='Black')
+Frame.pack(fill=BOTH, expand= TRUE)
+auth_label=Label(Frame, font=('Helvetica', 30), fg='white', bg='black', text="User authontication")
+auth_label.pack(side=TOP,fill=BOTH, expand= TRUE)
+#self.check_for_user()
 
-
-
-
-def create_first_user(user_name):
-	#try:
-	#	face_front=cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
-	#except:
-	face_front=cv2.CascadeClassifier('../../.local/lib/python3.7/site-packages/cv2/data/haarcascade_frontalface_default.xml')
-	cap = cv2.VideoCapture(-1)
-
-	ret, frame = cap.read()
-	count=0
-	found_faces=[10]
-	while(count<10):
-		# Capture frame-by-frame
-		ret, frame = cap.read()
-
-		# Our operations on the frame come here
-		gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-
-		faces = face_front.detectMultiScale(frame, scaleFactor=1.5, minNeighbors=5)
-		# Display the resulting frame
-		for (x, y, w, h) in faces:
-			face_coordinates=str(x)+", "+str(y)+","+str(w)+", "+str(h)
-			if face_coordinates not in found_faces:
-				print (x,y,w,h)
-				found_face=[w,h]
-				count+=1
-				roi_gray=gray[y:y+h, x:x+w]
-				roi_color=frame[y:y+h, x:x+w]
-				img_item='../Users/'+user_name+'/'+user_name+'.png'
-
-				#save the image
-				cv2.imwrite(img_item, roi_color)
-
-				# frame
-				color=(255,0,0)
-				stroke=2
-				width=x+y
-				height=y+h
-				cv2.rectangle(frame, (x, y), (width, height), color, stroke)
-				found_faces.append(face_coordinates)
-
-
-			#recognize
-		#time.sleep(100)
-		cv2.imshow('frame',frame)
-		#cv2.moveWindow(winname, 500,500)
-		if (cv2.waitKey(1) & 0xFF == ord('q')) or sys.stdin == str.encode('q') :
-			break
-
-	# When everything done, release the capture
-	cap.release()
-	cv2.destroyAllWindows()
-
-class new_user_GUI:
+class new_user_GUI():
 	def __init__(self):
 		self.tk=tk.Tk()
-		self.tk.configure(background='black')
-		self.tk.title("Pozdravljeni")
-		self.tk.geometry("1920x1000")
-		#self.tk.attributes('-fullscreen', True)  
-		#self.fullScreenState = False
-		self.Frame=Frame(self.tk, background='black')
-		self.Frame.pack(fill=BOTH, expand=YES)
-		self.Canvas=Canvas(self.Frame, background='red', width='450', height='150')
-		self.Canvas.pack(pady='300')
-		self.create_user_rectangle=Create_new_user(self.Canvas)
+		self.tk.geometry("1920x1080")
+		self.Frame=Frame(self.tk, background='Black')
+		self.Frame.pack(fill=BOTH, expand= TRUE)
+		self.auth_label=Label(self.Frame, font=('Helvetica', 30), fg='white', bg='black', text="User authontication")
+		self.auth_label.pack(side=TOP,fill=BOTH, expand= TRUE)
+		self.say_new_user_name=Label(self.Frame, font=('Helvetica', 30), fg='white', bg='black', text="")
+		self.say_new_user_name.pack(fill=BOTH, expand= TRUE)
+		self.get_new_user_name=Label(self.Frame, font=('Helvetica', 30), fg='white', bg='black', text="")
+		self.get_new_user_name.pack(fill=BOTH, expand= TRUE)
+		my_thread=threading.Thread(target=self.check_for_user)
+		my_thread.start()
+		#self.check_for_user()
+		self.tk.mainloop()
+	def check_for_user(self):
+		#user_check=''
+		print("TEST")
+		#while(True):
+		#user_check=face_recognize.Get_face.User_auth()
+		#print("USER: " + user_check)
+			#break;
+		self.new_user_create()
+	def new_user_create(self):
+		self.auth_label.config(text="Plase say your name without spaces")
+		new_user=Listening.listening_function()
+		#print("USER: "+new_user)
+		if (new_user is not None or new_user != ""):
+			while (True):
+				self.say_new_user_name.config(text="Your new name would be '" + new_user + "'. IS THAT OK?")
+				user_ok=Listening.listening_function()
+				if ("yes" in user_ok.lower()):
+					print("test")
+					Work_with_files.create_dir_for_user(new_user)
+					#face_recognize.take_pic(new_user)
+					new_user_pic=subprocess.Popen(["python3","take_picture.py", new_user])#self.take_pic=take_picture.take_pic('test')
+					self.tk.destroy()
+					break
+try:
+	if (count_users==2):
+		new_user_GUI()
+		path, dirs, files = next(os.walk(users_dir))
+		print(path)
+		print(dirs)
+		print(files)
+		count_users= len(dirs)
 
-def start_listening():
-	while (True):
-		with sr.Microphone() as source:
-			print("Say something1234!")
-			#q=Queue()
-			#print(q.get())
-			print(Frame)
-			r.adjust_for_ambient_noise(source)
-			audio = r.listen(source)
-			#audio = r.adjust_for_ambient_noise(source)
-			print(audio)
-			# recognize speech using Google Speech Recognition
-
-		try:
-			# for testing purposes, you're just using the default API key
-			# to use another API key, use `r.recognize_google(audio,key="GOOGLE_SPEECH_RECOGNITION_API_KEY")`
-			# instead of `r.recognize_google(audio)`
-			print("Google Speech Recognition thinks you said " + r.recognize_google(audio))
-			razgovor=r.recognize_google(audio).lower()
-			razgovor_search=""
-			if('mirror' in razgovor):
-				Open_yt_search=subprocess.Popen(["python3","SmartMirror.py"])
+	if(count_users>2):
+		while (True):
+			get_user=Get_face.User_auth()
+			if (get_user is not None and len(get_user)>0):
+				print(get_user)
 				break
-		except OSError as error:
-			print('test')
-			print(str(sys.exc_info()[0]))
-			print(error)
-			continue
+		#new_user_pic=subprocess.Popen(["python3","SmartMirror.py"])
+		start_mirror=threading.Thread(target=SmartMirror.Window)
+		start_mirror.start()
 
+except Exception as e:
+	print(e)
+start_window.mainloop()
 
-window=new_user_GUI()
-window.tk.mainloop()
-'''for root, dirs, files in os.walk(image_dir):
-	print(root)
-	print(dirs)
-	if len(dirs)==0 and len(files)==0:
-		window=new_user_GUI()
-		window.tk.mainloop()	
-		break
-	else:
-		start_listening()
-		break'''

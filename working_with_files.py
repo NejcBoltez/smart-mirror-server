@@ -2,6 +2,19 @@ import os
 import json
 
 class Work_with_files:
+	def save_start_phrases(phrases):
+		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
+		start_phrases=os.path.join(BASE_DIR, 'start_phrases.json')	
+		with open(start_phrases, "r") as f_r:
+			f_read=f_r.read()
+		read_phrases=f_read.replace(']','')
+		new_phrases={
+			"user" : "",
+			"start_phrases" : '"'+str(phrases)+'"'
+		}
+		with open(start_phrases,"w") as f_w:
+			f_w.write(str(read_phrases)+','+str(new_phrases).replace("'", '"')+"]")
+		print(f_read)
 	def create_dir_for_user(new_user):
 		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
 		image_dir=os.path.join(BASE_DIR, '../Users')

@@ -197,8 +197,8 @@ class Camera(Frame):
 		self.pack(side=LEFT, fill=BOTH, expand=YES)
 		self.CamFrame=Frame(self, background='Black')
 		self.CamFrame.pack(side=TOP,anchor=E)
-		self.get_camera()
-		#self.get_home()
+		#self.get_camera()
+		self.get_home()
 	def get_camera(self):
 		while (True):
 			self.get_user=Get_face.User_auth()
@@ -236,9 +236,10 @@ class Window:
 		self.Frame=Frame(self.tk, background='black')
 		self.Frame.pack(fill=BOTH, expand=YES)
 		self.recognize()
+		self.tk.mainloop()
 	def recognize(self):
 		self.cam=Camera(self.Frame)
 		self.cam.pack()
 	
-win=Window()
-win.tk.mainloop()
+#win=Window()
+#win.tk.mainloop()
