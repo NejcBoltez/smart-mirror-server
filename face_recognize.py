@@ -105,7 +105,7 @@ def save_images(self, f_faces, user):
 			if (self.user_name == self.user):
 				t=time.strftime("%Y%m%d%H%M%S")
 				new_file_count=count_pics_for_user(self.user)
-				while (new_file_count >= 200):
+				while (new_file_count >= 10):
 					last_mod_file=Work_with_files.get_last_mod_file(save_image_dir+"/"+self.user_name)
 					Work_with_files.remove_file(last_mod_file)
 					new_file_count=count_pics_for_user(self.user)
@@ -121,7 +121,7 @@ class User_auth_GUI (Frame):
 	def __init__(self, parent):
 		Frame.__init__(self, parent, bg="black")
 		self.user_name=""
-		self.main_label=Label(self, text="Calibrating the user123454321", font=("Helvetica", 60), fg="white", bg="black")
+		self.main_label=Label(self, text="Recognizing the user.", font=("Helvetica", 60), fg="white", bg="black")
 		self.main_label.pack(padx=20, pady=20)
 		self.img = Label(self, width=700, height=700, bg="black")
 		self.img.pack(padx=150, pady=150)
@@ -167,23 +167,21 @@ class User_auth_GUI (Frame):
 								
 				else:
 					self.user_name=get_user_from_stream(self.frame)
-					self.main_label.config(text=self.user_name)
-					#self.file_count=count_pics_for_user(self.user_name)
-					#print(self.file_count)
-					
+					self.main_label.config(text="Calibrationg for user " + self.user_name)
+
 				cv2image = cv2.cvtColor(self.frame, cv2.COLOR_BGR2RGBA)
 				image = PIL.Image.fromarray(cv2image)
 				render = ImageTk.PhotoImage(image=image)
-
 				self.img.imgtk = render
 				self.img.configure(image=render)
-				#time.sleep(0.5)
 				
 		except:
 			self.get_camera_stream_calibrate()
+		self.main_label.config(text="Please wait while saving pictures")
+		self.save_pic=threading.Thread(target=save_images(self,self.found_faces,self.user_name))
+		self.save_pic.start()
 		self.cap.release()
 		self.quit()
-		save_images(self,self.found_faces,self.user_name)
 class Get_face():
 	def User_auth():
 		cap = cv2.VideoCapture(0)

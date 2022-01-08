@@ -22,46 +22,22 @@ class Listening:
 		while user_name=='':
 			with sr.Microphone() as source:
 				print("Plase say your name without spaces")
-				#q=Queue()
-				#print(q.get())
 				print(Frame)
 				r.adjust_for_ambient_noise(source)
 				audio = r.listen(source)
-				#audio = r.adjust_for_ambient_noise(source)
 				print(audio)
-				# recognize speech using Google Speech Recognition
 
 			try:
-				# for testing purposes, you're just using the default API key
-				# to use another API key, use `r.recognize_google(audio,key="GOOGLE_SPEECH_RECOGNITION_API_KEY")`
-				# instead of `r.recognize_google(audio)`
 				print("Your name would be " + r.recognize_google(audio).replace(' ', '') + ".Is that OK?")
 				user_test=r.recognize_google(audio).replace(' ', '')
 				with sr.Microphone() as source:
 					print("Plase say your name without spaces")
-					#q=Queue()
-					#print(q.get())
-					#print(Frame)
 					r.adjust_for_ambient_noise(source)
 					audio = r.listen(source)
-					#audio = r.adjust_for_ambient_noise(source)
 					print(audio)
-				#ok_name=r.recognize_google(audio).replace(' ', '')
 				user_name=r.recognize_google(audio).replace(' ', '')
 				print("USER_NAME: "+user_name)
-				'''if('yes' in ok_name):
-					print('Good name')
-					user_name=user_test
-					dir_path=str(image_dir)+'/'+str(user_name)
-					os.mkdir(dir_path)
-					os.chmod(dir_path, 0o777)
-					#user_create=Get_face.User_creation(user_name)
-					#create_new_user(user_name)
-				else:
-					continue'''
 			except OSError as error:
-				print('test')
-				#print(str(sys.exc_info()[0]))
 				print(error)
 				continue
 		return user_name

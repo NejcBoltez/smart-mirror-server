@@ -22,9 +22,6 @@ from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 
-#import time
-
-
 
 days_table=[]
 day_selected=""
@@ -78,12 +75,6 @@ class weather_GUI:
 		self.populate_data(command)
 		self.tk.mainloop()
 	def get_weather_data(self):
-		'''days_table=[]
-		day_selected=""
-		#arguments = list(sys.argv)
-		#print(arguments[1])
-		days_in_week=["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
-		current_day=[]'''
 		self.City = "Novo mesto"
 		self.Country = "SI"
 		self.get_api=Work_with_files.get_api_keys()
@@ -110,10 +101,15 @@ class weather_GUI:
 		load = PIL.Image.open(image_byt)
 		image_final=load.resize((300,200), PIL.Image.ANTIALIAS)
 		render = ImageTk.PhotoImage(image_final)
+		overall_temp="Temp: " + str(self.read_day['main']['temp'])
+		overall_humidity="Humidity: " + str(self.read_day['main']['humidity'])
+		overall_temp_min="Temp_min: " + str(self.read_day['main']['temp_min'])
+		overall_temp_max="Temp_max: " + str(self.read_day['main']['temp_max'])
+		overall_forecast=overall_temp +'\n' + overall_humidity + '\n' + overall_temp_min + '\n' + overall_temp_max +'\n\n'
 		img = Label(self.logo, image=render, width=300, height=200, background="black")
 		img.image = render
-		img.place(x=10, y=150)
-
+		img.place(x=10, y=50)
+		self.logo.create_text(150,350, width=300, text=overall_forecast, fill="white", font=('Helvetica', 20))
 		for d in self.read['list']:
 			if (str(d['dt_txt']).split(' ')[0] not in days_table):
 				days_table.append(str(d['dt_txt']).split(' ')[0])
@@ -141,15 +137,16 @@ class weather_GUI:
 		#else:
 		#	 day_selected=days_table[0]
 		for i in self.read['list']:
-			date=str(i['dt_txt']).split(' ')[0]
+			date=str(i['dt_txt']).split(' ')
 			if (date == day_selected):
+				forecast_time=str(i['dt_txt']).split(' ')
 				cels=int(i['main']['temp'])
 				temp="Temp: " + str(cels)
 				humidity="Humidity: " + str(i['main']['humidity'])
 				temp_min="Temp_min: " + str(i['main']['temp_min'])
 				temp_max="Temp_max: " + str(i['main']['temp_max'])
 				day_forecast=str(i['dt_txt']) + '\n' + temp +'\n' + humidity + '\n' + temp_min + '\n' + temp_max +'\n\n'
-				weather=weather + str(i['dt_txt']) + '\n' + temp +'\n' + humidity + '\n' + temp_min + '\n' + temp_max +'\n\n' #+'\n' + days_table
+				weather=weather + str(str(i['dt_txt'])) + '\n' + temp +'\n' + humidity + '\n' + temp_min + '\n' + temp_max +'\n\n' #+'\n' + days_table
 				
 				t.append(cels)
 				h.append(int(i['main']['humidity']))

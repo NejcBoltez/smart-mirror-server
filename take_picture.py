@@ -4,7 +4,6 @@ import sys
 import time
 from PIL import ImageTk
 import PIL.Image
-#import multiprocessing
 import threading
 try:
 	import tkinter as tk

@@ -4,7 +4,6 @@ import pafy
 import sys
 from youtube_search import YoutubeSearch
 import json
-from youtube import get_yt_data
 try:
     import tkinter as tk
     from tkinter import *
@@ -27,8 +26,8 @@ class Video(Frame):
         self.video_name.pack(side=TOP)
         self.video_play=Frame(self.videoframe, background="black", width=1400, height=650)
         self.video_play.pack(fill=BOTH, expand=YES)
-        #self.url= self.get_URL()
-        self.url="https://www.youtube.com/watch?v=EUBWcad1U0c"#=xAg7z6u4NE8"
+        self.url= self.get_URL()
+        #self.url="https://www.youtube.com/watch?v=EUBWcad1U0c"#=xAg7z6u4NE8"
         self.video=pafy.new(self.url) #pip3 install youtube-dl    
         self.best=self.video.getbest()
         self.playurl=self.best.url
@@ -42,6 +41,7 @@ class Video(Frame):
         #time.sleep(1)
         #self.player.pause()
         #self.start_animation()
+        '''
     def start_animation(self):
         if(self.start_w_animation<=self.end_w_animation and self.start_h_animation<=self.end_h_animation):
             self.video_play.configure(width=self.start_w_animation, height=self.start_h_animation, background="black")
@@ -50,7 +50,7 @@ class Video(Frame):
             self.start=self.video_play.after(1, self.start_animation)
         else:
             self.video_play.after_cancel(self.start)
-            #self.player.play()
+            #self.player.play()'''
 
 
     def get_URL(self):
@@ -61,6 +61,8 @@ class Video(Frame):
         selected_url=''
         for i in self.yt:
             print(c)
+            print(i['url_suffix'])
+            print(i['title'])
             if (c == int(arguments[2])):
                 print(i['url_suffix'])
                 print(i['title'])

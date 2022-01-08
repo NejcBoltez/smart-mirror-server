@@ -33,6 +33,7 @@ class Work_with_files:
 			print("Read lines:"+str(p))
 
 		p_to_file="'"+p_name+"': '"+p_id+"'}"
+		p_to_file=p_to_file.replace("'",'"')
 		if (p=="{"):
 			p=p+p_to_file
 		else:

@@ -5,21 +5,18 @@ except:
 	import Tkinter as tk
 	from Tkinter import *
 import time
-import json
 import requests
 from urllib3 import *
 import os
 import pyttsx3 as pyttsx
 import speech_recognition as sr
 import threading
-import send_command
+#import send_command
 from send_command import Do_for_command
 from face_recognize import Get_face
 import signal
 import subprocess
-import psutil
 from speech_listen import Speaking
-from datetime import datetime
 from working_with_files import Work_with_files
 from PIL import ImageTk
 import PIL.Image
@@ -42,23 +39,8 @@ class Asistant(Frame):
 		self.CommandHelp.pack()
 		self.getPosluh()
 	def getPosluh(self):
-		print('TEST123')
 		my_thread=threading.Thread(target=self.Listening_test)
 		my_thread.start()
-	def listening_function(self):
-		r = sr.Recognizer()
-		razgovor=''		
-		with sr.Microphone() as source:
-			r.adjust_for_ambient_noise(source)
-			audio = r.listen(source)
-		try:
-			print("Google Speech Recognition thinks you said " + r.recognize_google(audio))
-			razgovor=r.recognize_google(audio).lower()
-		except sr.UnknownValueError:
-			print("Google Speech Recognition could not understand audio")
-		except sr.RequestError as e:
-			print("Could not request results from Google Speech Recognition service;{0}".format(e))
-		return razgovor
     		
 	def Listening_test(self):
 		self.start_to_listen=False
@@ -78,20 +60,16 @@ class Asistant(Frame):
 					self.popup_id=str(start_popup.pid)
 					
 				elif (self.l.lower() != "" and self.l.lower() != "mirror" and self.start_to_listen==True):
-					print(self.l.lower())
-					print(user)
 					if('log out' in self.l.lower() or 'log off' in self.l.lower() or 'exit' in self.l.lower()):
 						if (len(self.popup_id)>0):
 							os.kill(int(self.popup_id), signal.SIGKILL)
 						self.master.master.destroy()
-						print('TEST')
 					else:
 						if ("next" in self.l.lower()):
 							self.displayed=self.displayed+5
-						self.send_command_thread=threading.Thread(target=send_command.Do_for_command(self.l.lower(), user, str(self.displayed), self.previous_search))
+						self.send_command_thread=threading.Thread(target=Do_for_command(self.l.lower(), user, str(self.displayed), self.previous_search))
 						self.send_command_thread.start()
 					self.start_to_listen=False
-					print(self.start_to_listen)
 					if (len(self.popup_id)>0):
 						os.kill(int(self.popup_id), signal.SIGKILL)
 					if(self.l not in self.save_p_search):
@@ -157,7 +135,7 @@ class Weather(Frame):
 		self.temp_min="Temp_min: " + str(weather_data['main']['temp_min'])
 		self.temp_max="Temp_max: " + str(weather_data['main']['temp_max'])
 		self.weather=self.temp +'\n' + self.humidity + '\n' + self.temp_min + '\n' + self.temp_max
-		self.icon='13d'#weather_data['weather'][0]['icon']'13d'
+		self.icon=weather_data['weather'][0]['icon']#'13d'
 		self.BASE_DIR= os.path.dirname(os.path.abspath(__file__))
 		self.image_dir=os.path.join(self.BASE_DIR, 'Weather_widgets')
 		self.image_byt = str(self.image_dir+'/'+self.icon+'.PNG')
@@ -219,11 +197,10 @@ class Camera(Frame):
 		self.pack(side=LEFT, fill=BOTH, expand=YES)
 		self.CamFrame=Frame(self, background='Black')
 		self.CamFrame.pack(side=TOP,anchor=E)
-		self.get_home()
-		#self.get_camera()
+		self.get_camera()
+		#self.get_home()
 	def get_camera(self):
 		while (True):
-			print('test')
 			self.get_user=Get_face.User_auth()
 			if (self.get_user is not None and len(self.get_user)>0):
 				print(self.get_user)
