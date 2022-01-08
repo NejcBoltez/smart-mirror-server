@@ -28,17 +28,12 @@ def get_user_from_stream(frame):
 	image_dir=os.path.join(BASE_DIR, "../Users")
 	face_front=cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
 	faces = face_front.detectMultiScale(frame, scaleFactor=1.05, minNeighbors=6)
-	print(type(faces))
-	print(len(faces))
 	user_name=""
 	if (len(faces)==0):
-		roi_color=frame
-		print("TEST")
+		roi_color=Frame
 		image_encoding = face_recognition.face_encodings(frame)[0]
-		print(image_encoding)
 		for root, dirs, files in os.walk(image_dir):
 			for d in dirs:
-				print(dirs)
 				for root, dirs, files in os.walk(image_dir+"/"+d):
 					for file in files:
 						unknown_image = face_recognition.load_image_file(image_dir+"/"+d+"/"+file)
@@ -63,7 +58,6 @@ def get_user_from_stream(frame):
 			image_encoding = face_recognition.face_encodings(frame)[0]
 			for root, dirs, files in os.walk(image_dir):
 				for d in dirs:
-					print(dirs)
 					for root, dirs, files in os.walk(image_dir+"/"+d):
 						for file in files:
 							unknown_image = face_recognition.load_image_file(image_dir+"/"+d+"/"+file)
@@ -81,25 +75,18 @@ def get_user_from_stream(frame):
 									break
 								else:
 									continue
-	
-		
-	print(user_name)
 	return user_name
 def save_images(self, f_faces, user):
 	BASE_DIR= os.path.dirname(os.path.abspath(__file__))
 	save_image_dir=os.path.join(BASE_DIR, "../Users")
-	
-	print(f_faces)
 	self.user=user
 	for f in f_faces:
-		print(f)
 		f_split=str(f).replace("'","").split(",")
 		try:
 			f_x=f_split[0]
 			f_y=f_split[1]
 			f_w=f_split[2]
 			f_h=f_split[3]
-			print(type(f_split[0]))
 			roi_color=self.frame[int(f_y):int(f_y)+int(f_h), int(f_x):int(f_x)+int(f_w)]
 			self.user_name=get_user_from_stream(self.frame)
 			if (self.user_name == self.user):
@@ -145,14 +132,12 @@ class User_auth_GUI (Frame):
 			#	self.user_name=get_user_from_stream(self.frame)
 			while(self.count<5):
 				self.ret, self.frame = self.cap.read()
-				print(self.user_name)
 				if (self.user_name !="" and self.user_name != None):
 					faces = face_front.detectMultiScale(self.frame, scaleFactor=1.05, minNeighbors=6)
 					for (x, y, w, h) in faces:
 						face_coordinates=str(x)+","+str(y)+","+str(w)+","+str(h)
 						if face_coordinates not in self.found_faces:
 							try:
-								print (x,y,w,h)
 								self.count+=1
 								color=(255,0,0)
 								stroke=2
@@ -208,17 +193,12 @@ class User_create():
 		image_dir=os.path.join(BASE_DIR, "../Users")
 		face_front=cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
 		faces = face_front.detectMultiScale(frame, scaleFactor=1.05, minNeighbors=6)
-		print(type(faces))
-		print(len(faces))
 		user_name=""
 		if (len(faces)==0):
-			roi_color=frame
-			print("TEST")
+			roi_color=Frame
 			image_encoding = face_recognition.face_encodings(frame)[0]
-			print(image_encoding)
 			for root, dirs, files in os.walk(image_dir):
 				for d in dirs:
-					print(dirs)
 					for root, dirs, files in os.walk(image_dir+"/"+d):
 						for file in files:
 							unknown_image = face_recognition.load_image_file(image_dir+"/"+d+"/"+file)
@@ -279,10 +259,7 @@ class User_calibration(Frame):
 			for (x, y, w, h) in faces:
 				face_coordinates=str(x)+","+str(y)+","+str(w)+","+str(h)
 				if face_coordinates not in self.found_faces:
-					print (x,y,w,h)
 					count+=1
-
-					# frame
 					color=(255,0,0)
 					stroke=2
 					width=x+y
@@ -338,19 +315,15 @@ class take_pic:
 		#self.count_seconds(10)
 		#self.count_seconds(10)
 	def get_camera_stream(self):
-		print("test123")
 		self.rec, self.frame_image = self.cap.read()
 		self.cv2image = cv2.cvtColor(self.frame_image, cv2.COLOR_BGR2RGBA)
 		self.image = PIL.Image.fromarray(self.cv2image)
-		print("test12345654321")
 		render = ImageTk.PhotoImage(image=self.image)
 
 		self.img.imgtk = render
-		print("testPics")
 		#cv2.imwrite('test',self.frame_image)
 		self.img.configure(image=self.image)
 		self.count=self.count+10
-		print(self.count_number)
 		
 		#self.my_thread=threading.Thread(target=self.count_seconds(10))
 		#self.my_thread.start()
@@ -360,52 +333,25 @@ class take_pic:
 			self.count_number=self.count_number-1
 			#if (self.count_number>0):
 			self.count=0
-			print (self.count_number)
 		if (str(self.count_number)=='-1'):
 			self.counts.configure(text='0')
 			self.save_picture()
-				#print("SAVING_PICTURES")
-				#save_as="../taken_pictures/"+str(self.user)+"/"+self.user+".jpg"
-				#cv2.imwrite(save_as, self.frame_image)
-				#if()
-				#time.sleep(5)
-				#print("PIC SAVED")
-					#
-				#self.tk.destroy()
-					#self.camera_stream.join()
 		if(self.count_number>=0):
-			print("test")
 			self.img.after(10, self.get_camera_stream)
 		#self.save_picture()
 	def count_seconds(self, remaining):
-		#self.counts.configure(text="%d" % remaining)
-		'''if (remaining == 0):
-			self.get_camera_stream()'''
-		#else:
-		#self.counts.after(1000, self.count_seconds(remaining - 1))
 		while remaining:
-			print('TEST')
 			mins, secs = divmod(remaining, 60)
 			timer = '{:02d}:{:02d}'.format(mins, secs)
-			#print(timer, end="\r")
 			self.counts.configure(text=timer)
 			time.sleep(1)
 			remaining -= 1
-		#for i in range(10):
-		#    self.counts.config(text=str(i))
-		#    time.sleep(1)
-	   # seconds_left=seconds_left-1
-	   # if (seconds_left==0):
-	   #     self.save_picture()
-	   # return seconds_left
 	def save_picture(self):
 		try:
-			print("SAVING_PICTURES")
 			save_as="../taken_pictures/"+str(self.user)+"/"+self.user+".jpg"
 			cv2.imwrite(save_as, self.frame_image)
 			#if()
 			time.sleep(2)
-			print("PIC SAVED")
 			self.cap.release()
 			cv2.destroyAllWindows()
 			self.tk.destroy()
