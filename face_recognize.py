@@ -47,7 +47,6 @@ def get_user_from_stream(frame):
 								root, dirs, files = next(os.walk(image_dir+"/"+d))
 								file_count = len(files)
 								img_item=str(image_dir)+"/"+d+"/"+d+"_"+str(file_count+1)+".jpg"
-								#cv2.imwrite(img_item, roi_color)
 								break
 							else:
 								continue
@@ -71,7 +70,6 @@ def get_user_from_stream(frame):
 									root, dirs, files = next(os.walk(image_dir+"/"+d))
 									file_count = len(files)
 									img_item=str(image_dir)+"/"+d+"/"+d+"_"+str(file_count+1)+".jpg"
-									#cv2.imwrite(img_item, roi_color)
 									break
 								else:
 									continue
@@ -127,9 +125,6 @@ class User_auth_GUI (Frame):
 			self.count=0
 			self.found_faces=[]
 			self.file_count=0
-			#self.ret, self.frame = self.cap.read()
-			#if (self.user_name==""):
-			#	self.user_name=get_user_from_stream(self.frame)
 			while(self.count<5):
 				self.ret, self.frame = self.cap.read()
 				if (self.user_name !="" and self.user_name != None):
@@ -186,9 +181,7 @@ class User_create():
 	def __init (self, parent):
 		cap = cv2.VideoCapture(0)
 		user_name=""
-		#while(user_name==""):
 		ret, frame = cap.read()
-		#user_name=get_user_from_stream(frame)
 		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
 		image_dir=os.path.join(BASE_DIR, "../Users")
 		face_front=cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
@@ -212,7 +205,6 @@ class User_create():
 									root, dirs, files = next(os.walk(image_dir+"/"+d))
 									file_count = len(files)
 									img_item=str(image_dir)+"/"+d+"/"+d+"_"+str(file_count+1)+".jpg"
-									#cv2.imwrite(img_item, roi_color)
 									break
 								else:
 									continue
@@ -236,8 +228,6 @@ class User_calibration(Frame):
 		self.camera_stream=threading.Thread(target=self.get_camera_stream_calibrate)
 		self.camera_stream.start()
 		#self.win.mainloop()
-		
-		#cap = cv2.VideoCapture(0)
 	def get_camera_stream_calibrate(self):
 		time.sleep(1)
 		"""try:
@@ -286,7 +276,6 @@ class take_pic:
 		except:
 			print('')
 	def __init__(self,user):
-		#seconds_left=11
 		self.user=user
 		self.tk=tk.Tk()
 		self.seconds_left=11
@@ -309,11 +298,6 @@ class take_pic:
 		self.camera_stream.start()
 		self.tk.mainloop()
 		
-		#time.sleep(10)
-		#self.my_thread=threading.Thread(target=self.count_seconds(10))
-		#self.my_thread.start()
-		#self.count_seconds(10)
-		#self.count_seconds(10)
 	def get_camera_stream(self):
 		self.rec, self.frame_image = self.cap.read()
 		self.cv2image = cv2.cvtColor(self.frame_image, cv2.COLOR_BGR2RGBA)
@@ -321,24 +305,18 @@ class take_pic:
 		render = ImageTk.PhotoImage(image=self.image)
 
 		self.img.imgtk = render
-		#cv2.imwrite('test',self.frame_image)
 		self.img.configure(image=self.image)
 		self.count=self.count+10
-		
-		#self.my_thread=threading.Thread(target=self.count_seconds(10))
-		#self.my_thread.start()
 
 		if (self.count==100 and self.count_number>=0):
 			self.counts.configure(text=self.count_number)
 			self.count_number=self.count_number-1
-			#if (self.count_number>0):
 			self.count=0
 		if (str(self.count_number)=='-1'):
 			self.counts.configure(text='0')
 			self.save_picture()
 		if(self.count_number>=0):
 			self.img.after(10, self.get_camera_stream)
-		#self.save_picture()
 	def count_seconds(self, remaining):
 		while remaining:
 			mins, secs = divmod(remaining, 60)
