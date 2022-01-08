@@ -70,21 +70,6 @@ class yt_search(Frame):
                 except:
                     c=c-1
                     continue
-            print(c)
-            print(i)
-        
-        #self.resize_animation()
-            
-    '''        
-    def resize_animation(self):
-        if(self.position_x>=0):
-            self.search_frame_top.pack_configure(side=TOP, fill=BOTH, expand= TRUE, padx=self.position_x)
-            self.search_frame_bottom.pack_configure(side=TOP, fill=BOTH, expand= TRUE, padx=self.position_x)
-            self.position_x=self.position_x-50
-        else:
-            self.search_frame.after_cancel(self.move_left)
-        self.move_left=self.search_frame.after(100, self.resize_animation)
-        return self.position_x'''
 
 class Window:
     def __init__(self):
