@@ -1,7 +1,6 @@
 import vlc
 import pafy
 import sys
-from youtube_search import YoutubeSearch
 import json
 import os
 try:
@@ -50,7 +49,7 @@ class Video(Frame):
 		c=1
 		selected_url=''
 		for i in yt_data['videos']:
-			if (c == int(arguments[2])):
+			if (c == int(arguments[1])):
 				self.video_name.config(text=str(i['title']))
 				selected_url='https://www.youtube.com'+i['url_suffix']
 			c=c+1

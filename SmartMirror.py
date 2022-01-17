@@ -176,6 +176,7 @@ class News(Frame):
 		self.URLnews = "https://newsapi.org/v2/top-headlines?country=si&apiKey="+self.APIK
 		self.News_request=requests.get(self.URLnews)
 		self.News=self.News_request.json()
+		Work_with_files.save_news_data(self.News)
 		self.NewsList=self.News['articles']
 		self.update_news(self.NewsList)
 		self.NewsShow.after(10000, self.getNews)
@@ -243,5 +244,5 @@ class Window:
 		self.cam=Camera(self.Frame)
 		self.cam.pack()
 	
-#win=Window()
-#win.tk.mainloop()
+win=Window()
+win.tk.mainloop()

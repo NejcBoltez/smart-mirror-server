@@ -93,9 +93,20 @@ class Work_with_files:
 			f.write("")
 		#return f_read
 	def save_youtube_data(yt_data):
-		p=str(yt_data).replace("'", '"').replace('None','"None"')
 		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
 		open_processes=os.path.join(BASE_DIR, "youtube_data.json")
-		print(p)
 		with open(open_processes,"w") as f_w:
-			f_w.write(str(p))
+			json.dump(yt_data,f_w)
+	def save_news_data(news_data):
+		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
+		open_processes=os.path.join(BASE_DIR, "news_data.json")
+		with open(open_processes,"w") as f_w:
+			json.dump(news_data,f_w)#f_w.write(str(p))
+	def read_news_data():
+		r_p=""
+		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
+		open_processes=os.path.join(BASE_DIR, "news_data.json")
+		with open(open_processes,"r") as f_r:
+			r_p=json.load(f_r)
+		return r_p
+			#json.dump(news_data,f_w)#f_w.write(str(p))
