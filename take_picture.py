@@ -35,7 +35,7 @@ class take_pic:
 		self.counts.pack()
 		self.img = Label(self.Frame, width=700, height=700, bg="black")
 		self.img.pack(padx=20, pady=20)
-		self.cap = cv2.VideoCapture(0)
+		self.cap = cv2.VideoCapture(-1)
 		self.count_number=10
 		self.count=-10
 		self.camera_stream=threading.Thread(target=self.get_camera_stream)
@@ -53,9 +53,9 @@ class take_pic:
 		print(self.count_number)
 		if (self.count==100 and self.count_number>=0):
 			self.counts.configure(text=self.count_number)
-			self.count_number=self.count_number-1
-			self.count=0
-			print (self.count_number)
+			#self.count_number=self.count_number-1
+			#self.count=0
+			#print (self.count_number)
 		if (str(self.count_number)=='-1'):
 			self.counts.configure(text='0')
 			self.save_picture()

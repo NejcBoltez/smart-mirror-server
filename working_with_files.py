@@ -92,3 +92,10 @@ class Work_with_files:
 		with open(open_processes, "w") as f:
 			f.write("")
 		#return f_read
+	def save_youtube_data(yt_data):
+		p=str(yt_data).replace("'", '"').replace('None','"None"')
+		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
+		open_processes=os.path.join(BASE_DIR, "youtube_data.json")
+		print(p)
+		with open(open_processes,"w") as f_w:
+			f_w.write(str(p))

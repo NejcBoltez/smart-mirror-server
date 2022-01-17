@@ -1,17 +1,12 @@
-import speech_recognition as sr
 import subprocess
 import os
-import signal
-import numpy as np
-import cv2
-import time
-import multiprocessing
-from multiprocessing import Queue
 from speech_listen import Listening
 import threading
 from working_with_files import Work_with_files
 import SmartMirror
 from face_recognize import Get_face
+from PIL import ImageTk
+import PIL.Image
 try:
 	import tkinter as tk
 	from tkinter import *
@@ -19,24 +14,6 @@ except:
 	import Tkinter as tk
 	from Tkinter import *
 
-
-BASE_DIR= os.path.dirname(os.path.abspath(__file__))
-users_dir=os.path.join(BASE_DIR, '../Users')
-path, dirs, files = next(os.walk(users_dir))
-print(path)
-print(dirs)
-print(files)
-count_users= len(dirs)
-
-print(count_users)
-
-start_window=tk.Tk()
-start_window.geometry("1920x1080")
-Frame=Frame(start_window, background='Black')
-Frame.pack(fill=BOTH, expand= TRUE)
-auth_label=Label(Frame, font=('Helvetica', 30), fg='white', bg='black', text="User authontication")
-auth_label.pack(side=TOP,fill=BOTH, expand= TRUE)
-#self.check_for_user()
 
 class new_user_GUI():
 	def __init__(self):
@@ -77,26 +54,87 @@ class new_user_GUI():
 					new_user_pic=subprocess.Popen(["python3","take_picture.py", new_user])#self.take_pic=take_picture.take_pic('test')
 					self.tk.destroy()
 					break
-try:
-	if (count_users==2):
-		new_user_GUI()
+class Login(Frame):
+	def __init__(self, parent, *args, **kwargs):
+		Frame.__init__(self, parent, background='Black')
+		self.auth_label=Label(self, font=('Helvetica', 30), fg='white', bg='black', text="User authontication")
+		self.auth_label.pack(side=TOP,fill=BOTH, expand= TRUE)
+		start=threading.Thread(target=self.user_auth)
+		start.start()
+	def user_auth(self):
+		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
+		users_dir=os.path.join(BASE_DIR, '../Users')
 		path, dirs, files = next(os.walk(users_dir))
 		print(path)
 		print(dirs)
 		print(files)
 		count_users= len(dirs)
+		
+		try:
+			if (count_users==2):
+				new_user_GUI()
+				path, dirs, files = next(os.walk(users_dir))
+				print(path)
+				print(dirs)
+				print(files)
+				count_users= len(dirs)
 
-	if(count_users>2):
-		while (True):
-			get_user=Get_face.User_auth()
-			if (get_user is not None and len(get_user)>0):
-				print(get_user)
-				break
-		#new_user_pic=subprocess.Popen(["python3","SmartMirror.py"])
-		start_mirror=threading.Thread(target=SmartMirror.Window)
-		start_mirror.start()
+			if(count_users>2):
+				while (True):
+					test_user=Listening.listening_function()
+					if (len(test_user)>0):
+						get_user=Get_face.User_auth()
+						if (get_user is not None and len(get_user)>0):
+							print(get_user)
+							break
+				#new_user_pic=subprocess.Popen(["python3","SmartMirror.py"])
+				start_mirror=threading.Thread(target=SmartMirror.Window)
+				start_mirror.start()
+		except Exception as e:
+			print(e)
+class Window_start:
+	def __init__(self):
+		self.tk=tk.Tk()
+		self.tk.configure(background='black')
+		self.tk.title("Pozdravljeni")
+		self.tk.geometry("1920x1000")
+		#self.tk.attributes('-fullscreen', True)  
+		#self.fullScreenState = False
+		self.Frame=Frame(self.tk, background='black')
+		self.Frame.pack(fill=BOTH, expand=YES)
+		self.login=Login(self.Frame)
+		self.login.pack()
+		self.tk.mainloop()
+	def recognize(self):
+		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
+		users_dir=os.path.join(BASE_DIR, '../Users')
+		path, dirs, files = next(os.walk(users_dir))
+		print(path)
+		print(dirs)
+		print(files)
+		count_users= len(dirs)
+		try:
+			if (count_users==2):
+				new_user_GUI()
+				path, dirs, files = next(os.walk(users_dir))
+				print(path)
+				print(dirs)
+				print(files)
+				count_users= len(dirs)
 
-except Exception as e:
-	print(e)
-start_window.mainloop()
+			if(count_users>2):
+				while (True):
+					get_user=Get_face.User_auth()
+					if (get_user is not None and len(get_user)>0):
+						print(get_user)
+						break
+				#new_user_pic=subprocess.Popen(["python3","SmartMirror.py"])
+				start_mirror=threading.Thread(target=SmartMirror.Window)
+				start_mirror.start()
+		except Exception as e:
+			print(e)
+#self.check_for_user()
+
+
+win=Window_start()
 

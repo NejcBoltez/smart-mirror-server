@@ -13,6 +13,7 @@ import io
 from PIL import ImageTk
 import PIL.Image
 from urllib.request import urlopen
+from working_with_files import Work_with_files
 
 
 arguments = list(sys.argv)
@@ -20,6 +21,8 @@ arguments = list(sys.argv)
 def get_yt_data(search_for):
     results = YoutubeSearch(str(search_for).replace('_', ' '), max_results=20).to_json()
     get_results=json.loads(results)
+    Work_with_files.save_youtube_data(get_results)
+    print(get_results)
     return get_results
 
 class yt_search(Frame):

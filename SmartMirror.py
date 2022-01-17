@@ -21,6 +21,7 @@ from working_with_files import Work_with_files
 from PIL import ImageTk
 import PIL.Image
 from speech_listen import Listening
+import sys
 
 
 
@@ -61,9 +62,10 @@ class Asistant(Frame):
 					
 				elif (self.l.lower() != "" and self.l.lower() != "mirror" and self.start_to_listen==True):
 					if('log out' in self.l.lower() or 'log off' in self.l.lower() or 'exit' in self.l.lower()):
-						if (len(self.popup_id)>0):
+						'''if (len(self.popup_id)>0):
 							os.kill(int(self.popup_id), signal.SIGKILL)
-						self.master.master.destroy()
+						self.master.master.destroy()'''
+						sys.exit()
 					else:
 						if ("next" in self.l.lower()):
 							self.displayed=self.displayed+5
@@ -135,18 +137,18 @@ class Weather(Frame):
 		self.temp_min="Temp_min: " + str(weather_data['main']['temp_min'])
 		self.temp_max="Temp_max: " + str(weather_data['main']['temp_max'])
 		self.weather=self.temp +'\n' + self.humidity + '\n' + self.temp_min + '\n' + self.temp_max
-		self.icon=weather_data['weather'][0]['icon']#'13d'
+		'''self.icon='13d'#weather_data['weather'][0]['icon']
 		self.BASE_DIR= os.path.dirname(os.path.abspath(__file__))
 		self.image_dir=os.path.join(self.BASE_DIR, 'Weather_widgets')
 		self.image_byt = str(self.image_dir+'/'+self.icon+'.PNG')
 		self.load = PIL.Image.open(self.image_byt)
-		self.image_final=self.load.resize((150,100), PIL.Image.ANTIALIAS)
-		self.render = ImageTk.PhotoImage(self.image_final)
+		image_final=self.load.resize((150,100), PIL.Image.ANTIALIAS)
+		self.render = ImageTk.PhotoImage(image_final)
 		try:
 			self.img.config(image=self.render)
 		except AttributeError:
 			self.img = Label(self.WeatherIcon, image=self.render, width=150, height=100, background="red")
-			self.img.pack(side=LEFT, fill=BOTH, expand= TRUE, anchor='w')
+			self.img.pack(side=LEFT, fill=BOTH, expand= TRUE, anchor='w')'''
 		self.WeatherData.config(text=self.weather)
 
 	def update_weather_hours(self,data):
