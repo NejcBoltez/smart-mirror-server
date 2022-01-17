@@ -45,7 +45,7 @@ class Video(Frame):
 		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
 		get_yt_data=os.path.join(BASE_DIR, "youtube_data.json")
 		with open(get_yt_data, "r") as f_r:
-			yt_data=json.load(f_r)#.read()
+			yt_data=json.load(f_r)
 		print(yt_data)
 		c=1
 		selected_url=''
