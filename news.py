@@ -36,7 +36,9 @@ class display_news:
 		self.tk=tk.Tk()
 		self.tk.configure(background="black")
 		self.tk.title("Pozdravljeni")
-		self.tk.geometry("1920x1080")
+		#self.tk.geometry("1920x1000")
+		self.tk.attributes('-fullscreen', True)  
+		self.fullScreenState = False
 		self.Frame=Frame(self.tk, background="black")
 		self.Frame.pack(fill=BOTH, expand=YES)
 		self.title=Label(self.Frame, font=("Helvetica", 60), fg="white", bg="black", text="NEWS",anchor="w")

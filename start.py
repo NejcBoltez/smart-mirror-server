@@ -27,22 +27,12 @@ class new_user_GUI():
 		self.say_new_user_name.pack(fill=BOTH, expand= TRUE)
 		self.get_new_user_name=Label(self.Frame, font=('Helvetica', 30), fg='white', bg='black', text="")
 		self.get_new_user_name.pack(fill=BOTH, expand= TRUE)
-		my_thread=threading.Thread(target=self.check_for_user)
+		my_thread=threading.Thread(target=self.new_user_create())
 		my_thread.start()
-		#self.check_for_user()
 		self.tk.mainloop()
-	def check_for_user(self):
-		#user_check=''
-		print("TEST")
-		#while(True):
-		#user_check=face_recognize.Get_face.User_auth()
-		#print("USER: " + user_check)
-			#break;
-		self.new_user_create()
 	def new_user_create(self):
 		self.auth_label.config(text="Plase say your name without spaces")
 		new_user=Listening.listening_function()
-		#print("USER: "+new_user)
 		if (new_user is not None or new_user != ""):
 			while (True):
 				self.say_new_user_name.config(text="Your new name would be '" + new_user + "'. IS THAT OK?")
@@ -50,14 +40,13 @@ class new_user_GUI():
 				if ("yes" in user_ok.lower()):
 					print("test")
 					Work_with_files.create_dir_for_user(new_user)
-					#face_recognize.take_pic(new_user)
-					new_user_pic=subprocess.Popen(["python3","take_picture.py", new_user])#self.take_pic=take_picture.take_pic('test')
+					new_user_pic=subprocess.Popen(["python3","take_picture.py", new_user])
 					self.tk.destroy()
 					break
 class Login(Frame):
 	def __init__(self, parent, *args, **kwargs):
 		Frame.__init__(self, parent, background='Black')
-		self.auth_label=Label(self, font=('Helvetica', 30), fg='white', bg='black', text="User authontication")
+		self.auth_label=Label(self, font=('Helvetica', 30), fg='white', bg='black', text="")
 		self.auth_label.pack(side=TOP,fill=BOTH, expand= TRUE)
 		start=threading.Thread(target=self.user_auth)
 		start.start()
@@ -83,6 +72,7 @@ class Login(Frame):
 				while (True):
 					test_user=Listening.listening_function()
 					if (len(test_user)>0):
+						self.auth_label.config(text="USER AUTHONTICATION")
 						get_user=Get_face.User_auth()
 						if (get_user is not None and len(get_user)>0):
 							print(get_user)
@@ -90,6 +80,7 @@ class Login(Frame):
 				#new_user_pic=subprocess.Popen(["python3","SmartMirror.py"])
 				start_mirror=threading.Thread(target=SmartMirror.Window)
 				start_mirror.start()
+				self.tk.close()
 		except Exception as e:
 			print(e)
 class Window_start:
@@ -97,44 +88,14 @@ class Window_start:
 		self.tk=tk.Tk()
 		self.tk.configure(background='black')
 		self.tk.title("Pozdravljeni")
-		self.tk.geometry("1920x1000")
-		#self.tk.attributes('-fullscreen', True)  
-		#self.fullScreenState = False
+		#self.tk.geometry("1920x1000")
+		self.tk.attributes('-fullscreen', True)  
+		self.fullScreenState = False
 		self.Frame=Frame(self.tk, background='black')
 		self.Frame.pack(fill=BOTH, expand=YES)
 		self.login=Login(self.Frame)
 		self.login.pack()
 		self.tk.mainloop()
-	def recognize(self):
-		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
-		users_dir=os.path.join(BASE_DIR, '../Users')
-		path, dirs, files = next(os.walk(users_dir))
-		print(path)
-		print(dirs)
-		print(files)
-		count_users= len(dirs)
-		try:
-			if (count_users==2):
-				new_user_GUI()
-				path, dirs, files = next(os.walk(users_dir))
-				print(path)
-				print(dirs)
-				print(files)
-				count_users= len(dirs)
-
-			if(count_users>2):
-				while (True):
-					get_user=Get_face.User_auth()
-					if (get_user is not None and len(get_user)>0):
-						print(get_user)
-						break
-				#new_user_pic=subprocess.Popen(["python3","SmartMirror.py"])
-				start_mirror=threading.Thread(target=SmartMirror.Window)
-				start_mirror.start()
-		except Exception as e:
-			print(e)
-#self.check_for_user()
-
-
+		
 win=Window_start()
 

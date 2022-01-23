@@ -68,7 +68,10 @@ class Wikipedia_show:
 		tab2 = ttk.Frame(tabControl)
 		tabControl.add(tab2, text ='Tab 2')
 		tabControl.pack(expand = 1, fill ="both")'''
-		root.geometry("1920x1080")
+		#root.geometry("1920x1080")
+		#self.tk.geometry("1920x1000")
+		root.attributes('-fullscreen', True)  
+		root.fullScreenState = False
 		FrameWiki=Canvas(root, background="black")
 		FrameWiki.pack(fill=BOTH, expand= TRUE, anchor='w')
 		try:

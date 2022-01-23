@@ -125,11 +125,13 @@ class Weather(Frame):
 		self.URL_hours = 'https://api.openweathermap.org/data/2.5/forecast?q='+self.City+','+self.Country+'&appid='+self.APIK+'&units=metric'
 		self.r = requests.get(self.URL_main)
 		self.read_weather = self.r.json()
+		Work_with_files.save_weather_data(self.read_weather)
 		self.r_hours = requests.get(self.URL_hours)
 		self.read_weather_h=self.r_hours.json()
 		self.update_weather_main(self.read_weather)
 		self.update_weather_hours(self.read_weather_h)
-		self.WeatherTitle.after(10000, self.getWeather)
+		Work_with_files.save_weather_data(self.read_weather_h)
+		self.WeatherTitle.after(60000, self.getWeather)
 
 	def update_weather_main(self,weather_data):
 		self.temp="Temp: " + str(weather_data['main']['temp'])
@@ -179,7 +181,7 @@ class News(Frame):
 		Work_with_files.save_news_data(self.News)
 		self.NewsList=self.News['articles']
 		self.update_news(self.NewsList)
-		self.NewsShow.after(10000, self.getNews)
+		self.NewsShow.after(60000000000, self.getNews)
 
 	def update_news(self,data):
 		select_news=''
@@ -233,9 +235,9 @@ class Window:
 		self.tk=tk.Tk()
 		self.tk.configure(background='black')
 		self.tk.title("Pozdravljeni")
-		self.tk.geometry("1920x1000")
-		#self.tk.attributes('-fullscreen', True)  
-		#self.fullScreenState = False
+		#self.tk.geometry("1920x1000")
+		self.tk.attributes('-fullscreen', True)  
+		self.fullScreenState = False
 		self.Frame=Frame(self.tk, background='black')
 		self.Frame.pack(fill=BOTH, expand=YES)
 		self.recognize()
@@ -244,5 +246,5 @@ class Window:
 		self.cam=Camera(self.Frame)
 		self.cam.pack()
 	
-win=Window()
-win.tk.mainloop()
+#win=Window()
+#win.tk.mainloop()

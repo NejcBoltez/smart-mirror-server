@@ -47,7 +47,9 @@ class weather_GUI:
 		self.tk=tk.Tk()
 		self.tk.configure(background='black')
 		self.tk.title("Pozdravljeni")
-		self.tk.geometry("1920x1080")
+		#self.tk.geometry("1920x1000")
+		self.tk.attributes('-fullscreen', True)  
+		self.fullScreenState = False
 		self.Frame=Frame(self.tk, background="black", width=1920, height=1080)
 		self.Frame.pack(fill=BOTH, expand=YES, anchor='w')
 		logo_w=300

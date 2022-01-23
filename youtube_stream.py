@@ -60,6 +60,9 @@ class Window:
 	def __init__(self):
 		self.tk=tk.Tk()
 		#self.tk.geometry("1500x1000")
+		#self.tk.geometry("1920x1000")
+		self.tk.attributes('-fullscreen', True)  
+		self.fullScreenState = False
 		self.Frame=Frame(self.tk, background="black")
 		self.Frame.pack(fill=BOTH, expand=YES)
 		self.Canvas=Canvas(self.Frame)
