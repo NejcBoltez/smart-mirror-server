@@ -69,18 +69,19 @@ class Login(Frame):
 				count_users= len(dirs)
 
 			if(count_users>2):
-				while (True):
+				'''while (True):
 					test_user=Listening.listening_function()
 					if (len(test_user)>0):
-						self.auth_label.config(text="USER AUTHONTICATION")
-						get_user=Get_face.User_auth()
-						if (get_user is not None and len(get_user)>0):
+						self.auth_label.config(text="USER AUTHONTICATION")'''
+				get_user=Get_face.User_auth()
+				'''		if (get_user is not None and len(get_user)>0):
 							print(get_user)
-							break
+							break'''
 				#new_user_pic=subprocess.Popen(["python3","SmartMirror.py"])
+				#start_mirror=subprocess.Popen(["python3","SmartMirror.py"])
 				start_mirror=threading.Thread(target=SmartMirror.Window)
 				start_mirror.start()
-				self.tk.close()
+				#self.tk.close()
 		except Exception as e:
 			print(e)
 class Window_start:
@@ -88,14 +89,14 @@ class Window_start:
 		self.tk=tk.Tk()
 		self.tk.configure(background='black')
 		self.tk.title("Pozdravljeni")
-		#self.tk.geometry("1920x1000")
-		self.tk.attributes('-fullscreen', True)  
-		self.fullScreenState = False
+		self.tk.geometry("1920x1000")
+		#self.tk.attributes('-fullscreen', True)  
+		#self.fullScreenState = False
 		self.Frame=Frame(self.tk, background='black')
 		self.Frame.pack(fill=BOTH, expand=YES)
 		self.login=Login(self.Frame)
 		self.login.pack()
 		self.tk.mainloop()
-		
+
 win=Window_start()
 

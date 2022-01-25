@@ -46,7 +46,6 @@ class weather_GUI:
 		self.image_dir=os.path.join(self.BASE_DIR, 'Weather_widgets')
 		self.tk=tk.Tk()
 		self.tk.configure(background='black')
-		self.tk.title("Pozdravljeni")
 		#self.tk.geometry("1920x1000")
 		self.tk.attributes('-fullscreen', True)  
 		self.fullScreenState = False

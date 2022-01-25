@@ -139,7 +139,7 @@ class Weather(Frame):
 		self.temp_min="Temp_min: " + str(weather_data['main']['temp_min'])
 		self.temp_max="Temp_max: " + str(weather_data['main']['temp_max'])
 		self.weather=self.temp +'\n' + self.humidity + '\n' + self.temp_min + '\n' + self.temp_max
-		'''self.icon='13d'#weather_data['weather'][0]['icon']
+		self.icon='13d'#weather_data['weather'][0]['icon']
 		self.BASE_DIR= os.path.dirname(os.path.abspath(__file__))
 		self.image_dir=os.path.join(self.BASE_DIR, 'Weather_widgets')
 		self.image_byt = str(self.image_dir+'/'+self.icon+'.PNG')
@@ -150,7 +150,7 @@ class Weather(Frame):
 			self.img.config(image=self.render)
 		except AttributeError:
 			self.img = Label(self.WeatherIcon, image=self.render, width=150, height=100, background="red")
-			self.img.pack(side=LEFT, fill=BOTH, expand= TRUE, anchor='w')'''
+			self.img.pack(side=LEFT, fill=BOTH, expand= TRUE, anchor='w')
 		self.WeatherData.config(text=self.weather)
 
 	def update_weather_hours(self,data):
@@ -232,12 +232,12 @@ class Camera(Frame):
 		
 class Window:
 	def __init__(self):
-		self.tk=tk.Tk()
+		self.tk=tk.Toplevel()
 		self.tk.configure(background='black')
 		self.tk.title("Pozdravljeni")
-		#self.tk.geometry("1920x1000")
-		self.tk.attributes('-fullscreen', True)  
-		self.fullScreenState = False
+		self.tk.geometry("1920x1000")
+		#self.tk.attributes('-fullscreen', True)  
+		#self.fullScreenState = False
 		self.Frame=Frame(self.tk, background='black')
 		self.Frame.pack(fill=BOTH, expand=YES)
 		self.recognize()

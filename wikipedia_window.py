@@ -4,23 +4,18 @@ try:
 except:
 	import Tkinter as tk
 	from Tkinter import *
-import pyttsx3 as pyttsx
 import wikipedia
 
 import sys
 import requests
 import json
 from PIL import ImageTk
-#import PIL.Image as Image
 from PIL import Image
-import time
-from svglib.svglib import svg2rlg
-from reportlab.graphics import renderPDF, renderPM
 import os
 import subprocess
 from tkinter import ttk
 
-speech_engine = pyttsx.init()
+
 class Wikipedia_show:
 	def __call__(args):
 		try: 
@@ -58,7 +53,6 @@ class Wikipedia_show:
 			img.place(x=1100, y=300)
 
 		vpras=command
-		print("Vprasanje: "+vpras)
 
 		title=['']
 		root=tk.Tk()

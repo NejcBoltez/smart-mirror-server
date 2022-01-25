@@ -32,47 +32,51 @@ def get_user_from_stream(frame):
 	if (len(faces)==0):
 		roi_color=Frame
 		image_encoding = face_recognition.face_encodings(frame)[0]
-		for root, dirs, files in os.walk(image_dir):
-			for d in dirs:
-				for root, dirs, files in os.walk(image_dir+"/"+d):
-					for file in files:
-						unknown_image = face_recognition.load_image_file(image_dir+"/"+d+"/"+file)
-						unknown_encoding=face_recognition.face_encodings(unknown_image)
-						if (len(unknown_encoding)>0):
-							unknown_encoding1=face_recognition.face_encodings(unknown_image)[0]
-							results=face_recognition.compare_faces([image_encoding], unknown_encoding1)
-							if results[0]:
-								if (user_name==""):
-									user_name=d
-								root, dirs, files = next(os.walk(image_dir+"/"+d))
-								file_count = len(files)
-								img_item=str(image_dir)+"/"+d+"/"+d+"_"+str(file_count+1)+".jpg"
-								break
-							else:
-								continue
+		path, dirs, files = next(os.walk(image_dir))
+		for d in dirs:
+			path_users, dirs_users, files_users = next(os.walk(image_dir+"/"+d))
+			for file in files_users:
+				print("IF:" +file)
+				print(d)
+				unknown_image = face_recognition.load_image_file(image_dir+"/"+d+"/"+file)
+				unknown_encoding=face_recognition.face_encodings(unknown_image)
+				if (len(unknown_encoding)>0):
+					unknown_encoding1=face_recognition.face_encodings(unknown_image)[0]
+					results=face_recognition.compare_faces([image_encoding], unknown_encoding1)
+					if results[0]:
+						if (user_name==""):
+							user_name=d
+						#root_c, dirs_c, files_c = next(os.walk(image_dir+"/"+d))
+						file_count = len(files_users)
+						img_item=str(image_dir)+"/"+d+"/"+d+"_"+str(file_count+1)+".jpg"
+						break
+					else:
+						continue
 		
 	else:
 		for (x, y, w, h) in faces:
 			roi_color=frame[y:y+h, x:x+w]
 			image_encoding = face_recognition.face_encodings(frame)[0]
-			for root, dirs, files in os.walk(image_dir):
-				for d in dirs:
-					for root, dirs, files in os.walk(image_dir+"/"+d):
-						for file in files:
-							unknown_image = face_recognition.load_image_file(image_dir+"/"+d+"/"+file)
-							unknown_encoding=face_recognition.face_encodings(unknown_image)
-							if (len(unknown_encoding)>0):
-								unknown_encoding1=face_recognition.face_encodings(unknown_image)[0]
-								results=face_recognition.compare_faces([image_encoding], unknown_encoding1)
-								if results[0]:
-									if (user_name==""):
-										user_name=d
-									root, dirs, files = next(os.walk(image_dir+"/"+d))
-									file_count = len(files)
-									img_item=str(image_dir)+"/"+d+"/"+d+"_"+str(file_count+1)+".jpg"
-									break
-								else:
-									continue
+			path, dirs, files = next(os.walk(image_dir))
+			for d in dirs:
+				path_users, dirs_users, files_users = next(os.walk(image_dir+"/"+d))
+				for file in files_users:
+					print("ELSE:" +file)
+					print(d)
+					unknown_image = face_recognition.load_image_file(image_dir+"/"+d+"/"+file)
+					unknown_encoding=face_recognition.face_encodings(unknown_image)
+					if (len(unknown_encoding)>0):
+						unknown_encoding1=face_recognition.face_encodings(unknown_image)[0]
+						results=face_recognition.compare_faces([image_encoding], unknown_encoding1)
+						if results[0]:
+							if (user_name==""):
+								user_name=d
+							#root_c, dirs_c, files_c = next(os.walk(image_dir+"/"+d))
+							file_count = len(files_users)
+							img_item=str(image_dir)+"/"+d+"/"+d+"_"+str(file_count+1)+".jpg"
+							break
+						else:
+							continue
 	return user_name
 def save_images(self, f_faces, user):
 	BASE_DIR= os.path.dirname(os.path.abspath(__file__))
@@ -190,24 +194,24 @@ class User_create():
 		if (len(faces)==0):
 			roi_color=Frame
 			image_encoding = face_recognition.face_encodings(frame)[0]
-			for root, dirs, files in os.walk(image_dir):
-				for d in dirs:
-					for root, dirs, files in os.walk(image_dir+"/"+d):
-						for file in files:
-							unknown_image = face_recognition.load_image_file(image_dir+"/"+d+"/"+file)
-							unknown_encoding=face_recognition.face_encodings(unknown_image)
-							if (len(unknown_encoding)>0):
-								unknown_encoding1=face_recognition.face_encodings(unknown_image)[0]
-								results=face_recognition.compare_faces([image_encoding], unknown_encoding1)
-								if results[0]:
-									if (user_name==""):
-										user_name=d
-									root, dirs, files = next(os.walk(image_dir+"/"+d))
-									file_count = len(files)
-									img_item=str(image_dir)+"/"+d+"/"+d+"_"+str(file_count+1)+".jpg"
-									break
-								else:
-									continue
+			path, dirs, files = next(os.walk(image_dir))
+			for d in dirs:
+				path_users, dirs_users, files_users = next(os.walk(image_dir+"/"+d))
+				for file in files_users:
+					unknown_image = face_recognition.load_image_file(image_dir+"/"+d+"/"+file)
+					unknown_encoding=face_recognition.face_encodings(unknown_image)
+					if (len(unknown_encoding)>0):
+						unknown_encoding1=face_recognition.face_encodings(unknown_image)[0]
+						results=face_recognition.compare_faces([image_encoding], unknown_encoding1)
+						if results[0]:
+							if (user_name==""):
+								user_name=d
+							#root_c, dirs_c, files_c = next(os.walk(image_dir+"/"+d))
+							file_count = len(files_users)
+							img_item=str(image_dir)+"/"+d+"/"+d+"_"+str(file_count+1)+".jpg"
+							break
+						else:
+							continue
 		cap.release()
 	
 

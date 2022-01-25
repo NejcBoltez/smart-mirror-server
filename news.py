@@ -35,7 +35,6 @@ class display_news:
 	def __init__(self, displayed):
 		self.tk=tk.Tk()
 		self.tk.configure(background="black")
-		self.tk.title("Pozdravljeni")
 		#self.tk.geometry("1920x1000")
 		self.tk.attributes('-fullscreen', True)  
 		self.fullScreenState = False
