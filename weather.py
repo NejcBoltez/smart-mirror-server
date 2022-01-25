@@ -46,9 +46,9 @@ class weather_GUI:
 		self.image_dir=os.path.join(self.BASE_DIR, 'Weather_widgets')
 		self.tk=tk.Tk()
 		self.tk.configure(background='black')
-		#self.tk.geometry("1920x1000")
-		self.tk.attributes('-fullscreen', True)  
-		self.fullScreenState = False
+		self.tk.geometry("1920x1000")
+		#self.tk.attributes('-fullscreen', True)  
+		#self.fullScreenState = False
 		self.Frame=Frame(self.tk, background="black", width=1920, height=1080)
 		self.Frame.pack(fill=BOTH, expand=YES, anchor='w')
 		logo_w=300
@@ -139,7 +139,10 @@ class weather_GUI:
 		#	 day_selected=days_table[0]
 		for i in self.read['list']:
 			date=str(i['dt_txt']).split(' ')
-			if (date == day_selected):
+			print(date)
+			print(day_selected)
+			if (day_selected in date):
+				print(date)
 				forecast_time=str(i['dt_txt']).split(' ')
 				cels=int(i['main']['temp'])
 				temp="Temp: " + str(cels)
@@ -155,8 +158,9 @@ class weather_GUI:
 				hours.append(str(i['dt_txt']).split(' ')[1])
 				#self.data.create_text(coordinate,500, text=weather, width=100, fill="white")
 				#self.data.create_window(285, 280, window=frm, anchor=CENTER)
-				self.data.create_rectangle(coordinate,50, coordinate+170, 350, fill="black", outline="white")#create_rectangle(startx,starty,endx,endy, fill="blue", outline="red")
-				self.data.create_text(coordinate+80,155, width=200, text=day_forecast, fill="white")
+				print(coordinate)
+				self.data.create_rectangle(coordinate,10, coordinate+170, 350, fill="black", outline="white")#create_rectangle(startx,starty,endx,endy, fill="blue", outline="red")
+				self.data.create_text(coordinate+80,90, width=200, text=day_forecast, fill="white", font=('Helvetica', 12))
 				icon_id=i['weather'][0]['icon']
 				#print("Icon ID: "+str(icon_id))
 				image_byt = urlopen("https://openweathermap.org/img/wn/"+icon_id+"@2x.png").read()

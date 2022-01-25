@@ -6,23 +6,11 @@ except:
     from Tkinter import *
 import random
 import time
-import os
-import subprocess
-import webbrowser
-import wikipedia
-import pyttsx3 as pyttsx
-import speech_recognition as sr
-import urllib.parse as urllib
 from tkinter import *
-import requests
 new = 2
 ukaz = [""]
 izgovorjeno=[""]
-speech_engine = pyttsx.init()
 
-def govor(besedilo):
-    speech_engine.say(besedilo)
-    speech_engine.runAndWait()
 def teden(mes):
     teden=("mon", "tue", "wed", "thu", "fri", "sat", "sun")
     mi = ""

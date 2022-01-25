@@ -212,7 +212,6 @@ class Camera(Frame):
 				self.get_home()
 				break
 	def get_home(self):
-		#self.NewsTitle.config(text='')
 		self.TopFrame = Frame(self, background='black', padx=0, pady=0)
 		self.TopLeftFrame=Frame(self.TopFrame, background='black')
 		self.TopRightFrame=Frame(self.TopFrame, background='black')

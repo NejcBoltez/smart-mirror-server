@@ -109,13 +109,6 @@ class Do_for_command:
 						Work_with_files.print_process_to_file(str(Open_news.pid), "Open_news")
 						os.kill(int(p_id), signal.SIGKILL)
 						Work_with_files.remove_process_from_file(p_id)
-					'''if("Open_news" in p_name):
-						Open_news=subprocess.Popen(["python3", "news.py", displayed])
-						Work_with_files.print_process_to_file(str(Open_news.pid), "Open_news")
-					if("Open_news" in p_name):
-						Open_news=subprocess.Popen(["python3", "news.py", displayed])
-						Work_with_files.print_process_to_file(str(Open_news.pid), "Open_news")
-						#show_news=show_news+5'''
 			elif (command in numbers_int or command in numbers_string or command in position):
 				processes=Work_with_files.read_process_from_file()
 				p_name=''
@@ -127,18 +120,5 @@ class Do_for_command:
 					str_to_search=previous_search.split('for ')[1].replace(' ','_')
 					Open_yt=subprocess.Popen(["python3","youtube_stream.py", str_to_search, command])
 					Work_with_files.print_process_to_file(str(Open_yt.pid), "Open_yt")
-				'''if (command in numbers_int):
-					ni = numbers_int.index(command)
-					print(yt_search_query)
-					print(str(show_news-(5-int(ni))))
-					if("Open_news" in open_processes[len(open_processes)-1]):
-						Open_news=subprocess.Popen(["python3", "show_news.py", str(show_news-(5-int(ni)))])
-					elif("Open_yt" in open_processes[len(open_processes)-1]):
-						Open_yt=subprocess.Popen(["python3","youtube_stream.py", yt_search_query, str(ni)])
-						'''	
 			else:
 				asistant.jarvis(command)
-				#AskMirror=multiprocessing.Process(target=asistant.jarvis(command))
-				#AskMirror.start()
-				#AskMirror.join()
-				#subprocess.Popen(["python3","Virtual_asistent.py", command])
