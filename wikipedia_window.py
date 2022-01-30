@@ -22,7 +22,7 @@ class Wikipedia_show:
 			print('test:     '+args)
 		except:
 			print('')
-	def __init__(self, command):
+	def __init__(self, command, tabControl):
 		def save_image(url_of_image):
 			response = requests.get(url_of_image)
 			url_split=url_of_image.split('.')
@@ -55,21 +55,22 @@ class Wikipedia_show:
 		vpras=command
 
 		title=['']
-		root=tk.Tk()
-		'''tabControl = ttk.Notebook(root)
-		tab1 = ttk.Frame(tabControl)
-		tabControl.add(tab1, text ='Tab 1')
-		tab2 = ttk.Frame(tabControl)
-		tabControl.add(tab2, text ='Tab 2')
-		tabControl.pack(expand = 1, fill ="both")'''
+		print(vpras)
+		#root=tk.Tk()
 		#root.geometry("1920x1080")
-		#self.tk.geometry("1920x1000")
-		root.attributes('-fullscreen', True)  
-		root.fullScreenState = False
-		FrameWiki=Canvas(root, background="black")
-		FrameWiki.pack(fill=BOTH, expand= TRUE, anchor='w')
+		#tabControl = ttk.Notebook(root)
+		#tabControl.pack(expand = 1, fill ="both")
+		
+		#root.attributes('-fullscreen', True)  
+		#root.fullScreenState = False
+		FrameWiki=Canvas(tabControl, background="black", width=400, height=280)
+		FrameWiki.pack(fill=BOTH, expand= TRUE)
+		tab = ttk.Frame(tabControl)
+		tabControl.add(FrameWiki, text ='WIKIPEDIA')
+		tabControl.select(len(tabControl.tabs())-1)
 		try:
 			wiki_api_url="https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts|pageimages&exsentences=7&pithumbsize=500&exintro&explaintext&redirects=1&titles="+str(vpras.replace('_', ' '))#str(title[0])
+			print(wiki_api_url)
 			read_wiki=requests.get(wiki_api_url)
 			wiki_response=json.loads(read_wiki.text)
 			print(wiki_response)
@@ -90,9 +91,9 @@ class Wikipedia_show:
 			FrameWiki.create_text(600,350,width=80, text="Here are some other possible matches", fill='white', font=('verdana', 15, "bold"))
 			FrameWiki.create_text(650,500,width=800, text=matches, fill='white', font=('verdana', 15))
 		
-		root.mainloop()
-arguments = list(sys.argv)
+		#root.mainloop()
+'''arguments = list(sys.argv)
 try:
 	Wikipedia_show(arguments[1])
 except Exception  as e:
-	print(e)
+	print(e)'''

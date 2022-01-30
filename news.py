@@ -13,6 +13,8 @@ except:
 	import Tkinter as tk
 	from Tkinter import *
 
+from tkinter import ttk
+
 arguments = list(sys.argv)
 
 
@@ -32,14 +34,19 @@ class display_news:
 			print("test:     "+args)
 		except:
 			print("")
-	def __init__(self, displayed):
-		self.tk=tk.Tk()
+	def __init__(self, displayed, tabControl):
+		'''self.tk=tk.Tk()
 		self.tk.configure(background="black")
 		#self.tk.geometry("1920x1000")
 		self.tk.attributes('-fullscreen', True)  
-		self.fullScreenState = False
-		self.Frame=Frame(self.tk, background="black")
+		self.fullScreenState = False'''
+		print("TEST")
+		self.Frame=Frame(tabControl, background="black")
 		self.Frame.pack(fill=BOTH, expand=YES)
+		tab2 = ttk.Frame(tabControl)
+		tabControl.add(self.Frame, text ='NEWS')
+		tabControl.select(len(tabControl.tabs())-1)
+		#print(tabControl.tabs().index(tabControl.select(1)))
 		self.title=Label(self.Frame, font=("Helvetica", 60), fg="white", bg="black", text="NEWS",anchor="w")
 		self.title.pack(padx=0, pady=25)
 		self.n=0
@@ -148,9 +155,9 @@ class display_news:
 				self.n=self.n+1
 			else:
 				self.n=self.n+1
-		self.tk.mainloop()
+		#self.tk.mainloop()
 
-if (len(arguments)==2):
+'''if (len(arguments)==2):
     displayed=int(arguments[1])
 else:
 	displayed=5		
@@ -158,4 +165,4 @@ else:
 try:
 	display_news(displayed)
 except Exception as e:
-	print(e)
+	print(e)'''

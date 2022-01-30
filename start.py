@@ -5,8 +5,10 @@ import threading
 from working_with_files import Work_with_files
 import SmartMirror
 from face_recognize import Get_face
-from PIL import ImageTk
+import time
+'''from PIL import ImageTk
 import PIL.Image
+import asyncio'''
 try:
 	import tkinter as tk
 	from tkinter import *
@@ -14,7 +16,9 @@ except:
 	import Tkinter as tk
 	from Tkinter import *
 
-
+async def get_json_data():
+	while(True):
+		print("TEST")
 class new_user_GUI():
 	def __init__(self):
 		self.tk=tk.Tk()
@@ -45,8 +49,9 @@ class new_user_GUI():
 					break
 class Login(Frame):
 	def __init__(self, parent, *args, **kwargs):
-		Frame.__init__(self, parent, background='Black')
-		self.auth_label=Label(self, font=('Helvetica', 30), fg='white', bg='black', text="")
+		Frame.__init__(self, parent, background='red')
+		self.pack(fill=BOTH, expand=YES)
+		self.auth_label=Label(self, font=('Helvetica', 30), fg='white', bg='black', text="TEST")
 		self.auth_label.pack(side=TOP,fill=BOTH, expand= TRUE)
 		start=threading.Thread(target=self.user_auth)
 		start.start()
@@ -79,8 +84,15 @@ class Login(Frame):
 							break'''
 				#new_user_pic=subprocess.Popen(["python3","SmartMirror.py"])
 				#start_mirror=subprocess.Popen(["python3","SmartMirror.py"])
-				start_mirror=threading.Thread(target=SmartMirror.Window)
-				start_mirror.start()
+				self.auth_label.pack_forget()
+				SmartMirror.Camera(self, get_user)
+				#start_mirror=threading.Thread(target=SmartMirror.Camera(self, get_user))
+				#start_mirror.start()
+				#start_mirror.join()
+				print("TEST")
+				while (True):
+					print("TEST")
+					time.sleep(1)
 				#self.tk.close()
 		except Exception as e:
 			print(e)
@@ -92,11 +104,13 @@ class Window_start:
 		self.tk.geometry("1920x1000")
 		#self.tk.attributes('-fullscreen', True)  
 		#self.fullScreenState = False
-		self.Frame=Frame(self.tk, background='black')
+		self.Frame=Frame(self.tk, background='purple')
 		self.Frame.pack(fill=BOTH, expand=YES)
 		self.login=Login(self.Frame)
 		self.login.pack()
 		self.tk.mainloop()
 
+
+#Open_forecast=subprocess.Popen(["python3","get_json_data.py"])
 win=Window_start()
 

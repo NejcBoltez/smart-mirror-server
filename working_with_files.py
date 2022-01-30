@@ -107,17 +107,43 @@ class Work_with_files:
 		open_processes=os.path.join(BASE_DIR, "forecast_data.json")
 		with open(open_processes,"w") as f_w:
 			json.dump(weather_data,f_w)
+	def save_weather_data_main(weather_data):
+		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
+		open_processes=os.path.join(BASE_DIR, "forecast_main.json")
+		with open(open_processes,"w") as f_w:
+			json.dump(weather_data,f_w)
+	def save_weather_data_today(weather_data):
+		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
+		open_processes=os.path.join(BASE_DIR, "forecast_today.json")
+		with open(open_processes,"w") as f_w:
+			json.dump(weather_data,f_w)
 	def read_news_data():
 		r_p=""
 		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
 		open_processes=os.path.join(BASE_DIR, "news_data.json")
 		with open(open_processes,"r") as f_r:
 			r_p=json.load(f_r)
+		#print(r_p)
 		return r_p
 	def read_weather_data():
 		r_p=""
 		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
 		open_processes=os.path.join(BASE_DIR, "forecast_data.json")
+		with open(open_processes,"r") as f_r:
+			r_p=json.load(f_r)
+		return r_p
+	def read_weather_main():
+		r_p=""
+		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
+		open_processes=os.path.join(BASE_DIR, "forecast_main.json")
+		with open(open_processes,"r") as f_r:
+			r_p=json.load(f_r)
+		#print("TEST: "+str(r_p))
+		return r_p
+	def read_weather_today():
+		r_p=""
+		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
+		open_processes=os.path.join(BASE_DIR, "forecast_today.json")
 		with open(open_processes,"r") as f_r:
 			r_p=json.load(f_r)
 		return r_p

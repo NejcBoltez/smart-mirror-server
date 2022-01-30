@@ -22,6 +22,7 @@ from PIL import ImageTk
 import PIL.Image
 from speech_listen import Listening
 import sys
+from tkinter import ttk
 
 
 
@@ -31,12 +32,14 @@ user = ''
 speech_engine = pyttsx.init()
 
 class Asistant(Frame):
-	def __init__(self, parent, *args, **kwargs):
+	def __init__(self, parent, user, tabcontrol):
 		self.listening_bool : str
 		Frame.__init__(self, parent, bg='black')
-		self.CommandHelpHeader=Label(self,font=('Helvetica', 40), fg="white", bg="black", text='\nFirst say "Hey Mirror" then you can try to say:')
+		self.parent=parent
+		self.tabcontrol=tabcontrol
+		self.CommandHelpHeader=Label(self,font=('Helvetica', 40), fg="white", bg="black", text="HELLO "+user.upper())
 		self.CommandHelpHeader.pack()
-		self.CommandHelp=Label(self,font=('Helvetica', 12), fg="white", bg="black",text='Search youtube for\nShow me the forecast\nSearch wikipedia for\nStart the calibration')
+		self.CommandHelp=Label(self,font=('Helvetica', 12), fg="white", bg="black",text='First say "Hey Mirror" then you can try to say:')#Search youtube for\nShow me the forecast\nSearch wikipedia for\nStart the calibration')
 		self.CommandHelp.pack()
 		self.getPosluh()
 	def getPosluh(self):
@@ -52,7 +55,7 @@ class Asistant(Frame):
 		self.save_p_search=["next","back","previous","1","2","3","4","5","6","7","8","9","10","one","two","three","four","five","six","seven","eight","nine","ten","first", "second","thirth","fourth","fifth","sixth","seventh","eighth","nineth","tenth"]
 		try:
 			while(True):
-				print('START LISTENING WHILE LOOP')
+				#print('START LISTENING WHILE LOOP')
 				self.l=Listening.listening_function()
 				if ("mirror" in self.l.lower()):
 					self.start_to_listen=True
@@ -65,11 +68,19 @@ class Asistant(Frame):
 						'''if (len(self.popup_id)>0):
 							os.kill(int(self.popup_id), signal.SIGKILL)
 						self.master.master.destroy()'''
-						sys.exit()
+						#sys.exit()
+						self.parent.pack_forget()
+						'''for t in threading.enumerate():
+							if ("main" not in t.getName().lower()):
+								print(t)
+								t.
+								#t.setDaemon = True
+								t.cancel()'''
+								#print(t.getName() + " : " + t.get_native_id())
 					else:
 						if ("next" in self.l.lower()):
 							self.displayed=self.displayed+5
-						self.send_command_thread=threading.Thread(target=Do_for_command(self.l.lower(), user, str(self.displayed), self.previous_search))
+						self.send_command_thread=threading.Thread(target=Do_for_command(self.l.lower(), user, str(self.displayed), self.previous_search, self.tabcontrol))
 						self.send_command_thread.start()
 					self.start_to_listen=False
 					if (len(self.popup_id)>0):
@@ -102,6 +113,7 @@ class Time(Frame):
 class Weather(Frame):
 	def __init__(self, parent):
 		Frame.__init__(self, parent, bg='black', padx=0, pady=0)
+		#print("WEATHER")
 		self.WeatherTitle=Label(self, font=('Helvetica', 40), fg='white', bg='black', text="Weather:")
 		self.WeatherTitle.pack()
 		self.WeatherFrame=Frame(self, bg="black")
@@ -117,7 +129,7 @@ class Weather(Frame):
 		self.getWeather()
 		
 	def getWeather(self):
-		self.City = "Novo mesto"
+		'''self.City = "Novo mesto"
 		self.Country = "SI"
 		self.get_api=Work_with_files.get_api_keys()
 		self.APIK=self.get_api['weather_api']
@@ -125,13 +137,17 @@ class Weather(Frame):
 		self.URL_hours = 'https://api.openweathermap.org/data/2.5/forecast?q='+self.City+','+self.Country+'&appid='+self.APIK+'&units=metric'
 		self.r = requests.get(self.URL_main)
 		self.read_weather = self.r.json()
-		Work_with_files.save_weather_data(self.read_weather)
+		#Work_with_files.save_weather_data(self.read_weather)
 		self.r_hours = requests.get(self.URL_hours)
-		self.read_weather_h=self.r_hours.json()
+		self.read_weather_h=self.r_hours.json()'''
+		#print("WEATHER")
+		self.read_weather=Work_with_files.read_weather_main()
+		##print(self.read_weather)
+		self.read_weather_h=Work_with_files.read_weather_data()
 		self.update_weather_main(self.read_weather)
 		self.update_weather_hours(self.read_weather_h)
-		Work_with_files.save_weather_data(self.read_weather_h)
-		self.WeatherTitle.after(60000, self.getWeather)
+		#Work_with_files.save_weather_data(self.read_weather_h)
+		#self.WeatherTitle.after(60000000000, self.getWeather)
 
 	def update_weather_main(self,weather_data):
 		self.temp="Temp: " + str(weather_data['main']['temp'])
@@ -139,12 +155,21 @@ class Weather(Frame):
 		self.temp_min="Temp_min: " + str(weather_data['main']['temp_min'])
 		self.temp_max="Temp_max: " + str(weather_data['main']['temp_max'])
 		self.weather=self.temp +'\n' + self.humidity + '\n' + self.temp_min + '\n' + self.temp_max
-		self.icon='13d'#weather_data['weather'][0]['icon']
-		self.BASE_DIR= os.path.dirname(os.path.abspath(__file__))
-		self.image_dir=os.path.join(self.BASE_DIR, 'Weather_widgets')
-		self.image_byt = str(self.image_dir+'/'+self.icon+'.PNG')
-		self.load = PIL.Image.open(self.image_byt)
-		image_final=self.load.resize((150,100), PIL.Image.ANTIALIAS)
+		try:
+			self.icon=weather_data['weather'][0]['icon']
+			#print(self.icon)
+			self.BASE_DIR= os.path.dirname(os.path.abspath(__file__))
+			self.image_dir=os.path.join(self.BASE_DIR, 'Weather_widgets')
+			self.image_byt = str(self.image_dir+'/'+self.icon+'.PNG')
+			self.load = PIL.Image.open(self.image_byt)
+			image_final=self.load.resize((150,100), PIL.Image.ANTIALIAS)
+		except:
+			self.icon='13d'#weather_data['weather'][0]['icon']
+			self.BASE_DIR= os.path.dirname(os.path.abspath(__file__))
+			self.image_dir=os.path.join(self.BASE_DIR, 'Weather_widgets')
+			self.image_byt = str(self.image_dir+'/'+self.icon+'.PNG')
+			self.load = PIL.Image.open(self.image_byt)
+			image_final=self.load.resize((150,100), PIL.Image.ANTIALIAS)
 		self.render = ImageTk.PhotoImage(image_final)
 		try:
 			self.img.config(image=self.render)
@@ -161,7 +186,8 @@ class Weather(Frame):
 				w_data=w_data+"\n"+d["dt_txt"].split(' ')[1]+"   Temp: " + str(d['main']['temp'])+'   Desc:'+d['weather'][0]['description']
 		self.WeatherDataHours.config(text=w_data)
 class News(Frame):
-	def __init__(self, parent):
+	def __init__(self, parent):	
+		#print("NEWS")
 		Frame.__init__(self, parent, bg='black')
 		self.NewsFrame=Frame(self, background='Black')
 		self.NewsFrame.pack(side=RIGHT)
@@ -169,16 +195,20 @@ class News(Frame):
 		self.NewsTitle.pack()
 		self.NewsShow=Label(self.NewsFrame, font=('Helvetica', 12), fg="white", bg="black")
 		self.NewsShow.pack(side=LEFT, fill=BOTH, expand= TRUE, anchor='w')
+		#print("NEWS2")
 		self.getNews()
 		
 	def getNews(self):
 		self.NewsList=[]
-		self.get_api=Work_with_files.get_api_keys()
+		#print("NEWS")
+		'''self.get_api=Work_with_files.get_api_keys()
 		self.APIK=self.get_api['news_api']
 		self.URLnews = "https://newsapi.org/v2/top-headlines?country=si&apiKey="+self.APIK
 		self.News_request=requests.get(self.URLnews)
 		self.News=self.News_request.json()
-		Work_with_files.save_news_data(self.News)
+		Work_with_files.save_news_data(self.News)'''
+		self.News=Work_with_files.read_news_data()
+		##print(self.News)
 		self.NewsList=self.News['articles']
 		self.update_news(self.NewsList)
 		self.NewsShow.after(60000000000, self.getNews)
@@ -197,40 +227,54 @@ class News(Frame):
 		self.NewsShow.config(text=select_news)
 		
 class Camera(Frame):
-	def __init__(self, parent, *args, **kwargs):
+	def __call__(args):
+		try: 
+			print('test:     '+args)
+		except:
+			print('')
+	def __init__(self, parent, user):
 		Frame.__init__(self, parent, background='Black')
-		self.pack(side=LEFT, fill=BOTH, expand=YES)
+		self.pack(fill=BOTH, expand=YES)
+		self.tabControl = ttk.Notebook(self)
+		self.tabControl.pack(expand = 1, fill ="both")
+		self.user=user
 		self.CamFrame=Frame(self, background='Black')
-		self.CamFrame.pack(side=TOP,anchor=E)
+		self.CamFrame.pack(fill=BOTH, expand=YES)#side=TOP,anchor=E)
 		#self.get_camera()
 		self.get_home()
 	def get_camera(self):
 		while (True):
 			self.get_user=Get_face.User_auth()
 			if (self.get_user is not None and len(self.get_user)>0):
-				print(self.get_user)
+				#print(self.get_user)
 				self.get_home()
 				break
 	def get_home(self):
-		self.TopFrame = Frame(self, background='black', padx=0, pady=0)
+		self.TopFrame = Frame(self.CamFrame, background='black', padx=0, pady=0)
 		self.TopLeftFrame=Frame(self.TopFrame, background='black')
 		self.TopRightFrame=Frame(self.TopFrame, background='black')
 		
 		self.TopFrame.pack(side=TOP, fill=BOTH)
 		self.TopLeftFrame.pack(side = LEFT, fill=BOTH, padx=50, pady=50)
 		self.TopRightFrame.pack(side = RIGHT, fill=BOTH, padx=50, pady=50)
+		
+		
+		tab1 = ttk.Frame(self.tabControl)
+		self.tabControl.add(self.CamFrame, text ='HOME SCREEN')
 
 		self.ura=Time(self.TopLeftFrame)
 		self.ura.pack(side=TOP)
 		self.Weather=Weather(self.TopRightFrame)
 		self.Weather.pack(side=TOP)
-		self.news=News(self)
+		self.news=News(self.CamFrame)
 		self.news.pack(side=BOTTOM)
-		self.asistant=Asistant(self)
+		self.asistant=Asistant(self.CamFrame, self.user, self.tabControl)
 		self.asistant.pack(side=TOP)
 		
 class Window:
-	def __init__(self):
+	def __init__(self, user):
+		#print("USER: "+ user)
+		self.user=user
 		self.tk=tk.Toplevel()
 		self.tk.configure(background='black')
 		self.tk.title("Pozdravljeni")
@@ -244,6 +288,24 @@ class Window:
 	def recognize(self):
 		self.cam=Camera(self.Frame)
 		self.cam.pack()
+	def start_home(self):
+		self.TopFrame = Frame(self.Frame, background='black', padx=0, pady=0)
+		self.TopLeftFrame=Frame(self.TopFrame, background='black')
+		self.TopRightFrame=Frame(self.TopFrame, background='black')
+		
+		self.TopFrame.pack(side=TOP, fill=BOTH)
+		self.TopLeftFrame.pack(side = LEFT, fill=BOTH, padx=50, pady=50)
+		self.TopRightFrame.pack(side = RIGHT, fill=BOTH, padx=50, pady=50)
+
+		self.ura=Time(self.TopLeftFrame)
+		self.ura.pack(side=TOP)
+		self.Weather=Weather(self.TopRightFrame)
+		self.Weather.pack(side=TOP)
+		#print("TEST")
+		#self.news=News(self.Frame)
+		#self.news.pack(side=BOTTOM)
+		#self.asistant=Asistant(self.Frame, self.user)
+		#self.asistant.pack(side=TOP)
 	
-#win=Window()
+#win=Window("nejc")
 #win.tk.mainloop()
