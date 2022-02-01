@@ -22,7 +22,7 @@ class Wikipedia_show:
 			print('test:     '+args)
 		except:
 			print('')
-	def __init__(self, command, tabControl):
+	async def main(self, command, tabControl):
 		def save_image(url_of_image):
 			response = requests.get(url_of_image)
 			url_split=url_of_image.split('.')

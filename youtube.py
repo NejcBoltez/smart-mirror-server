@@ -27,13 +27,13 @@ def get_yt_data(search_for):
 	return get_results
 
 class yt_search(Frame):
-	def __init__(self, search_command, tabControl):
+	async def main(self, search_command):
 		#Frame.__init__(self, parent)
-		self.search_frame=Frame(tabControl, width=1920, height=1080, bg="black", bd=0, highlightthickness=0)
+		self.search_frame=Frame(self, width=1920, height=1080, bg="black", bd=0, highlightthickness=0)
 		self.search_frame.pack(fill=BOTH, expand=YES)
-		tab2 = ttk.Frame(tabControl)
-		tabControl.add(self.search_frame, text ='SEARCH YOUTUBE FOR ' + search_command.upper())
-		tabControl.select(len(tabControl.tabs())-1)
+		#tab2 = ttk.Frame(tabControl)
+		#tabControl.add(self.search_frame, text ='SEARCH YOUTUBE FOR ' + search_command.upper())
+		#tabControl.select(len(tabControl.tabs())-1)
 		self.search_text=Label(self.search_frame, text=str(search_command).replace('_', ' ').upper(), font=('verdana', 30, 'bold'), fg="white", bg="black", bd=0, highlightthickness=0, anchor="center")
 		self.search_text.pack(side=TOP)
 		self.search_frame_top=Canvas(self.search_frame,width=1700, height=400, bg="black", bd=0, highlightthickness=0)
@@ -89,8 +89,8 @@ class yt_search(Frame):
 		self.Canvas=Canvas(self.Frame)
 		self.Canvas.grid(padx=150, pady=150)
 		self.yt=yt_search(self.Canvas)
-		self.yt.pack()'''
+		self.yt.pack()
 
-#root=Window()
-#root.tk.mainloop()
+root=Window()
+root.tk.mainloop()'''
 

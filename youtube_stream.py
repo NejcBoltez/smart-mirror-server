@@ -17,25 +17,27 @@ arguments = list(sys.argv)
 
 #Youtube video https://www.youtube.com/watch?v=qmQr0Uyi0Ls
 class Video(Frame):
-	def __init__(self, play_num, tabControl):
-		#Frame.__init__(self, parent)
+	async def main(self,parent):
+		Frame.__init__(self, parent)
 		self.start_w_animation=14
 		self.end_w_animation=1400
 		self.start_h_animation=6.5
 		self.end_h_animation=650
-		self.videoframe=Frame(tabControl, background="black", width=1400, height=700)
+		self.videoframe=Frame(self, background="black", width=1400, height=700)
 		self.videoframe.pack(fill=BOTH, expand=YES)
-		tab2 = ttk.Frame(tabControl)
-		tabControl.add(self.videoframe, text ='PLAYING YOUTUBE VIDEO')
-		tabControl.select(len(tabControl.tabs())-1)
+		#tab2 = ttk.Frame(tabControl)
+		#tabControl.add(self.videoframe, text ='PLAYING YOUTUBE VIDEO')
+		#tabControl.select(len(tabControl.tabs())-1)
 		self.video_name=Label(self.videoframe, fg="white", background="black")
 		self.video_name.pack(side=TOP)
 		self.video_play=Frame(self.videoframe, background="black", width=1400, height=650)
 		self.video_play.pack(fill=BOTH, expand=YES)
-		self.url= self.get_URL(play_num)
+		self.url= "https://www.youtube.com/watch?v=qmQr0Uyi0Ls"#self.get_URL(arguments[1])
 		self.video=pafy.new(self.url) #pip3 install youtube-dl    
 		self.best=self.video.getbest()
 		self.streams=self.video.streams
+		for s in self.streams:
+			print(s.url)
 		print(self.streams[0])
 		self.playurl=self.best.url
 		self.instance=vlc.Instance()
@@ -70,16 +72,16 @@ class Video(Frame):
 	def __init__(self):
 		self.tk=tk.Tk()
 		#self.tk.geometry("1500x1000")
-		#self.tk.geometry("1920x1000")
-		self.tk.attributes('-fullscreen', True)  
-		self.fullScreenState = False
+		self.tk.geometry("1920x1000")
+		#self.tk.attributes('-fullscreen', True)  
+		#self.fullScreenState = False
 		self.Frame=Frame(self.tk, background="black")
 		self.Frame.pack(fill=BOTH, expand=YES)
 		self.Canvas=Canvas(self.Frame)
 		#self.Canvas.pack()
 		self.Canvas.grid(padx=300, pady=150, sticky=W)
 		self.yt=Video(self.Canvas)
-		self.yt.pack()'''
+		self.yt.pack()
 
-#root=Window()
-#root.tk.mainloop()
+root=Window()
+root.tk.mainloop()'''

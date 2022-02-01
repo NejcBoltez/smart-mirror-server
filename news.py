@@ -6,6 +6,7 @@ from PIL import ImageTk
 import PIL.Image
 import sys
 import os
+from working_with_files import Work_with_files
 try:
 	import tkinter as tk
 	from tkinter import *
@@ -34,7 +35,7 @@ class display_news:
 			print("test:     "+args)
 		except:
 			print("")
-	def __init__(self, displayed, tabControl):
+	async def main(self, displayed, tabControl):
 		'''self.tk=tk.Tk()
 		self.tk.configure(background="black")
 		#self.tk.geometry("1920x1000")
@@ -51,15 +52,16 @@ class display_news:
 		self.title.pack(padx=0, pady=25)
 		self.n=0
 		self.NewsList=[]
-		self.Novice=""
+		'''self.Novice=""
 		self.News=""
 		self.IzborNovic=""
 		self.get_api=get_api_keys()
 		self.APIK=self.get_api["news_api"]
 		self.URLnews = "https://newsapi.org/v2/top-headlines?country=si&apiKey="+self.APIK
 		self.News=requests.get(self.URLnews)
-		self.Novice=self.News.json()
-		self.NewsList=self.Novice["articles"]
+		self.Novice=self.News.json()'''
+		self.News=Work_with_files.read_news_data()
+		self.NewsList=self.News["articles"]
 		self.w=350
 		self.h=600
 		self.NewsFrame=Frame(self.Frame, width=1920, height=1000, bg="black",padx=25,pady=50)

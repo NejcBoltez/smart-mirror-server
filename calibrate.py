@@ -10,9 +10,9 @@ except:
 class Calibrate():
 	def __init__(self):
 		self.tk=tk.Tk()
-		#self.tk.geometry("1920x1000")
-		self.tk.attributes('-fullscreen', True)  
-		self.fullScreenState = False
+		self.tk.geometry("1920x1000")
+		#self.tk.attributes('-fullscreen', True)  
+		#self.fullScreenState = False
 		self.Frame=Frame(self.tk, background='Black')
 		self.Frame.pack(fill=BOTH, expand= TRUE)
 		self.auth_label=Label(self.Frame, font=('Helvetica', 30), fg='white', bg='black', text="User calibration")

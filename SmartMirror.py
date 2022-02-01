@@ -22,6 +22,7 @@ from PIL import ImageTk
 import PIL.Image
 from speech_listen import Listening
 import sys
+import asyncio
 from tkinter import ttk
 
 
@@ -43,10 +44,11 @@ class Asistant(Frame):
 		self.CommandHelp.pack()
 		self.getPosluh()
 	def getPosluh(self):
-		my_thread=threading.Thread(target=self.Listening_test)
-		my_thread.start()
+		listen= asyncio.create_task(self.Listening_test)
+		#my_thread=threading.Thread(target=self.Listening_test)
+		#my_thread.start()
     		
-	def Listening_test(self):
+	async def Listening_test(self):
 		self.start_to_listen=False
 		self.popup_id=''
 		self.displayed=5
@@ -69,7 +71,9 @@ class Asistant(Frame):
 							os.kill(int(self.popup_id), signal.SIGKILL)
 						self.master.master.destroy()'''
 						#sys.exit()
-						self.parent.pack_forget()
+						for task in asyncio.tasks:
+							print(task)
+						#self.parent.pack_forget()
 						'''for t in threading.enumerate():
 							if ("main" not in t.getName().lower()):
 								print(t)
@@ -80,8 +84,10 @@ class Asistant(Frame):
 					else:
 						if ("next" in self.l.lower()):
 							self.displayed=self.displayed+5
-						self.send_command_thread=threading.Thread(target=Do_for_command(self.l.lower(), user, str(self.displayed), self.previous_search, self.tabcontrol))
-						self.send_command_thread.start()
+						task1=asyncio.create_task(Do_for_command(self.l.lower(), user, str(self.displayed), self.previous_search, self.tabcontrol))
+						
+						#self.send_command_thread=threading.Thread(target=Do_for_command(self.l.lower(), user, str(self.displayed), self.previous_search, self.tabcontrol))
+						#self.send_command_thread.start()
 					self.start_to_listen=False
 					if (len(self.popup_id)>0):
 						os.kill(int(self.popup_id), signal.SIGKILL)
@@ -101,11 +107,14 @@ class Time(Frame):
 		self.day_label=Label(self, font=('Helvetica', 20), fg="white", bg="black")
 		self.day_label.pack()
 		self.update_time()
-	def update_time(self):
+
+	async def update_time(self):
 		self.ti=time.strftime('%H:%M:%S')
 		self.day=time.strftime('%A, %B %d %Y ')
 		self.update_clock(self.ti,self.day)
-		self.current_time.after(1000, self.update_time)
+		#self.current_time.after(1000, self.update_time)
+		await asyncio.sleep(1)
+		
 	def update_clock(self,ti,d):
 		self.current_time.config(text=ti)
 		self.day_label.config(text=d)
@@ -239,17 +248,16 @@ class Camera(Frame):
 		self.tabControl.pack(expand = 1, fill ="both")
 		self.user=user
 		self.CamFrame=Frame(self, background='Black')
-		self.CamFrame.pack(fill=BOTH, expand=YES)#side=TOP,anchor=E)
-		#self.get_camera()
+		self.CamFrame.pack(fill=BOTH, expand=YES)
 		self.get_home()
-	def get_camera(self):
-		while (True):
-			self.get_user=Get_face.User_auth()
-			if (self.get_user is not None and len(self.get_user)>0):
-				#print(self.get_user)
-				self.get_home()
-				break
-	def get_home(self):
+	async def get_home(self, user):
+		self.pack(fill=BOTH, expand=YES)
+		self.tabControl = ttk.Notebook(self)
+		self.tabControl.pack(expand = 1, fill ="both")
+		self.user=user
+		self.CamFrame=Frame(self, background='Black')
+		self.CamFrame.pack(fill=BOTH, expand=YES)
+
 		self.TopFrame = Frame(self.CamFrame, background='black', padx=0, pady=0)
 		self.TopLeftFrame=Frame(self.TopFrame, background='black')
 		self.TopRightFrame=Frame(self.TopFrame, background='black')

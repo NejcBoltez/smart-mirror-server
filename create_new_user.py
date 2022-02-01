@@ -25,9 +25,9 @@ image_dir=os.path.join(BASE_DIR, '../Users')
 class new_user_GUI():
 	def __init__(self):
 		self.tk=tk.Tk()
-		#self.tk.geometry("1920x1000")
-		self.tk.attributes('-fullscreen', True)  
-		self.fullScreenState = False
+		self.tk.geometry("1920x1000")
+		#self.tk.attributes('-fullscreen', True)  
+		#self.fullScreenState = False
 		self.Frame=Frame(self.tk, background='Black')
 		self.Frame.pack(fill=BOTH, expand= TRUE)
 		self.auth_label=Label(self.Frame, font=('Helvetica', 30), fg='white', bg='black', text="User authontication")
@@ -51,7 +51,6 @@ class new_user_GUI():
 	def new_user_create(self):
 		self.auth_label.config(text="Plase say your name without spaces")
 		new_user=Listening.listening_function()
-		#print("USER: "+new_user)
 		if (new_user is not None or new_user != ""):
 			while (True):
 				self.say_new_user_name.config(text="Your new name would be '" + new_user + "'. IS THAT OK?")
@@ -59,7 +58,6 @@ class new_user_GUI():
 				if ("yes" in user_ok.lower()):
 					print("test")
 					Work_with_files.create_dir_for_user(new_user)
-					#face_recognize.take_pic(new_user)
 					new_user_pic=subprocess.Popen(["python3","take_picture.py", new_user])#self.take_pic=take_picture.take_pic('test')
 					self.tk.destroy()
 					break

@@ -39,7 +39,7 @@ class weather_GUI:
 			print('test:     '+args)
 		except:
 			print('')
-	def __init__(self,command):
+	async def main(self,command):
 		#global arguments
 		#Frame.__init__(self, parent)
 		self.BASE_DIR= os.path.dirname(os.path.abspath(__file__))
@@ -76,7 +76,7 @@ class weather_GUI:
 		self.populate_data(command)
 		self.tk.mainloop()
 	def get_weather_data(self):
-		self.City = "Novo mesto"
+		'''self.City = "Novo mesto"
 		self.Country = "SI"
 		self.get_api=Work_with_files.get_api_keys()
 		print(self.get_api)
@@ -86,7 +86,9 @@ class weather_GUI:
 		self.r = requests.get(self.URL)
 		self.r_main=requests.get(self.main_URL)
 		self.read = self.r.json()
-		self.read_day=self.r_main.json()
+		self.read_day=self.r_main.json()'''
+		self.read=Work_with_files.read_weather_data()
+		self.read_day=Work_with_files.read_weather_main()
 		self.main_icon=self.read_day['weather'][0]['icon']
 	def populate_data(self,command):
 		weather=''

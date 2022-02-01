@@ -7,8 +7,8 @@ import SmartMirror
 from face_recognize import Get_face
 import time
 '''from PIL import ImageTk
-import PIL.Image
-import asyncio'''
+import PIL.Image'''
+import asyncio
 try:
 	import tkinter as tk
 	from tkinter import *
@@ -16,9 +16,7 @@ except:
 	import Tkinter as tk
 	from Tkinter import *
 
-async def get_json_data():
-	while(True):
-		print("TEST")
+
 class new_user_GUI():
 	def __init__(self):
 		self.tk=tk.Tk()
@@ -53,9 +51,12 @@ class Login(Frame):
 		self.pack(fill=BOTH, expand=YES)
 		self.auth_label=Label(self, font=('Helvetica', 30), fg='white', bg='black', text="TEST")
 		self.auth_label.pack(side=TOP,fill=BOTH, expand= TRUE)
-		start=threading.Thread(target=self.user_auth)
-		start.start()
-	def user_auth(self):
+		#start=threading.Thread(target=self.user_auth)
+		#start.start()
+		loop = asyncio.get_event_loop()
+		loop.run_until_complete(self.user_auth())
+	async def user_auth(self):
+		asyncio.sleep(1)
 		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
 		users_dir=os.path.join(BASE_DIR, '../Users')
 		path, dirs, files = next(os.walk(users_dir))
@@ -63,9 +64,8 @@ class Login(Frame):
 		print(dirs)
 		print(files)
 		count_users= len(dirs)
-		
 		try:
-			if (count_users==2):
+			if (count_users==0):
 				new_user_GUI()
 				path, dirs, files = next(os.walk(users_dir))
 				print(path)
@@ -73,7 +73,7 @@ class Login(Frame):
 				print(files)
 				count_users= len(dirs)
 
-			if(count_users>2):
+			if(count_users>0):
 				'''while (True):
 					test_user=Listening.listening_function()
 					if (len(test_user)>0):
@@ -84,18 +84,21 @@ class Login(Frame):
 							break'''
 				#new_user_pic=subprocess.Popen(["python3","SmartMirror.py"])
 				#start_mirror=subprocess.Popen(["python3","SmartMirror.py"])
-				self.auth_label.pack_forget()
-				SmartMirror.Camera(self, get_user)
+				#label.pack_forget()
+				
+				login_home=asyncio.create_task(SmartMirror.Camera.get_home(self, get_user))
+				await login_home
 				#start_mirror=threading.Thread(target=SmartMirror.Camera(self, get_user))
 				#start_mirror.start()
 				#start_mirror.join()
 				print("TEST")
-				while (True):
-					print("TEST")
-					time.sleep(1)
+				#while (True):
+				#	print("TEST")
+			#		time.sleep(1)
 				#self.tk.close()
 		except Exception as e:
 			print(e)
+
 class Window_start:
 	def __init__(self):
 		self.tk=tk.Tk()
@@ -106,11 +109,40 @@ class Window_start:
 		#self.fullScreenState = False
 		self.Frame=Frame(self.tk, background='purple')
 		self.Frame.pack(fill=BOTH, expand=YES)
+		#self.auth_label=Label(self.Frame, font=('Helvetica', 30), fg='white', bg='black', text="TEST")
+		#self.auth_label.pack(side=TOP,fill=BOTH, expand= TRUE)
 		self.login=Login(self.Frame)
+		#await user_auth(self.auth_label)
+		#task1 = asyncio.create_task(user_auth(self.auth_label))
 		self.login.pack()
 		self.tk.mainloop()
 
 
 #Open_forecast=subprocess.Popen(["python3","get_json_data.py"])
 win=Window_start()
+async def main():
+	tk=tk.Tk()
+	tk.configure(background='black')
+	tk.title("Pozdravljeni")
+	tk.geometry("1920x1000")
+	#self.tk.attributes('-fullscreen', True)  
+	#self.fullScreenState = False
+	Frame=Frame(tk, background='purple')
+	Frame.pack(fill=BOTH, expand=YES)
+	auth_label=Label(Frame, font=('Helvetica', 30), fg='white', bg='black', text="TEST")
+	auth_label.pack(side=TOP,fill=BOTH, expand= TRUE)
+	#self.login=Login(self.Frame)
+	#await user_auth(self.auth_label)
+	task1 = asyncio.create_task(user_auth(auth_label))
+	#asyncio.run(user_auth(auth_label))
+	#await task1
+	#self.login.pack()
+	tk.mainloop()
+#asyncio.run(main())
+
+async def foo (text):
+	print(text)
+	await asyncio.sleep(1)
+
+#asyncio.run(main())
 

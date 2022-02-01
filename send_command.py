@@ -9,7 +9,8 @@ from news import display_news
 from wikipedia_window import Wikipedia_show
 from youtube import yt_search
 from youtube_stream import Video
-open_processes=[]
+from weather import weather_GUI
+import asyncio
 		
 class Do_for_command:
 	def __call__(args):
@@ -17,7 +18,7 @@ class Do_for_command:
 				print('test:     '+args)
 			except:
 				print('')
-	def __init__(self, command, user, displayed, previous_search, tabcontrol):
+	async def main(self, command, user, displayed, previous_search, tabcontrol):
 
 		print('WE HAVE IT')
 		print(type(tabcontrol))
@@ -36,12 +37,14 @@ class Do_for_command:
 		if (command!=""):
 			if("forecast" in command or "weather" in command):
 				if (command_search==""):
-					Open_forecast=subprocess.Popen(["python3","weather.py"], 'today')
-					Work_with_files.print_process_to_file(str(Open_forecast.pid), "Open_forecast")
+					forecast=asyncio.create_task(weather_GUI())
+					#Open_forecast=subprocess.Popen(["python3","weather.py"], 'today')
+					#Work_with_files.print_process_to_file(str(Open_forecast.pid), "Open_forecast")
 					
 				else:
-					Open_forecast=subprocess.Popen(["python3","weather.py",command_search])
-					Work_with_files.print_process_to_file(str(Open_forecast.pid), "Open_forecast")
+					forecast=asyncio.create_task(weather_GUI())
+					#Open_forecast=subprocess.Popen(["python3","weather.py",command_search])
+					#Work_with_files.print_process_to_file(str(Open_forecast.pid), "Open_forecast")
 					
 			elif (("who" in command or "was" in command or "what" in command  or ("search" in command and "youtube" not in command)) and ("date" not in command)):
 				wiki_command=""
@@ -53,20 +56,18 @@ class Do_for_command:
 					wiki_command=command.split("was ")
 				elif ("for" in command):
 					wiki_command=command_search
-				w=Wikipedia_show(wiki_command.replace(" ","_"), self.tabcontrol)
+				w=asyncio.create_task(Wikipedia_show(wiki_command.replace(" ","_"), self.tabcontrol))
 				#Open_wiki=subprocess.Popen(["python3","wikipedia_window.py",wiki_command.replace(" ","_")])
 				#Work_with_files.print_process_to_file(str(Open_wiki.pid), "Open_wiki")
 				
 
 			elif ("youtube" in command):
 				if ("search" in command):
-					yt=yt_search(command_search, self.tabcontrol)
+					yt=asyncio.create_task(yt_search(command_search, self.tabcontrol))
 					#Open_yt_search=subprocess.Popen(["python3","youtube.py", command_search])
-					#open_processes.append("Open_yt_search")
 					#Work_with_files.print_process_to_file(str(Open_yt_search.pid), "Open_yt_search")
 				elif ("play" in command):
 					Open_yt=subprocess.Popen(["python3","youtube_stream.py", command])
-					open_processes.append("Open_yt")
 					Work_with_files.print_process_to_file(str(Open_yt.pid), "Open_yt")
 
 			elif ("calibration" in command):
@@ -74,21 +75,12 @@ class Do_for_command:
 				Work_with_files.print_process_to_file(str(Open_calibrate.pid), "Open_calibrate")
 
 			elif ("news" in command):
-				n=display_news(self.show_news, self.tabcontrol)
+				n=asyncio.create_task(display_news(self.show_news, self.tabcontrol))
 				#Open_news=subprocess.Popen(["python3", "news.py", str(show_news)])
 				#Work_with_files.print_process_to_file(str(Open_news.pid), "Open_news")
-				
-			elif("picture" in command):
-				if ("take" in command):
-						take_pic=subprocess.Popen(["python3","take_picture.py",user])
-						open_processes.append("take_pic:"+str(take_pic.pid))
-			elif("timer" in command):
-				start_timer=subprocess.Popen(["python3","timer.py",command_search])
-				Speaking.to_say("Setting a timer for " + str(command_search))
-				Work_with_files.print_process_to_file(str(start_timer.pid), "Start_timer")
 			
 			elif ("home" in command):
-				processes=Work_with_files.read_process_from_file()
+				'''processes=Work_with_files.read_process_from_file()
 				print(type(processes))
 				for name, value in processes.items():
 					print(name+':'+str(value))
@@ -96,7 +88,7 @@ class Do_for_command:
 						os.kill(int(value), signal.SIGKILL)
 					except:
 						continue
-				Work_with_files.remove_all_processes_from_file()
+				Work_with_files.remove_all_processes_from_file()'''
 				for t in self.tabcontrol.tabs():
 					if (t>0):
 						self.tabcontrol.forget(t)
