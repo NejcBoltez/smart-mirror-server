@@ -65,7 +65,7 @@ class Wikipedia_show:
 		#root.fullScreenState = False
 		FrameWiki=Canvas(tabControl, background="black", width=400, height=280)
 		FrameWiki.pack(fill=BOTH, expand= TRUE)
-		tab = ttk.Frame(tabControl)
+		wiki_tab = ttk.Frame(tabControl)
 		tabControl.add(FrameWiki, text ='WIKIPEDIA')
 		tabControl.select(len(tabControl.tabs())-1)
 		try:
@@ -76,7 +76,6 @@ class Wikipedia_show:
 			print(wiki_response)
 			title=list(wiki_response['query']['pages'].values())[0]["title"]
 			answer=list(wiki_response['query']['pages'].values())[0]["extract"]
-			odgovor=''
 			FrameWiki.create_text(600,300, text=title, fill="white", font=("verdana", 25, "bold"))
 			FrameWiki.create_text(600,500,width=800, text=answer, fill='white', font=('verdana', 15))
 			wiki_api_url=list(wiki_response['query']['pages'].values())[0]["thumbnail"]["source"]#"http://en.wikipedia.org/w/api.php?action=query&prop=pageimages&format=json&piprop=original&titles="+str(vpras.replace('_', ' '))#str(title[0])

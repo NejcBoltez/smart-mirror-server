@@ -16,19 +16,6 @@ except:
 
 from tkinter import ttk
 
-arguments = list(sys.argv)
-
-
-displayed=0
-
-def get_api_keys():
-	read_api=""
-	BASE_DIR= os.path.dirname(os.path.abspath(__file__))
-	api_keys_dir=os.path.join(BASE_DIR, "../api_keys.json")
-	with open(api_keys_dir, "r") as f_api:
-		read_api=json.load(f_api)
-	return read_api
-
 class display_news:
 	def __call__(args):
 		try: 
@@ -36,30 +23,16 @@ class display_news:
 		except:
 			print("")
 	async def main(self, displayed, tabControl):
-		'''self.tk=tk.Tk()
-		self.tk.configure(background="black")
-		#self.tk.geometry("1920x1000")
-		self.tk.attributes('-fullscreen', True)  
-		self.fullScreenState = False'''
 		print("TEST")
 		self.Frame=Frame(tabControl, background="black")
 		self.Frame.pack(fill=BOTH, expand=YES)
-		tab2 = ttk.Frame(tabControl)
+		newstab = ttk.Frame(tabControl)
 		tabControl.add(self.Frame, text ='NEWS')
 		tabControl.select(len(tabControl.tabs())-1)
-		#print(tabControl.tabs().index(tabControl.select(1)))
 		self.title=Label(self.Frame, font=("Helvetica", 60), fg="white", bg="black", text="NEWS",anchor="w")
 		self.title.pack(padx=0, pady=25)
 		self.n=0
 		self.NewsList=[]
-		'''self.Novice=""
-		self.News=""
-		self.IzborNovic=""
-		self.get_api=get_api_keys()
-		self.APIK=self.get_api["news_api"]
-		self.URLnews = "https://newsapi.org/v2/top-headlines?country=si&apiKey="+self.APIK
-		self.News=requests.get(self.URLnews)
-		self.Novice=self.News.json()'''
 		self.News=Work_with_files.read_news_data()
 		self.NewsList=self.News["articles"]
 		self.w=350
@@ -157,14 +130,3 @@ class display_news:
 				self.n=self.n+1
 			else:
 				self.n=self.n+1
-		#self.tk.mainloop()
-
-'''if (len(arguments)==2):
-    displayed=int(arguments[1])
-else:
-	displayed=5		
-
-try:
-	display_news(displayed)
-except Exception as e:
-	print(e)'''

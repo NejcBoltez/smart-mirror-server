@@ -76,17 +76,6 @@ class weather_GUI:
 		self.populate_data(command)
 		self.tk.mainloop()
 	def get_weather_data(self):
-		'''self.City = "Novo mesto"
-		self.Country = "SI"
-		self.get_api=Work_with_files.get_api_keys()
-		print(self.get_api)
-		self.APIK=self.get_api['weather_api']
-		self.URL = "https://api.openweathermap.org/data/2.5/forecast?q="+self.City+","+self.Country+"&appid="+self.APIK+'&units=metric'
-		self.main_URL="https://api.openweathermap.org/data/2.5/weather?q="+self.City+","+self.Country+"&appid="+self.APIK+'&units=metric'
-		self.r = requests.get(self.URL)
-		self.r_main=requests.get(self.main_URL)
-		self.read = self.r.json()
-		self.read_day=self.r_main.json()'''
 		self.read=Work_with_files.read_weather_data()
 		self.read_day=Work_with_files.read_weather_main()
 		self.main_icon=self.read_day['weather'][0]['icon']

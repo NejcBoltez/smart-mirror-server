@@ -17,7 +17,7 @@ arguments = list(sys.argv)
 
 #Youtube video https://www.youtube.com/watch?v=qmQr0Uyi0Ls
 class Video(Frame):
-	async def main(self,parent):
+	async def main(self,parent, tabControl):
 		Frame.__init__(self, parent)
 		self.start_w_animation=14
 		self.end_w_animation=1400
@@ -25,9 +25,9 @@ class Video(Frame):
 		self.end_h_animation=650
 		self.videoframe=Frame(self, background="black", width=1400, height=700)
 		self.videoframe.pack(fill=BOTH, expand=YES)
-		#tab2 = ttk.Frame(tabControl)
-		#tabControl.add(self.videoframe, text ='PLAYING YOUTUBE VIDEO')
-		#tabControl.select(len(tabControl.tabs())-1)
+		pla_yt_tab = ttk.Frame(tabControl)
+		tabControl.add(self.videoframe, text ='PLAYING YOUTUBE VIDEO')
+		tabControl.select(len(tabControl.tabs())-1)
 		self.video_name=Label(self.videoframe, fg="white", background="black")
 		self.video_name.pack(side=TOP)
 		self.video_play=Frame(self.videoframe, background="black", width=1400, height=650)
