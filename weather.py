@@ -21,6 +21,7 @@ import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
+from tkinter import ttk
 
 
 days_table=[]
@@ -39,18 +40,23 @@ class weather_GUI:
 			print('test:     '+args)
 		except:
 			print('')
-	async def main(self,command):
+	async def main(self,command, tabControl):
 		#global arguments
 		#Frame.__init__(self, parent)
 		self.BASE_DIR= os.path.dirname(os.path.abspath(__file__))
 		self.image_dir=os.path.join(self.BASE_DIR, 'Weather_widgets')
-		self.tk=tk.Tk()
-		self.tk.configure(background='black')
-		self.tk.geometry("1920x1000")
+		#self.tk=tk.Tk()
+		#self.tk.configure(background='black')
+		#self.tk.geometry("1920x1000")
 		#self.tk.attributes('-fullscreen', True)  
 		#self.fullScreenState = False
+		
 		self.Frame=Frame(self.tk, background="black", width=1920, height=1080)
 		self.Frame.pack(fill=BOTH, expand=YES, anchor='w')
+		
+		weather_tab = ttk.Frame(tabControl)
+		tabControl.add(self.Frame, text ='WEATHER FORECAST')
+		tabControl.select(len(tabControl.tabs())-1)
 		logo_w=300
 		logo_h=500
 		days_w=100
