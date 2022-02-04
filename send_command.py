@@ -10,7 +10,9 @@ from wikipedia_window import Wikipedia_show
 from youtube import yt_search
 from youtube_stream import Video
 from weather import weather_GUI
+from calibrate import Calibrate
 import asyncio
+
 		
 class Do_for_command:
 	def __call__(args):
@@ -18,18 +20,18 @@ class Do_for_command:
 				print('test:     '+args)
 			except:
 				print('')
-	async def main(self, command, user, displayed, previous_search, tabcontrol):
+	async def main(self, command, user, displayed, tabcontrol):
 
 		print('WE HAVE IT')
 		print(type(tabcontrol))
 		numbers_int=["1","2","3","4","5","6","7","8","9","10"]
 		numbers_string=["one","two","three","four","five","six","seven","eight","nine","ten"]
 		position=["first", "second","thirth","fourth","fifth","sixth","seventh","eighth","nineth","tenth"]
-		
+		await asyncio.sleep(1)
 		
 
-		self.show_news=displayed
-		self.tabcontrol=tabcontrol
+		show_news=displayed
+		tabcontrol=tabcontrol
 		command=command.lower()
 		command_search=""
 		if (" for " in command):
@@ -37,14 +39,13 @@ class Do_for_command:
 		if (command!=""):
 			if("forecast" in command or "weather" in command):
 				if (command_search==""):
-					forecast=asyncio.create_task(weather_GUI())
-					#Open_forecast=subprocess.Popen(["python3","weather.py"], 'today')
-					#Work_with_files.print_process_to_file(str(Open_forecast.pid), "Open_forecast")
+					command_search="today"
+					forecast_task=asyncio.create_task(weather_GUI.main(self, command_search, tabcontrol))
+					await forecast_task
 					
 				else:
-					forecast=asyncio.create_task(weather_GUI())
-					#Open_forecast=subprocess.Popen(["python3","weather.py",command_search])
-					#Work_with_files.print_process_to_file(str(Open_forecast.pid), "Open_forecast")
+					forecast_task=asyncio.create_task(weather_GUI.main(self, command_search, tabcontrol))
+					await forecast_task
 					
 			elif (("who" in command or "was" in command or "what" in command  or ("search" in command and "youtube" not in command)) and ("date" not in command)):
 				wiki_command=""
@@ -56,52 +57,30 @@ class Do_for_command:
 					wiki_command=command.split("was ")
 				elif ("for" in command):
 					wiki_command=command_search
-				w=asyncio.create_task(Wikipedia_show(wiki_command.replace(" ","_"), self.tabcontrol))
-				#Open_wiki=subprocess.Popen(["python3","wikipedia_window.py",wiki_command.replace(" ","_")])
-				#Work_with_files.print_process_to_file(str(Open_wiki.pid), "Open_wiki")
+				wiki_task=asyncio.create_task(Wikipedia_show.main(self, wiki_command.replace(" ","_"), tabcontrol))
+				await wiki_task
 				
 
 			elif ("youtube" in command):
 				if ("search" in command):
-					yt=asyncio.create_task(yt_search(command_search, self.tabcontrol))
-					#Open_yt_search=subprocess.Popen(["python3","youtube.py", command_search])
-					#Work_with_files.print_process_to_file(str(Open_yt_search.pid), "Open_yt_search")
-				elif ("play" in command):
-					Open_yt=subprocess.Popen(["python3","youtube_stream.py", command])
-					Work_with_files.print_process_to_file(str(Open_yt.pid), "Open_yt")
+					yt_task=asyncio.create_task(yt_search(self, command_search, tabcontrol))
+					await yt_task
 
 			elif ("calibration" in command):
-				Open_calibrate=subprocess.Popen(["python3", "calibrate.py", user])
-				Work_with_files.print_process_to_file(str(Open_calibrate.pid), "Open_calibrate")
+				calib_task = asyncio.create_task(Calibrate.main(self, tabcontrol))
+				await calib_task
 
 			elif ("news" in command):
-				n=asyncio.create_task(display_news(self.show_news, self.tabcontrol))
-				#Open_news=subprocess.Popen(["python3", "news.py", str(show_news)])
-				#Work_with_files.print_process_to_file(str(Open_news.pid), "Open_news")
+				news_task=asyncio.create_task(display_news.main(self, show_news, tabcontrol))
+				await news_task
 			
 			elif ("home" in command):
-				'''processes=Work_with_files.read_process_from_file()
-				print(type(processes))
-				for name, value in processes.items():
-					print(name+':'+str(value))
-					try:
-						os.kill(int(value), signal.SIGKILL)
-					except:
-						continue
-				Work_with_files.remove_all_processes_from_file()'''
-				for t in self.tabcontrol.tabs():
+				for t in tabcontrol.tabs():
 					if (t>0):
-						self.tabcontrol.forget(t)
+						tabcontrol.forget(t)
 			
 			elif ("close" in command):
-				'''processes=Work_with_files.read_process_from_file()
-				id_to_kill=''
-				for name, value in processes.items():
-						id_to_kill=value
-						print(id_to_kill)
-				os.kill(int(id_to_kill), signal.SIGKILL)
-				Work_with_files.remove_process_from_file(id_to_kill)'''
-				self.tabcontrol.forget(len(self.tabcontrol.tabs())-1)
+				tabcontrol.forget(len(tabcontrol.tabs())-1)
 
 			elif ("next" in command):
 					processes=Work_with_files.read_process_from_file()
@@ -116,7 +95,6 @@ class Do_for_command:
 						os.kill(int(p_id), signal.SIGKILL)
 						Work_with_files.remove_process_from_file(p_id)
 			elif (command in numbers_int or command in numbers_string or command in position):
-				#str_to_search=previous_search.split('for ')[1].replace(' ','_')
 				get_position=0
 				if (command in numbers_int):
 					get_position=numbers_int.index(command) + 1
@@ -127,16 +105,7 @@ class Do_for_command:
 				
 				print(get_position)
 
-				yt_stream=Video(get_position, self.tabcontrol)
-				'''processes=Work_with_files.read_process_from_file()
-				p_name=''
-				p_id=''
-				for name, value in processes.items():
-					p_name=name
-					p_id=value
-				if ("Open_yt_search" in p_name):
-					str_to_search=previous_search.split('for ')[1].replace(' ','_')
-					Open_yt=subprocess.Popen(["python3","youtube_stream.py", str_to_search, command])
-					Work_with_files.print_process_to_file(str(Open_yt.pid), "Open_yt")'''
+				yt_stream_task=asyncio.create_task(Video.main(self, get_position, tabcontrol))
+				await yt_stream_task
 			#else:
 			#	asistant.jarvis(command)

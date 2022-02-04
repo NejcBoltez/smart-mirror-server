@@ -1,8 +1,6 @@
-from types import FrameType
 import cv2
 import face_recognition
 import os
-import sys
 import threading
 from PIL import ImageTk
 import PIL.Image

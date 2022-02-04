@@ -27,7 +27,7 @@ class display_news:
 		self.Frame=Frame(tabControl, background="black")
 		self.Frame.pack(fill=BOTH, expand=YES)
 		newstab = ttk.Frame(tabControl)
-		tabControl.add(self.Frame, text ='NEWS')
+		tabControl.add(self.Frame, text ="NEWS")
 		tabControl.select(len(tabControl.tabs())-1)
 		self.title=Label(self.Frame, font=("Helvetica", 60), fg="white", bg="black", text="NEWS",anchor="w")
 		self.title.pack(padx=0, pady=25)

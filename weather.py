@@ -51,7 +51,7 @@ class weather_GUI:
 		#self.tk.attributes('-fullscreen', True)  
 		#self.fullScreenState = False
 		
-		self.Frame=Frame(self.tk, background="black", width=1920, height=1080)
+		self.Frame=Frame(self, background="black", width=1920, height=1080)
 		self.Frame.pack(fill=BOTH, expand=YES, anchor='w')
 		
 		weather_tab = ttk.Frame(tabControl)
@@ -230,7 +230,7 @@ class weather_GUI:
 
 		canvas = FigureCanvasTkAgg(f,self.chart)
 		canvas.get_tk_widget().pack(pady=100)
-
+'''
 try:
 	if (len(arguments)>1):
 		print(len(arguments))
@@ -241,7 +241,7 @@ try:
 	else: 
 		weather_GUI('today')
 except EXCEPTION as e:
-	print(e)
+	print(e)'''
 
 #weather_GUI(arguments[1])
 

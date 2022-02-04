@@ -1,41 +1,49 @@
-from tkinter import *
-from tkinter import messagebox
 import asyncio
-import threading
-import random
-
-def _asyncio_thread(async_loop):
-    async_loop.run_until_complete(do_urls())
+from random import randrange as rr
+import tkinter as tk
 
 
-def do_tasks(async_loop):
-    """ Button-Event-Handler starting the asyncio part. """
-    threading.Thread(target=_asyncio_thread, args=(async_loop,)).start()
+class App(tk.Tk):
 
-    
-async def one_url(url):
-    """ One task. """
-    sec = random.randint(1, 8)
-    await asyncio.sleep(sec)
-    return 'url: {}\tsec: {}'.format(url, sec)
+    def __init__(self, loop, interval=1/120):
+        super().__init__()
+        self.loop = loop
+        self.protocol("WM_DELETE_WINDOW", self.close)
+        self.tasks = []
+        self.tasks.append(loop.create_task(self.rotator(1/60, 2)))
+        self.tasks.append(loop.create_task(self.updater(interval)))
 
-async def do_urls():
-    """ Creating and starting 10 tasks. """
-    tasks = [one_url(url) for url in range(10)]
-    completed, pending = await asyncio.wait(tasks)
-    results = [task.result() for task in completed]
-    print('\n'.join(results))
+    async def rotator(self, interval, d_per_tick):
+        canvas = tk.Canvas(self, height=600, width=600)
+        canvas.pack()
+        deg = 0
+        color = 'black'
+        arc = canvas.create_arc(100, 100, 500, 500, style=tk.CHORD,
+                                start=0, extent=deg, fill=color)
+        while await asyncio.sleep(interval, True):
+            deg, color = deg_color(deg, d_per_tick, color)
+            canvas.itemconfigure(arc, extent=deg, fill=color)
+
+    async def updater(self, interval):
+        while True:
+            self.update()
+            await asyncio.sleep(interval)
+
+    def close(self):
+        for task in self.tasks:
+            task.cancel()
+        self.loop.stop()
+        self.destroy()
 
 
-def do_freezed():
-    messagebox.showinfo(message='Tkinter is reacting.')
+def deg_color(deg, d_per_tick, color):
+    deg += d_per_tick
+    if 360 <= deg:
+        deg %= 360
+        color = '#%02x%02x%02x' % (rr(0, 256), rr(0, 256), rr(0, 256))
+    return deg, color
 
-def main(async_loop):
-    root = Tk()
-    Button(master=root, text='Asyncio Tasks', command= lambda:do_tasks(async_loop)).pack()
-    Button(master=root, text='Freezed???', command=do_freezed).pack()
-    root.mainloop()
-
-if __name__ == '__main__':
-    async_loop = asyncio.get_event_loop()
-    main(async_loop)
+loop = asyncio.get_event_loop()
+app = App(loop)
+loop.run_forever()
+loop.close()

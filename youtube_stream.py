@@ -26,7 +26,7 @@ class Video(Frame):
 		self.videoframe=Frame(self, background="black", width=1400, height=700)
 		self.videoframe.pack(fill=BOTH, expand=YES)
 		pla_yt_tab = ttk.Frame(tabControl)
-		tabControl.add(self.videoframe, text ='PLAYING YOUTUBE VIDEO')
+		tabControl.add(self.videoframe, text ="PLAYING YOUTUBE VIDEO")
 		tabControl.select(len(tabControl.tabs())-1)
 		self.video_name=Label(self.videoframe, fg="white", background="black")
 		self.video_name.pack(side=TOP)
@@ -58,22 +58,22 @@ class Video(Frame):
 			yt_data=json.load(f_r)
 		print(num)
 		c=1
-		selected_url=''
-		for i in yt_data['videos']:
+		selected_url=""
+		for i in yt_data["videos"]:
 			if (c == num):
-				self.video_name.config(text=str(i['title']))
+				self.video_name.config(text=str(i["title"]))
 				print(i)
-				selected_url='https://www.youtube.com'+i['url_suffix']
+				selected_url="https://www.youtube.com"+i["url_suffix"]
 			c=c+1
 		return selected_url
 	def GetHandle(self):
 		return self.video_play.winfo_id()
-'''class Window:
+"""class Window:
 	def __init__(self):
 		self.tk=tk.Tk()
 		#self.tk.geometry("1500x1000")
 		self.tk.geometry("1920x1000")
-		#self.tk.attributes('-fullscreen', True)  
+		#self.tk.attributes("-fullscreen", True)  
 		#self.fullScreenState = False
 		self.Frame=Frame(self.tk, background="black")
 		self.Frame.pack(fill=BOTH, expand=YES)
@@ -84,4 +84,4 @@ class Video(Frame):
 		self.yt.pack()
 
 root=Window()
-root.tk.mainloop()'''
+root.tk.mainloop()"""

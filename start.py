@@ -1,14 +1,19 @@
+import multiprocessing
 import subprocess
 import os
 from speech_listen import Listening
+from speech_listen import Speaking
 import threading
 from working_with_files import Work_with_files
 import SmartMirror
 from face_recognize import Get_face
-import time
-'''from PIL import ImageTk
-import PIL.Image'''
+from speech_listen import Listening
 import asyncio
+from multiprocessing import Value
+from multiprocessing import cpu_count
+from send_command import Do_for_command
+import concurrent.futures 
+from queue import Queue
 try:
 	import tkinter as tk
 	from tkinter import *
@@ -16,133 +21,128 @@ except:
 	import Tkinter as tk
 	from Tkinter import *
 
+from tkinter import ttk
 
-class new_user_GUI():
-	def __init__(self):
-		self.tk=tk.Tk()
-		self.tk.geometry("1920x1080")
-		self.Frame=Frame(self.tk, background='Black')
-		self.Frame.pack(fill=BOTH, expand= TRUE)
-		self.auth_label=Label(self.Frame, font=('Helvetica', 30), fg='white', bg='black', text="User authontication")
-		self.auth_label.pack(side=TOP,fill=BOTH, expand= TRUE)
-		self.say_new_user_name=Label(self.Frame, font=('Helvetica', 30), fg='white', bg='black', text="")
-		self.say_new_user_name.pack(fill=BOTH, expand= TRUE)
-		self.get_new_user_name=Label(self.Frame, font=('Helvetica', 30), fg='white', bg='black', text="")
-		self.get_new_user_name.pack(fill=BOTH, expand= TRUE)
-		my_thread=threading.Thread(target=self.new_user_create())
-		my_thread.start()
-		self.tk.mainloop()
-	def new_user_create(self):
-		self.auth_label.config(text="Plase say your name without spaces")
-		new_user=Listening.listening_function()
-		if (new_user is not None or new_user != ""):
-			while (True):
-				self.say_new_user_name.config(text="Your new name would be '" + new_user + "'. IS THAT OK?")
-				user_ok=Listening.listening_function()
-				if ("yes" in user_ok.lower()):
-					print("test")
-					Work_with_files.create_dir_for_user(new_user)
-					new_user_pic=subprocess.Popen(["python3","take_picture.py", new_user])
-					self.tk.destroy()
-					break
+
+
 class Login(Frame):
 	def __init__(self, parent, *args, **kwargs):
-		Frame.__init__(self, parent, background='red')
+		Frame.__init__(self, parent, bg='black')
 		self.pack(fill=BOTH, expand=YES)
-		self.auth_label=Label(self, font=('Helvetica', 30), fg='white', bg='black', text="TEST")
-		self.auth_label.pack(side=TOP,fill=BOTH, expand= TRUE)
-		#start=threading.Thread(target=self.user_auth)
-		#start.start()
-		loop = asyncio.get_event_loop()
-		loop.run_until_complete(self.user_auth())
-	async def user_auth(self):
-		asyncio.sleep(1)
+		main_q=Queue()
+		self.tabControl = ttk.Notebook(self, height=100)
+		self.tabControl.pack(expand = 1, fill ="both")
+		
+		self.update()
+		start_l=threading.Thread(target=self.get_listen, args=(main_q,))#(name='Listen 1', target=Listening)
+		start_l.setDaemon(True)
+		start_l.start()
+		#x=Listening()
+		self.user_auth(self.tabControl, main_q)
+		#self.user_auth()
+	
+	def get_listen(self, threading_q):
+		displayed=5
+		l=""
+		print("TEST")
+		is_login=False
+		start_to_listen=True
+		not_recognize=0
+		user=""
+		try:
+			while(True):
+				l= Listening.listening_function()
+				if ("mirror" in l.lower()):
+					if (is_login==False):
+						is_login=True
+						threading_q.put(True)
+					elif (is_login==True):
+						start_to_listen=True
+						Speaking.to_say("OK. I AM LISTENING.")
+						start_popup=subprocess.Popen(["python3", "./show_popup.py"])
+					
+				if (l.lower() != "" and l.lower() != "mirror" and start_to_listen==True):
+					if("log out" in l.lower() or "log off" in l.lower() or "exit" in l.lower()):
+						is_login=False
+
+					else:
+						if ("next" in l.lower()):
+							displayed=displayed+5
+
+						task1=asyncio.run(Do_for_command.main(self, l.lower(), user, str(displayed), self.tabControl))
+					
+					start_to_listen=False
+					self.update()
+
+				elif (l.lower == "" and start_to_listen==True):
+					not_recognize=not_recognize + 1
+
+				else:
+					continue
+				
+		except Exception as e:
+			print(e)
+	def user_auth(self, tabs, login_q):
 		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
 		users_dir=os.path.join(BASE_DIR, '../Users')
 		path, dirs, files = next(os.walk(users_dir))
-		print(path)
-		print(dirs)
-		print(files)
 		count_users= len(dirs)
+		is_login=False
 		try:
-			if (count_users==0):
-				new_user_GUI()
-				path, dirs, files = next(os.walk(users_dir))
-				print(path)
-				print(dirs)
-				print(files)
-				count_users= len(dirs)
+			while(True):
+				if (login_q.empty()):
+					continue
+				else:
+					print("IS_LOGIN: "+str(login_q.get()))
+					if (count_users==0):
+						path, dirs, files = next(os.walk(users_dir))
+						count_users= len(dirs)
 
-			if(count_users>0):
-				'''while (True):
-					test_user=Listening.listening_function()
-					if (len(test_user)>0):
-						self.auth_label.config(text="USER AUTHONTICATION")'''
-				get_user=Get_face.User_auth()
-				'''		if (get_user is not None and len(get_user)>0):
-							print(get_user)
-							break'''
-				#new_user_pic=subprocess.Popen(["python3","SmartMirror.py"])
-				#start_mirror=subprocess.Popen(["python3","SmartMirror.py"])
-				#label.pack_forget()
-				
-				login_home=asyncio.create_task(SmartMirror.Camera.get_home(self, get_user))
-				await login_home
-				#start_mirror=threading.Thread(target=SmartMirror.Camera(self, get_user))
-				#start_mirror.start()
-				#start_mirror.join()
-				print("TEST")
-				#while (True):
-				#	print("TEST")
-			#		time.sleep(1)
-				#self.tk.close()
+					if(count_users>0):						
+						self.auth_label=Label(self, font=('Helvetica', 30), fg='white', bg='black', text="TEST")
+						self.auth_label.pack(side=TOP,fill=BOTH, expand= TRUE)
+						self.update()
+						get_user=Get_face.User_auth()
+						self.auth_label.pack_forget()
+						if (get_user is not None and len(get_user)>0):
+							SmartMirror.Home_screen.get_home(self, get_user, tabs)
 		except Exception as e:
 			print(e)
-
 class Window_start:
 	def __init__(self):
 		self.tk=tk.Tk()
-		self.tk.configure(background='black')
+		self.tk.configure(bg='black')
 		self.tk.title("Pozdravljeni")
 		self.tk.geometry("1920x1000")
 		#self.tk.attributes('-fullscreen', True)  
 		#self.fullScreenState = False
-		self.Frame=Frame(self.tk, background='purple')
+		self.Frame=Frame(self.tk, bg='black')
 		self.Frame.pack(fill=BOTH, expand=YES)
-		#self.auth_label=Label(self.Frame, font=('Helvetica', 30), fg='white', bg='black', text="TEST")
-		#self.auth_label.pack(side=TOP,fill=BOTH, expand= TRUE)
 		self.login=Login(self.Frame)
-		#await user_auth(self.auth_label)
-		#task1 = asyncio.create_task(user_auth(self.auth_label))
 		self.login.pack()
 		self.tk.mainloop()
+window=Window_start()
 
 
-#Open_forecast=subprocess.Popen(["python3","get_json_data.py"])
-win=Window_start()
-async def main():
-	tk=tk.Tk()
-	tk.configure(background='black')
-	tk.title("Pozdravljeni")
-	tk.geometry("1920x1000")
-	#self.tk.attributes('-fullscreen', True)  
-	#self.fullScreenState = False
-	Frame=Frame(tk, background='purple')
-	Frame.pack(fill=BOTH, expand=YES)
-	auth_label=Label(Frame, font=('Helvetica', 30), fg='white', bg='black', text="TEST")
-	auth_label.pack(side=TOP,fill=BOTH, expand= TRUE)
-	#self.login=Login(self.Frame)
-	#await user_auth(self.auth_label)
-	task1 = asyncio.create_task(user_auth(auth_label))
-	#asyncio.run(user_auth(auth_label))
-	#await task1
-	#self.login.pack()
-	tk.mainloop()
-#asyncio.run(main())
-
-async def foo (text):
-	print(text)
-	await asyncio.sleep(1)
-
-#asyncio.run(main())
-
+'''
+tk=tk.Tk()
+tk.configure(background='black')
+tk.title("Pozdravljeni")
+tk.geometry("1920x1000")
+#self.tk.attributes('-fullscreen', True)  
+#self.fullScreenState = False
+Frame=Frame(tk, background='black')
+Frame.pack(fill=BOTH, expand=YES)
+tabControl = ttk.Notebook(Frame)
+tabControl.pack(expand = 1, fill ="both")
+auth_label=Label(Frame, font=('Helvetica', 30), fg='white', bg='black', text="TEST")
+auth_label.pack(side=TOP,fill=BOTH, expand= TRUE)
+tk.update()
+start_l=threading.Thread(target=get_listen())#(name='Listen 1', target=Listening)
+#start_l.setDaemon(True)
+start_l.start()
+#x=Listening()
+user_auth(tk, tabControl)
+#start_login=threading.Thread(target=user_auth(tk, tabControl, test_q))
+#start_login.start()
+tk.mainloop()'''
