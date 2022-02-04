@@ -6,13 +6,6 @@ try:
 except:
 	import Tkinter as tk
 	from Tkinter import *
-import asyncio
-import os
-import subprocess
-import signal
-import time
-from multiprocessing import Process
-#from send_command import Do_for_command
 r = sr.Recognizer()
 
 class Speaking:

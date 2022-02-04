@@ -6,7 +6,6 @@ except:
 	from Tkinter import *
 import wikipedia
 
-import sys
 import requests
 import json
 from PIL import ImageTk
@@ -55,14 +54,6 @@ class Wikipedia_show:
 		vpras=command
 
 		title=['']
-		print(vpras)
-		#root=tk.Tk()
-		#root.geometry("1920x1080")
-		#tabControl = ttk.Notebook(root)
-		#tabControl.pack(expand = 1, fill ="both")
-		
-		#root.attributes('-fullscreen', True)  
-		#root.fullScreenState = False
 		FrameWiki=Canvas(tabControl, background="black", width=400, height=280)
 		FrameWiki.pack(fill=BOTH, expand= TRUE)
 		wiki_tab = ttk.Frame(tabControl)
@@ -89,10 +80,3 @@ class Wikipedia_show:
 			FrameWiki.create_text(600,300, text="Sorry no matches for "+vpras.replace('_',' '), fill="white", font=("verdana", 25, "bold"))
 			FrameWiki.create_text(600,350,width=80, text="Here are some other possible matches", fill='white', font=('verdana', 15, "bold"))
 			FrameWiki.create_text(650,500,width=800, text=matches, fill='white', font=('verdana', 15))
-		
-		#root.mainloop()
-'''arguments = list(sys.argv)
-try:
-	Wikipedia_show(arguments[1])
-except Exception  as e:
-	print(e)'''

@@ -23,7 +23,6 @@ class display_news:
 		except:
 			print("")
 	async def main(self, displayed, tabControl):
-		print("TEST")
 		self.Frame=Frame(tabControl, background="black")
 		self.Frame.pack(fill=BOTH, expand=YES)
 		newstab = ttk.Frame(tabControl)

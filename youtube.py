@@ -1,4 +1,3 @@
-import sys
 try:
 	import tkinter as tk
 	from tkinter import *
@@ -76,20 +75,4 @@ class yt_search(Frame):
 				except:
 					c=c-1
 					continue
-
-"""class Window:
-	def __init__(self):
-		self.tk=tk.Tk()
-		#self.tk.geometry("1920x1000")
-		self.tk.attributes("-fullscreen", True)  
-		self.fullScreenState = False
-		self.Frame=Frame(self.tk, background="black")
-		self.Frame.pack(fill=BOTH, expand=YES)
-		self.Canvas=Canvas(self.Frame)
-		self.Canvas.grid(padx=150, pady=150)
-		self.yt=yt_search(self.Canvas)
-		self.yt.pack()
-
-root=Window()
-root.tk.mainloop()"""
 

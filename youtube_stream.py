@@ -68,20 +68,3 @@ class Video(Frame):
 		return selected_url
 	def GetHandle(self):
 		return self.video_play.winfo_id()
-"""class Window:
-	def __init__(self):
-		self.tk=tk.Tk()
-		#self.tk.geometry("1500x1000")
-		self.tk.geometry("1920x1000")
-		#self.tk.attributes("-fullscreen", True)  
-		#self.fullScreenState = False
-		self.Frame=Frame(self.tk, background="black")
-		self.Frame.pack(fill=BOTH, expand=YES)
-		self.Canvas=Canvas(self.Frame)
-		#self.Canvas.pack()
-		self.Canvas.grid(padx=300, pady=150, sticky=W)
-		self.yt=Video(self.Canvas)
-		self.yt.pack()
-
-root=Window()
-root.tk.mainloop()"""

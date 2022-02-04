@@ -41,15 +41,8 @@ class weather_GUI:
 		except:
 			print('')
 	async def main(self,command, tabControl):
-		#global arguments
-		#Frame.__init__(self, parent)
 		self.BASE_DIR= os.path.dirname(os.path.abspath(__file__))
 		self.image_dir=os.path.join(self.BASE_DIR, 'Weather_widgets')
-		#self.tk=tk.Tk()
-		#self.tk.configure(background='black')
-		#self.tk.geometry("1920x1000")
-		#self.tk.attributes('-fullscreen', True)  
-		#self.fullScreenState = False
 		
 		self.Frame=Frame(self, background="black", width=1920, height=1080)
 		self.Frame.pack(fill=BOTH, expand=YES, anchor='w')
@@ -93,7 +86,6 @@ class weather_GUI:
 		hours=[]
 		coordinate=50
 		coordinatey=100
-		#print(str(self.read['list']['main']))
 		print(self.image_dir+'/'+self.main_icon+'.png')
 		image_byt = str(self.image_dir+'/'+self.main_icon+'.PNG')# urlopen("https://openweathermap.org/img/wn/"+self.main_icon+"@2x.png").read()
 		load = PIL.Image.open(image_byt)
@@ -131,9 +123,6 @@ class weather_GUI:
 				self.daysb.pack()
 
 		day_selected=self.day_position(command)
-			#days_table.append(str(d['dt_txt']).split(' ')[0])
-		#else:
-		#	 day_selected=days_table[0]
 		for i in self.read['list']:
 			date=str(i['dt_txt']).split(' ')
 			print(date)
@@ -153,13 +142,10 @@ class weather_GUI:
 				h.append(int(i['main']['humidity']))
 				ws.append(float(i['wind']['speed']))
 				hours.append(str(i['dt_txt']).split(' ')[1])
-				#self.data.create_text(coordinate,500, text=weather, width=100, fill="white")
-				#self.data.create_window(285, 280, window=frm, anchor=CENTER)
 				print(coordinate)
 				self.data.create_rectangle(coordinate,10, coordinate+170, 350, fill="black", outline="white")#create_rectangle(startx,starty,endx,endy, fill="blue", outline="red")
 				self.data.create_text(coordinate+80,90, width=200, text=day_forecast, fill="white", font=('Helvetica', 12))
 				icon_id=i['weather'][0]['icon']
-				#print("Icon ID: "+str(icon_id))
 				image_byt = urlopen("https://openweathermap.org/img/wn/"+icon_id+"@2x.png").read()
 				load = PIL.Image.open(io.BytesIO(image_byt))
 				image_final=load.resize((150,100), PIL.Image.ANTIALIAS)
@@ -169,9 +155,6 @@ class weather_GUI:
 				img.place(x=coordinate+10, y=200)
 
 				coordinate=coordinate+190
-				#print(coordinate)
-				#print(weather)
-		#self.data.create_text(150,500, text=weather, width=200, fill="white")
 		
 		self.create_graph(hours, t, h, ws)
 	def day_position(self, arg):
@@ -180,7 +163,6 @@ class weather_GUI:
 		day_name=datetime.datetime.strptime(days_table[0], '%Y-%m-%d')
 		day_name_txt= str(day_name.strftime("%A")).lower()
 		if (arg=="tomorrow"):
-			#day_selected=days_table[1]
 			day_number=1
 		elif(arg=="today"):
 			day_number=0
@@ -189,7 +171,6 @@ class weather_GUI:
 			print(day_index)
 			if (arg==days_in_week[day_index-1]):
 				Speaking.to_say("I don't have Data for that day")
-				#self.tk.destroy
 			else:
 				for day in days_in_week:
 					print(day)
@@ -230,18 +211,4 @@ class weather_GUI:
 
 		canvas = FigureCanvasTkAgg(f,self.chart)
 		canvas.get_tk_widget().pack(pady=100)
-'''
-try:
-	if (len(arguments)>1):
-		print(len(arguments))
-		if (arguments[1]=='today'):
-			weather_GUI('')
-		else:
-			weather_GUI(arguments[1])
-	else: 
-		weather_GUI('today')
-except EXCEPTION as e:
-	print(e)'''
-
-#weather_GUI(arguments[1])
 
