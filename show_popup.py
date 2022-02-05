@@ -17,4 +17,4 @@ class Popup_window:
 		self.labelText.pack(side="top", fill="x", pady=20)
 		self.popup.lift()
 		self.popup.mainloop()
-Popup_window()
+#Popup_window()

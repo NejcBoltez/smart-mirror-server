@@ -6,6 +6,8 @@ from speech_listen import Speaking
 import threading
 from working_with_files import Work_with_files
 import SmartMirror
+import calibrate
+import create_new_user
 from face_recognize import Get_face
 from speech_listen import Listening
 import asyncio
@@ -14,6 +16,7 @@ from multiprocessing import cpu_count
 from send_command import Do_for_command
 import concurrent.futures 
 from queue import Queue
+import show_popup
 try:
 	import tkinter as tk
 	from tkinter import *
@@ -35,7 +38,7 @@ class Login(Frame):
 		
 		self.update()
 		start_l=threading.Thread(target=self.get_listen, args=(main_q,))#(name='Listen 1', target=Listening)
-		start_l.setDaemon(True)
+		#start_l.setDaemon(True)
 		start_l.start()
 		#x=Listening()
 		self.user_auth(self.tabControl, main_q)
@@ -46,37 +49,44 @@ class Login(Frame):
 		l=""
 		print("TEST")
 		is_login=False
-		start_to_listen=True
+		start_to_listen=False
 		not_recognize=0
 		user=""
+		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
+		users_dir=os.path.join(BASE_DIR, '../Users')
+		path, dirs, files = next(os.walk(users_dir))
+		count_users= len(dirs)
 		try:
 			while(True):
-				l= Listening.listening_function()
-				if ("mirror" in l.lower()):
-					if (is_login==False):
-						is_login=True
-						threading_q.put(True)
-					elif (is_login==True):
-						start_to_listen=True
-						Speaking.to_say("OK. I AM LISTENING.")
-						start_popup=subprocess.Popen(["python3", "./show_popup.py"])
-					
-				if (l.lower() != "" and l.lower() != "mirror" and start_to_listen==True):
-					if("log out" in l.lower() or "log off" in l.lower() or "exit" in l.lower()):
-						is_login=False
+				if(count_users>0):
+					l= Listening.listening_function()
+					if ("mirror" in l.lower()):
+						if (is_login==False):
+							is_login=True
+							threading_q.put(True)
+						elif (is_login==True):
+							start_to_listen=True
+							Speaking.to_say("OK. I AM LISTENING.")
+							#start_popup=subprocess.Popen(["python3", "./show_popup.py"])
+							show_popup.Popup_window()
+					if (l.lower() != "" and l.lower() != "mirror" and start_to_listen==True):
+						if("log out" in l.lower() or "log off" in l.lower() or "exit" in l.lower()):
+							is_login=False
+
+						else:
+							if ("next" in l.lower()):
+								displayed=displayed+5
+
+							task1=asyncio.run(Do_for_command.main(self, l.lower(), user, str(displayed), self.tabControl))
+						
+						start_to_listen=False
+						self.update()
+
+					elif (l.lower == "" and start_to_listen==True):
+						not_recognize=not_recognize + 1
 
 					else:
-						if ("next" in l.lower()):
-							displayed=displayed+5
-
-						task1=asyncio.run(Do_for_command.main(self, l.lower(), user, str(displayed), self.tabControl))
-					
-					start_to_listen=False
-					self.update()
-
-				elif (l.lower == "" and start_to_listen==True):
-					not_recognize=not_recognize + 1
-
+						continue
 				else:
 					continue
 				
@@ -90,22 +100,24 @@ class Login(Frame):
 		is_login=False
 		try:
 			while(True):
-				if (login_q.empty()):
-					continue
+				if (count_users==0):
+					create_new_user.new_user_GUI.main(self, tabs)
 				else:
-					print("IS_LOGIN: "+str(login_q.get()))
-					if (count_users==0):
+					if (login_q.empty()):
 						path, dirs, files = next(os.walk(users_dir))
 						count_users= len(dirs)
-
-					if(count_users>0):						
-						self.auth_label=Label(self, font=('Helvetica', 30), fg='white', bg='black', text="TEST")
-						self.auth_label.pack(side=TOP,fill=BOTH, expand= TRUE)
-						self.update()
-						get_user=Get_face.User_auth()
-						self.auth_label.pack_forget()
-						if (get_user is not None and len(get_user)>0):
-							SmartMirror.Home_screen.get_home(self, get_user, tabs)
+						#create_new_user.new_user_GUI.main(self,tabs)
+						continue
+					else:
+						print("IS_LOGIN: "+str(login_q.get()))
+						if(count_users>0):						
+							self.auth_label=Label(self, font=('Helvetica', 30), fg='white', bg='black', text="TEST")
+							self.auth_label.pack(side=TOP,fill=BOTH, expand= TRUE)
+							self.update()
+							get_user=Get_face.User_auth()
+							self.auth_label.pack_forget()
+							if (get_user is not None and len(get_user)>0):
+								SmartMirror.Home_screen.get_home(self, get_user, tabs)
 		except Exception as e:
 			print(e)
 class Window_start:

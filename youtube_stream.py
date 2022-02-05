@@ -17,24 +17,26 @@ arguments = list(sys.argv)
 
 #Youtube video https://www.youtube.com/watch?v=qmQr0Uyi0Ls
 class Video(Frame):
-	async def main(self,parent, tabControl):
-		Frame.__init__(self, parent)
+	def __init__(self,parent, tabControl):
+		#Frame.__init__(self, parent)
 		self.start_w_animation=14
 		self.end_w_animation=1400
 		self.start_h_animation=6.5
 		self.end_h_animation=650
 		self.videoframe=Frame(self, background="black", width=1400, height=700)
 		self.videoframe.pack(fill=BOTH, expand=YES)
-		pla_yt_tab = ttk.Frame(tabControl)
+		play_yt_tab = ttk.Frame(tabControl)
 		tabControl.add(self.videoframe, text ="PLAYING YOUTUBE VIDEO")
 		tabControl.select(len(tabControl.tabs())-1)
 		self.video_name=Label(self.videoframe, fg="white", background="black")
 		self.video_name.pack(side=TOP)
 		self.video_play=Frame(self.videoframe, background="black", width=1400, height=650)
 		self.video_play.pack(fill=BOTH, expand=YES)
-		self.url= "https://www.youtube.com/watch?v=qmQr0Uyi0Ls"#self.get_URL(arguments[1])
+		#https://www.youtube.com/embed/jNQXAC9IVRw?vq=large
+		self.url= self.get_URL(arguments[1])
 		self.video=pafy.new(self.url) #pip3 install youtube-dl    
-		self.best=self.video.getbest()
+		self.best=self.video.getbest(preftype="webm")
+		print(self.best.resolution)
 		self.streams=self.video.streams
 		for s in self.streams:
 			print(s.url)
@@ -68,3 +70,20 @@ class Video(Frame):
 		return selected_url
 	def GetHandle(self):
 		return self.video_play.winfo_id()
+class Window:
+	def __init__(self):
+		self.tk=tk.Tk()
+		#self.tk.geometry("1500x1000")
+		self.tk.geometry("1920x1000")
+		#self.tk.attributes("-fullscreen", True)  
+		#self.fullScreenState = False
+		self.Frame=Frame(self.tk, background="black")
+		self.Frame.pack(fill=BOTH, expand=YES)
+		self.Canvas=Canvas(self.Frame)
+		#self.Canvas.pack()
+		self.Canvas.grid(padx=300, pady=150, sticky=W)
+		self.yt=Video(self.Canvas)
+		self.yt.pack()
+
+#root=Window()
+#root.tk.mainloop()

@@ -2,15 +2,15 @@ import os
 import json
 
 class Work_with_files:
-	def save_start_phrases(phrases):
+	def save_start_phrases(phrases, user):
 		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
 		file_to_open=os.path.join(BASE_DIR, "json_data"+os.path.sep+"start_phrases.json")	
 		with open(file_to_open, "r") as f_r:
 			f_read=f_r.read()
 		read_phrases=f_read.replace(']','')
 		new_phrases={
-			"user" : "",
-			"start_phrases" : '"'+str(phrases)+'"'
+			"user" : user,
+			"start_phrases" : phrases
 		}
 		with open(file_to_open,"w") as f_w:
 			f_w.write(str(read_phrases)+','+str(new_phrases).replace("'", '"')+"]")

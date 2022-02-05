@@ -162,7 +162,8 @@ class Home_screen(Frame):
 		self.CommandHelpHeader.pack()
 		self.CommandHelp=Label(self.HomeFrame,font=("Helvetica", 12), fg="white", bg="black",text="First say 'Hey Mirror' then you can try to say:")#Search youtube for\nShow me the forecast\nSearch wikipedia for\nStart the calibration")
 		self.CommandHelp.pack()
-		self.update()
+		while (True):
+			self.update()
 		
 class Window:
 	def __init__(self, user):
