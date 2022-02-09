@@ -1,34 +1,31 @@
 try:
 	import tkinter as tk
 	from tkinter import *
+	from tkinter import ttk
 except:
 	import Tkinter as tk
 	from Tkinter import *
 import time
-from urllib3 import *
-import os
+import asyncio
+from send_command import Do_for_command
 from working_with_files import Work_with_files
 from PIL import ImageTk
 import PIL.Image
-from tkinter import ttk
-import asyncio
-import threading
-from send_command import Do_for_command
+import os
+import subprocess
+from speech_listen import Speaking
+import signal
+import show_popup
 
-class Asistant(Frame):
-	def __init__(self, parent, thread_q):
-		Frame.__init__(self, parent, bg="black")
-		
-		self.listening_queue=Label(self, font=("Helvetica", 100), fg="white", bg="black")
-		self.listening_queue.pack(side=TOP,anchor=E)
-		self.thread_q=thread_q
-		self.update_listening_data()
-	def update_listening_data(self):
-		print("TESTING QUEUE: " + self.thread_q.get())
-		self.listening_queue.after(1000, self.update_listening_data)
+
 class Time(Frame):
-	def __init__(self, parent):
-		Frame.__init__(self, parent, bg="black")
+	def __call__(args):
+		try: 
+			print("test:     "+args)
+		except:
+			print("")
+	def __init__(self, parent):#, tabcontrol):
+		Frame.__init__(self, parent, bg="black", padx=0, pady=0)
 		self.current_time=Label(self, font=("Helvetica", 100), fg="white", bg="black")
 		self.current_time.pack(side=TOP,anchor=E)
 		self.day_label=Label(self, font=("Helvetica", 20), fg="white", bg="black")
@@ -39,12 +36,12 @@ class Time(Frame):
 		self.ti=time.strftime("%H:%M:%S")
 		self.day=time.strftime("%A, %B %d %Y ")
 		self.update_clock(self.ti,self.day)
-		self.current_time.after(1000, self.update_time)
+		print("TEST TIME SECONDS")
+		#self.current_time.after(1000, self.update_time)
 		
 	def update_clock(self,ti,d):
 		self.current_time.config(text=ti)
-		self.day_label.config(text=d)
-
+		self.day_label.config(text=d)	
 
 class Weather(Frame):
 	def __init__(self, parent):
@@ -135,82 +132,97 @@ class News(Frame):
 			elif (count_news==10):
 				break
 		self.NewsShow.config(text=select_news)
-		
-class Home_screen:
+class Home_screen(Frame):
 	def __call__(args):
 		try: 
 			print("test:     "+args)
 		except:
 			print("")
-	def __init__(self, parent, user, tabcontrol, thread_q, loop):
+	def main(self, user, tabs, listening_q):
+		#Frame.__init__(self, parent, bg="black", padx=0, pady=0)
 		self.user=user
-		self.HomeFrame=Frame(tabcontrol, background="Black")
+		tabs=tabs
+		self.isListening=True
+		self.HomeFrame=Frame(tabs, background="black")
 		self.HomeFrame.pack(fill=BOTH, expand=YES)
-		self.tabControl=tabcontrol
+		home_tab = ttk.Frame(tabs)
 		self.tasks=[]
+		tabs.add(self.HomeFrame, text ="HOME SCREEN")
 		
-		home_tab = ttk.Frame(self.tabControl)
-		self.tabControl.add(self.HomeFrame, text ="HOME SCREEN")
-		self.tabControl.update()
+		loop = asyncio.get_event_loop()
+		self.tasks.append(loop.create_task(get_home(self, user, tabs)))
 		
-		self.main_screen=Main_screen(self.HomeFrame, self.user)
-		self.main_screen.pack(fill=BOTH, expand=YES)
-		
-		#self.tasks.append(loop.create_task(self.get_home(user, thread_q)))
-		
-		#self.tasks.append(loop.create_task(self.get_thread(thread_q)))
-		#loop.run_forever()
-		
-		print("DEBUG TEST")
-		#self.tabControl.update()
-	async def get_thread(self, thread_q):
-		#        l=thread_q.get()
-		#while(True):
-		user="nejc"
+		self.tasks.append(loop.create_task(get_thread(self, listening_q, user, tabs, loop)))
+		loop.run_until_complete(asyncio.gather(*self.tasks))
+		#self.loop.run_forever()
+		#self.loop.run_until_complete(get_home(self, user, self.tabs))
+		#self.loop.run_until_complete(get_thread(self, listening_q, user, self.tabs))
+		while(True):
+			if(len(tabs.tabs())==0):
+				print("STOPING TASKS")
+				for task in self.tasks:
+					task.cancel()
+				#loop.stop()
+
+				break
+					#self.destroy()
+async def get_thread(self, thread_q, user, tabControl, loop):
+	is_listening=False
+	popup_id=0
+	while(len(tabControl.tabs())>0):
+		await asyncio.sleep(5)
+		l= await thread_value(thread_q)
 		displayed=5
-		print("TEST")
-		print("TESTING QUEUE: " + thread_q.get())
-		#asyncio.run(Do_for_command.main(self, l.lower(), user, str(displayed), self.tabControl))
-			#await asyncio.sleep(1)
-		
-        
-class Main_screen(Frame):
-	def __init__(self, parent, user):
-		Frame.__init__(self, parent, bg="black")
-		self.user=user
-		isLogin=True
-		#lis_t=threading.Thread(target=self.get_thread, args=(thread_q,))
-		#lis_t.start()
+		print("TEST:  " + l)
+		if ("mirror" in l.lower()):
+			Speaking.to_say('OK. I AM LISTENING.')
+			popup=show_popup.Popup_window()
+			#start_popup=subprocess.Popen(["python3", "./show_popup.py"])
+			#popup_id=str(start_popup.pid)
+			is_listening=True	
+		elif ("exit" not in l.lower() and is_listening==True):
+			print("TEST1234321 WORKING OK")
+			#os.kill(int(popup_id), signal.SIGKILL)
+			loop.create_task(Do_for_command.main(self, l.lower(), user, str(displayed), tabControl, loop))
 
-		self.TopFrame = Frame(self, background="black", padx=0, pady=0)
-		self.TopLeftFrame=Frame(self.TopFrame, background="black")
-		self.TopRightFrame=Frame(self.TopFrame, background="black")
-		
-		self.TopFrame.pack(side=TOP, fill=BOTH)
-		self.TopLeftFrame.pack(side = LEFT, fill=BOTH, padx=50, pady=50)
-		self.TopRightFrame.pack(side = RIGHT, fill=BOTH, padx=50, pady=50)
+		else:
+			print("EXITING")
+			#break
+async def thread_value(q):
+	value=q.get()
+	return value
+async def get_home(self, user, tabs):
+	self.TopFrame = Frame(self.HomeFrame, background="black", padx=0, pady=0)
+	self.TopLeftFrame=Frame(self.TopFrame, background="black")
+	self.TopRightFrame=Frame(self.TopFrame, background="black")
+	
+	self.TopFrame.pack(side=TOP, fill=BOTH)
+	self.TopLeftFrame.pack(side = LEFT, fill=BOTH, padx=50, pady=50)
+	self.TopRightFrame.pack(side = RIGHT, fill=BOTH, padx=50, pady=50)
 
-		self.clock=Time(self.TopLeftFrame)
-		self.clock.pack(side=TOP)
-		self.Weather=Weather(self.TopRightFrame)
-		self.Weather.pack(side=TOP)
-		self.news=News(self)
-		self.news.pack(side=BOTTOM)
-		
-		#self.ast=Asistant(self.HomeFrame, thread_q)
-		#self.ast.pack(side=BOTTOM)
-		self.CommandHelpHeader=Label(self,font=("Helvetica", 40), fg="white", bg="black", text="HELLO "+user.upper())
-		self.CommandHelpHeader.pack()
-		self.CommandHelp=Label(self,font=("Helvetica", 12), fg="white", bg="black",text="First say 'Hey Mirror' then you can try to say:")#Search youtube for\nShow me the forecast\nSearch wikipedia for\nStart the calibration")
-		self.CommandHelp.pack()
-		while(isLogin):
-		#	print("TESTING QUEUE: " + thread_q.get())
-			self.update()
-		#await asyncio.sleep(3)
-		'''while(isLogin):
-			self.HomeFrame.update()
-			await asyncio.sleep(3)
-			await asyncio.wait_for(self.get_thread(thread_q))'''
+	self.Clock=Time(self.TopLeftFrame)
+	self.Clock.pack(side=TOP)
+	self.Weather=Weather(self.TopRightFrame)
+	self.Weather.pack(side=TOP)
+	self.News=News(self.HomeFrame)
+	self.News.pack(side=BOTTOM)
+	
+	#self.ast=Asistant(self.HomeFrame, thread_q)
+	#self.ast.pack(side=BOTTOM)
+	self.CommandHelpHeader=Label(self.HomeFrame,font=("Helvetica", 40), fg="white", bg="black", text="HELLO "+user.upper())
+	self.CommandHelpHeader.pack()
+	self.CommandHelp=Label(self.HomeFrame,font=("Helvetica", 12), fg="white", bg="black",text="First say 'Hey Mirror' then you can try to say:")#Search youtube for\nShow me the forecast\nSearch wikipedia for\nStart the calibration")
+	self.CommandHelp.pack()
+
+	print(len(tabs.tabs()))
+	print(tabs.tabs())
+	while(len(tabs.tabs())>0):
+		await asyncio.sleep(1)
+		print(len(tabs.tabs()))
+		print(tabs.tabs())
+		self.Clock.update_time()
+		self.Clock.update()
+	#	tabs.update()
 		
 class Window:
 	def __init__(self, user):
@@ -221,10 +233,13 @@ class Window:
 		self.tk.geometry("1920x1000")
 		self.Frame=Frame(self.tk, background="black")
 		self.Frame.pack(fill=BOTH, expand=YES)
+		#self.tabControl = ttk.Notebook(self.Frame, height=100)
+		#self.tabControl.pack(expand = 1, fill ="both")
 		self.recognize()
 		self.tk.mainloop()
 	def recognize(self):
-		self.cam=Home_screen(self.Frame, self.user)
+		self.cam=Home_screen(self.Frame, self.user)#, self.tabControl)
 		self.cam.pack()
 	
 #win=Window("nejc")
+
