@@ -66,10 +66,12 @@ def check_for_user(self):
 	self.new_user_create()
 def new_user_create(self):
 	self.auth_label.config(text="Plase say your name without spaces")
+	self.update()
 	new_user=Listening.listening_function()
 	if (new_user is not None or new_user != ""):
 		while (True):
-			self.say_new_user_name.config(text="Your new name would be "" + new_user + "". IS THAT OK?")
+			self.say_new_user_name.config(text="Your new name would be " + new_user + ". IS THAT OK?")
+			self.update()
 			user_ok=Listening.listening_function()
 			if ("yes" in user_ok.lower()):
 				print("test")

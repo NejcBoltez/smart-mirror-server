@@ -7,6 +7,7 @@ import PIL.Image
 import time
 import numpy as np
 from working_with_files import Work_with_files
+import time
 try:
 	import tkinter as tk
 	from tkinter import *
@@ -27,11 +28,14 @@ def get_user_from_stream(frame):
 	face_front=cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
 	faces = face_front.detectMultiScale(frame, scaleFactor=1.05, minNeighbors=6)
 	user_name=""
+	print("STARTING RECOGNITION: "+ time.strftime("%H:%M:%S"))
+	print(faces)
 	if (len(faces)==0):
 		roi_color=Frame
 		image_encoding = face_recognition.face_encodings(frame)[0]
 		path, dirs, files = next(os.walk(image_dir))
 		for d in dirs:
+			print("STARTING RECOGNITION 1: " + d + "       " + time.strftime("%H:%M:%S"))
 			path_users, dirs_users, files_users = next(os.walk(image_dir+"/"+d))
 			for file in files_users:
 				print("IF:" +file)
@@ -50,13 +54,23 @@ def get_user_from_stream(frame):
 						break
 					else:
 						continue
+				if(user_name==""):
+					continue
+				else:
+					break
+			if(user_name==""):
+				continue
+			else:
+				break
 		
 	else:
 		for (x, y, w, h) in faces:
+			print("TEST")
 			roi_color=frame[y:y+h, x:x+w]
 			image_encoding = face_recognition.face_encodings(frame)[0]
 			path, dirs, files = next(os.walk(image_dir))
 			for d in dirs:
+				print("STARTING RECOGNITION 1: " + d + "       " + time.strftime("%H:%M:%S"))
 				path_users, dirs_users, files_users = next(os.walk(image_dir+"/"+d))
 				for file in files_users:
 					print("ELSE:" +file)
@@ -75,6 +89,14 @@ def get_user_from_stream(frame):
 							break
 						else:
 							continue
+				if(user_name==""):
+					continue
+				else:
+					break
+			if(user_name==""):
+				continue
+			else:
+				break
 	return user_name
 def save_images(self, f_faces, user):
 	BASE_DIR= os.path.dirname(os.path.abspath(__file__))
@@ -92,7 +114,7 @@ def save_images(self, f_faces, user):
 			if (self.user_name == self.user):
 				t=time.strftime("%Y%m%d%H%M%S")
 				new_file_count=count_pics_for_user(self.user)
-				while (new_file_count >= 10):
+				while (new_file_count >= 100):
 					last_mod_file=Work_with_files.get_last_mod_file(save_image_dir+"/"+self.user_name)
 					Work_with_files.remove_file(last_mod_file)
 					new_file_count=count_pics_for_user(self.user)

@@ -1,5 +1,16 @@
 #!/bin/bash
 
+#disable screen going to sleep
+
+xset s 0
+xset -dpms
+xset q
+
+
+
+
+#Install linux packages
+
 sudo apt-get install libatlas-base-dev -y
 sudo apt-get install libjasper-dev -y
 sudo apt-get install libqtgui4 -y

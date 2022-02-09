@@ -22,7 +22,8 @@ class display_news:
 			print("test:     "+args)
 		except:
 			print("")
-	async def main(self, displayed, tabControl):
+	def main(self, displayed, tabControl):
+		print("TESTING NEWS")
 		self.Frame=Frame(tabControl, background="black")
 		self.Frame.pack(fill=BOTH, expand=YES)
 		newstab = ttk.Frame(tabControl)
@@ -48,7 +49,7 @@ class display_news:
 		self.NewsDir4.pack(side=LEFT, padx=10)
 		self.NewsDir5=Canvas(self.NewsFrame, width=self.w, height=self.h, bg="black")
 		self.NewsDir5.pack(side=LEFT, padx=10)
-
+		self.update()
 		self.NewsD=1
 		self.displayed=int(displayed)
 		self.start= self.displayed-5

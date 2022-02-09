@@ -71,14 +71,11 @@ class weather_GUI:
 		self.data.pack(side=BOTTOM, fill=BOTH, expand= TRUE, anchor='w')
 		self.chart=Canvas(self.topFrame, bg="black", border=0, highlightthickness=0)
 		self.chart.pack(side=RIGHT, fill=BOTH, expand= TRUE, anchor='w')
-		self.get_weather_data()
-		self.populate_data(command)
-		self.tk.mainloop()
-	def get_weather_data(self):
+		#self.get_weather_data()
+		
 		self.read=Work_with_files.read_weather_data()
 		self.read_day=Work_with_files.read_weather_main()
 		self.main_icon=self.read_day['weather'][0]['icon']
-	def populate_data(self,command):
 		weather=''
 		t=[]
 		h=[]

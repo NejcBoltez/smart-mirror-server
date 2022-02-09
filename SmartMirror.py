@@ -11,7 +11,21 @@ from working_with_files import Work_with_files
 from PIL import ImageTk
 import PIL.Image
 from tkinter import ttk
+import asyncio
+import threading
+from send_command import Do_for_command
 
+class Asistant(Frame):
+	def __init__(self, parent, thread_q):
+		Frame.__init__(self, parent, bg="black")
+		
+		self.listening_queue=Label(self, font=("Helvetica", 100), fg="white", bg="black")
+		self.listening_queue.pack(side=TOP,anchor=E)
+		self.thread_q=thread_q
+		self.update_listening_data()
+	def update_listening_data(self):
+		print("TESTING QUEUE: " + self.thread_q.get())
+		self.listening_queue.after(1000, self.update_listening_data)
 class Time(Frame):
 	def __init__(self, parent):
 		Frame.__init__(self, parent, bg="black")
@@ -30,6 +44,7 @@ class Time(Frame):
 	def update_clock(self,ti,d):
 		self.current_time.config(text=ti)
 		self.day_label.config(text=d)
+
 
 class Weather(Frame):
 	def __init__(self, parent):
@@ -106,7 +121,7 @@ class News(Frame):
 		self.News=Work_with_files.read_news_data()
 		self.NewsList=self.News["articles"]
 		self.update_news(self.NewsList)
-		self.NewsShow.after(60000000000, self.getNews)
+		#self.NewsShow.after(60000000000, self.getNews)
 
 	def update_news(self,data):
 		select_news=""
@@ -121,49 +136,81 @@ class News(Frame):
 				break
 		self.NewsShow.config(text=select_news)
 		
-class Home_screen(Frame):
+class Home_screen:
 	def __call__(args):
 		try: 
 			print("test:     "+args)
 		except:
 			print("")
-	def __init__(self, parent, user, tabcontrol):
-		self.pack(fill=BOTH, expand=YES)
-		self.tabControl=tabcontrol
+	def __init__(self, parent, user, tabcontrol, thread_q, loop):
 		self.user=user
+		self.HomeFrame=Frame(tabcontrol, background="Black")
+		self.HomeFrame.pack(fill=BOTH, expand=YES)
+		self.tabControl=tabcontrol
+		self.tasks=[]
+		
+		home_tab = ttk.Frame(self.tabControl)
+		self.tabControl.add(self.HomeFrame, text ="HOME SCREEN")
+		self.tabControl.update()
+		
+		self.main_screen=Main_screen(self.HomeFrame, self.user)
+		self.main_screen.pack(fill=BOTH, expand=YES)
+		
+		#self.tasks.append(loop.create_task(self.get_home(user, thread_q)))
+		
+		#self.tasks.append(loop.create_task(self.get_thread(thread_q)))
+		#loop.run_forever()
 		
 		print("DEBUG TEST")
-		self.get_home(user)
-
-	def get_home(self, user, tabcontrol):
-		self.tabControl=tabcontrol
+		#self.tabControl.update()
+	async def get_thread(self, thread_q):
+		#        l=thread_q.get()
+		#while(True):
+		user="nejc"
+		displayed=5
+		print("TEST")
+		print("TESTING QUEUE: " + thread_q.get())
+		#asyncio.run(Do_for_command.main(self, l.lower(), user, str(displayed), self.tabControl))
+			#await asyncio.sleep(1)
+		
+        
+class Main_screen(Frame):
+	def __init__(self, parent, user):
+		Frame.__init__(self, parent, bg="black")
 		self.user=user
-		self.HomeFrame=Frame(self, background="Black")
-		self.HomeFrame.pack(fill=BOTH, expand=YES)
+		isLogin=True
+		#lis_t=threading.Thread(target=self.get_thread, args=(thread_q,))
+		#lis_t.start()
 
-		self.TopFrame = Frame(self.HomeFrame, background="black", padx=0, pady=0)
+		self.TopFrame = Frame(self, background="black", padx=0, pady=0)
 		self.TopLeftFrame=Frame(self.TopFrame, background="black")
 		self.TopRightFrame=Frame(self.TopFrame, background="black")
 		
 		self.TopFrame.pack(side=TOP, fill=BOTH)
 		self.TopLeftFrame.pack(side = LEFT, fill=BOTH, padx=50, pady=50)
 		self.TopRightFrame.pack(side = RIGHT, fill=BOTH, padx=50, pady=50)
-		
-		home_tab = ttk.Frame(self.tabControl)
-		self.tabControl.add(self.HomeFrame, text ="HOME SCREEN")
 
-		self.ura=Time(self.TopLeftFrame)
-		self.ura.pack(side=TOP)
+		self.clock=Time(self.TopLeftFrame)
+		self.clock.pack(side=TOP)
 		self.Weather=Weather(self.TopRightFrame)
 		self.Weather.pack(side=TOP)
-		self.news=News(self.HomeFrame)
+		self.news=News(self)
 		self.news.pack(side=BOTTOM)
-		self.CommandHelpHeader=Label(self.HomeFrame,font=("Helvetica", 40), fg="white", bg="black", text="HELLO "+user.upper())
+		
+		#self.ast=Asistant(self.HomeFrame, thread_q)
+		#self.ast.pack(side=BOTTOM)
+		self.CommandHelpHeader=Label(self,font=("Helvetica", 40), fg="white", bg="black", text="HELLO "+user.upper())
 		self.CommandHelpHeader.pack()
-		self.CommandHelp=Label(self.HomeFrame,font=("Helvetica", 12), fg="white", bg="black",text="First say 'Hey Mirror' then you can try to say:")#Search youtube for\nShow me the forecast\nSearch wikipedia for\nStart the calibration")
+		self.CommandHelp=Label(self,font=("Helvetica", 12), fg="white", bg="black",text="First say 'Hey Mirror' then you can try to say:")#Search youtube for\nShow me the forecast\nSearch wikipedia for\nStart the calibration")
 		self.CommandHelp.pack()
-		while (True):
+		while(isLogin):
+		#	print("TESTING QUEUE: " + thread_q.get())
 			self.update()
+		#await asyncio.sleep(3)
+		'''while(isLogin):
+			self.HomeFrame.update()
+			await asyncio.sleep(3)
+			await asyncio.wait_for(self.get_thread(thread_q))'''
 		
 class Window:
 	def __init__(self, user):
