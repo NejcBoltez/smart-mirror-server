@@ -16,7 +16,7 @@ class Do_for_command:
 				print('test:     '+args)
 			except:
 				print('')
-	async def main(self, command, user, displayed, tabcontrol, loop):
+	async def main(self, command, user, displayed, tabcontrol, loop, thread_tasks):
 
 		print('WE HAVE IT')
 		print(type(tabcontrol))
@@ -38,6 +38,7 @@ class Do_for_command:
 					start_bar=subprocess.Popen(["python3", "./progress_bar.py", "OPENING FORECAST FOR " + command_search.upper()])
 					progress_bar_id=str(start_bar.pid)'''
 					forecast_task=loop.create_task(weather_GUI.main(self, command_search, tabcontrol))
+					thread_tasks.append(forecast_task)
 					await forecast_task
 					#os.kill(int(progress_bar_id), signal.SIGKILL)
 					
@@ -47,6 +48,7 @@ class Do_for_command:
 					start_bar=subprocess.Popen(["python3", "./progress_bar.py", "OPENING FORECAST FOR " + command_search.upper()])
 					progress_bar_id=str(start_bar.pid)'''
 					forecast_task=loop.create_task(weather_GUI.main(self, command_search, tabcontrol))
+					thread_tasks.append(forecast_task)
 					await forecast_task
 					#os.kill(int(progress_bar_id), signal.SIGKILL)
 					
@@ -61,12 +63,14 @@ class Do_for_command:
 				elif ("for" in command):
 					wiki_command=command_search
 				wiki_task=loop.create_task(Wikipedia_show.main(self, wiki_command.replace(" ","_"), tabcontrol))
+				thread_tasks.append(wiki_task)
 				#await wiki_task
 				
 
 			elif ("youtube" in command):
 				if ("search" in command):
 					yt_task=loop.create_task(yt_search(self, command_search, tabcontrol))
+					thread_tasks.append(yt_task)
 					#t_thread.run_until_complete(yt_task)
 					#await yt_task
 
@@ -77,6 +81,7 @@ class Do_for_command:
 			elif ("news" in command):
 				#display_news.main(self, show_news, tabcontrol)
 				news_task=loop.create_task(display_news.main(self, show_news, tabcontrol))
+				thread_tasks.append(news_task)
 				#t_thread.run_until_complete(news_task)
 				#await news_task
 			
@@ -93,6 +98,7 @@ class Do_for_command:
 
 			elif ("next" in command):
 					news_next_task=loop.create_task(display_news.main(self, show_news, tabcontrol))
+					thread_tasks.append(news_next_task)
 					'''processes=Work_with_files.read_process_from_file()
 					p_name=''
 					p_id=''
@@ -116,6 +122,7 @@ class Do_for_command:
 				print(get_position)
 
 				yt_stream_task=loop.create_task(Video.main(self, get_position, tabcontrol))
-				#await yt_stream_task
+				thread_tasks.append(yt_stream_task)
+				await yt_stream_task
 			#else:
 			#	asistant.jarvis(command)

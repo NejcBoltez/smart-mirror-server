@@ -36,44 +36,44 @@ speech_engine = pyttsx.init()
 
 class Asistant(Frame):
 	def __init__(self, parent, user, tabcontrol, main_q):
-		self.listening_bool : str
+		listening_bool : str
 		Frame.__init__(self, parent, bg='black')
-		self.parent=parent
-		self.tabcontrol=tabcontrol
-		'''self.CommandHelpHeader=Label(self,font=('Helvetica', 40), fg="white", bg="black", text="HELLO "+user.upper())
-		self.CommandHelpHeader.pack()
-		self.CommandHelp=Label(self,font=('Helvetica', 12), fg="white", bg="black",text='First say "Hey Mirror" then you can try to say:')#Search youtube for\nShow me the forecast\nSearch wikipedia for\nStart the calibration')
-		self.CommandHelp.pack()'''
-		self.getPosluh(main_q)
+		parent=parent
+		tabcontrol=tabcontrol
+		'''CommandHelpHeader=Label(self,font=('Helvetica', 40), fg="white", bg="black", text="HELLO "+user.upper())
+		CommandHelpHeader.pack()
+		CommandHelp=Label(self,font=('Helvetica', 12), fg="white", bg="black",text='First say "Hey Mirror" then you can try to say:')#Search youtube for\nShow me the forecast\nSearch wikipedia for\nStart the calibration')
+		CommandHelp.pack()'''
+		getPosluh(main_q)
 	def getPosluh(self, q):
-		my_thread=threading.Thread(target=self.Listening_test, args=(q,))
+		my_thread=threading.Thread(target=Listening_test, args=(q,))
 		my_thread.start()
 			
 	def Listening_test(self, thread_q):
-		self.start_to_listen=True
-		self.popup_id=''
-		self.displayed=5
-		self.previous_search=''
-		self.l=''
-		self.save_p_search=["next","back","previous","1","2","3","4","5","6","7","8","9","10","one","two","three","four","five","six","seven","eight","nine","ten","first", "second","thirth","fourth","fifth","sixth","seventh","eighth","nineth","tenth"]
+		start_to_listen=True
+		popup_id=''
+		displayed=5
+		previous_search=''
+		l=''
+		save_p_search=["next","back","previous","1","2","3","4","5","6","7","8","9","10","one","two","three","four","five","six","seven","eight","nine","ten","first", "second","thirth","fourth","fifth","sixth","seventh","eighth","nineth","tenth"]
 		try:
 			while(True):
 				#print('START LISTENING WHILE LOOP')
-				self.l=Listening.listening_function()
-				if ("mirror" in self.l.lower()):
-					self.start_to_listen=True
+				l=Listening.listening_function()
+				if ("mirror" in l.lower()):
+					start_to_listen=True
 					thread_q.put(True)
 					Speaking.to_say('OK. I AM LISTENING.')
 					start_popup=subprocess.Popen(["python3", "./show_popup.py"])
-					self.popup_id=str(start_popup.pid)
+					popup_id=str(start_popup.pid)
 					
-				if (self.l.lower() != "" and self.l.lower() != "mirror" and self.start_to_listen==True):
-					if('log out' in self.l.lower() or 'log off' in self.l.lower() or 'exit' in self.l.lower()):
-						'''if (len(self.popup_id)>0):
-							os.kill(int(self.popup_id), signal.SIGKILL)
-						self.master.master.destroy()'''
+				if (l.lower() != "" and l.lower() != "mirror" and start_to_listen==True):
+					if('log out' in l.lower() or 'log off' in l.lower() or 'exit' in l.lower()):
+						'''if (len(popup_id)>0):
+							os.kill(int(popup_id), signal.SIGKILL)
+						master.master.destroy()'''
 						#sys.exit()
-						self.parent.pack_forget()
+						parent.pack_forget()
 						'''for t in threading.enumerate():
 							if ("main" not in t.getName().lower()):
 								print(t)
@@ -82,16 +82,16 @@ class Asistant(Frame):
 								t.cancel()'''
 								#print(t.getName() + " : " + t.get_native_id())
 					else:
-						if ("next" in self.l.lower()):
-							self.displayed=self.displayed+5
-						asyncio.run(Do_for_command.main(self, self.l.lower(), user, str(self.displayed), self.tabcontrol))
-						#self.send_command_thread=threading.Thread(target=Do_for_command.main(self, self.l.lower(), user, str(self.displayed), self.tabcontrol))
-						#self.send_command_thread.start()
-					self.start_to_listen=False
-					if (len(self.popup_id)>0):
-						os.kill(int(self.popup_id), signal.SIGKILL)
-					if(self.l not in self.save_p_search):
-						self.previous_search=self.l
+						if ("next" in l.lower()):
+							displayed=displayed+5
+						asyncio.run(Do_for_command.main(self, l.lower(), user, str(displayed), tabcontrol))
+						#send_command_thread=threading.Thread(target=Do_for_command.main(self, l.lower(), user, str(displayed), tabcontrol))
+						#send_command_thread.start()
+					start_to_listen=False
+					if (len(popup_id)>0):
+						os.kill(int(popup_id), signal.SIGKILL)
+					if(l not in save_p_search):
+						previous_search=l
 					else:
 						continue
 
@@ -106,17 +106,17 @@ class Camera(Frame):
 			print('')
 	def __init__(self, parent, user):
 		Frame.__init__(self, parent, background='Black')
-		self.pack(fill=BOTH, expand=YES)
-		self.tabControl = ttk.Notebook(self)
-		self.tabControl.pack(expand = 1, fill ="both")
-		self.user=user
+		pack(fill=BOTH, expand=YES)
+		tabControl = ttk.Notebook(self)
+		tabControl.pack(expand = 1, fill ="both")
+		user=user
 		main_q=Queue()
-		self.CamFrame=Frame(self, background='Black')
-		self.CamFrame.pack(fill=BOTH, expand=YES)
-		self.update()
-		self.asistant=Asistant(self.CamFrame, self.user, self.tabControl, main_q)
-		self.asistant.pack(side=TOP)
-		#self.user_auth(self.tabControl, main_q)
+		CamFrame=Frame(self, background='Black')
+		CamFrame.pack(fill=BOTH, expand=YES)
+		update()
+		asistant=Asistant(CamFrame, user, tabControl, main_q)
+		asistant.pack(side=TOP)
+		#user_auth(tabControl, main_q)
 	def user_auth(self, tabs, login_q):
 		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
 		users_dir=os.path.join(BASE_DIR, '../Users')
@@ -136,12 +136,12 @@ class Camera(Frame):
 				else:
 					print("IS_LOGIN: "+str(login_q.get()))
 					if(count_users>0):						
-						self.auth_label=Label(self, font=('Helvetica', 30), fg='white', bg='black', text="TEST")
-						self.auth_label.pack(side=TOP,fill=BOTH, expand= TRUE)
-						self.update()
+						auth_label=Label(self, font=('Helvetica', 30), fg='white', bg='black', text="TEST")
+						auth_label.pack(side=TOP,fill=BOTH, expand= TRUE)
+						update()
 						get_user=Get_face.User_auth()
 						time.sleep(10)
-						self.auth_label.pack_forget()
+						auth_label.pack_forget()
 						if (get_user is not None and len(get_user)>0):
 							SmartMirror.Home_screen.get_home(self, get_user, tabs)
 		except Exception as e:
@@ -149,25 +149,25 @@ class Camera(Frame):
 class Window:
 	def __init__(self, user):
 		#print("USER: "+ user)
-		self.user=user
-		self.tk=tk.Tk()
-		self.tk.configure(background='black')
-		self.tk.title("Pozdravljeni")
-		self.tk.geometry("1920x1000")
-		#self.tk.attributes('-fullscreen', True)  
-		#self.fullScreenState = False
-		self.Frame=Frame(self.tk, background='black')
-		self.Frame.pack(fill=BOTH, expand=YES)
-		self.recognize()
-		self.tk.mainloop()
+		user=user
+		tk=tk.Tk()
+		tk.configure(background='black')
+		tk.title("Pozdravljeni")
+		tk.geometry("1920x1000")
+		#tk.attributes('-fullscreen', True)  
+		#fullScreenState = False
+		Frame=Frame(tk, background='black')
+		Frame.pack(fill=BOTH, expand=YES)
+		recognize()
+		tk.mainloop()
 	def recognize(self):
-		self.cam=Camera(self.Frame, self.user)
-		self.cam.pack()
+		cam=Camera(Frame, user)
+		cam.pack()
 		#print("TEST")
-		#self.news=News(self.Frame)
-		#self.news.pack(side=BOTTOM)
-		#self.asistant=Asistant(self.Frame, self.user)
-		#self.asistant.pack(side=TOP)
+		#news=News(Frame)
+		#news.pack(side=BOTTOM)
+		#asistant=Asistant(Frame, user)
+		#asistant.pack(side=TOP)
 	
 win=Window("nejc")
 win.tk.mainloop()

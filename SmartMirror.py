@@ -243,3 +243,4 @@ class Window:
 	
 #win=Window("nejc")
 
+s

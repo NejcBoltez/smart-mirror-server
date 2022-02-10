@@ -23,4 +23,4 @@ class Popup_window:
 		self.textSaid.config(text=text)
 	def close(self):
 		self.destroy()
-#Popup_window()
+Popup_window()

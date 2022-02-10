@@ -25,33 +25,33 @@ def get_yt_data(search_for):
 class yt_search(Frame):
 	async def main(self, search_command, tabControl):
 		#Frame.__init__(self, parent)
-		self.search_frame=Frame(self, width=1920, height=1080, bg="black", bd=0, highlightthickness=0)
-		self.search_frame.pack(fill=BOTH, expand=YES)
+		search_frame=Frame(self, width=1920, height=1080, bg="black", bd=0, highlightthickness=0)
+		search_frame.pack(fill=BOTH, expand=YES)
 
 		yt_tab = ttk.Frame(tabControl)
-		tabControl.add(self.search_frame, text ="SEARCH YOUTUBE FOR " + search_command.upper())
+		tabControl.add(search_frame, text ="SEARCH YOUTUBE FOR " + search_command.upper())
 		tabControl.select(len(tabControl.tabs())-1)
 
-		self.search_text=Label(self.search_frame, text=str(search_command).replace("_", " ").upper(), font=("verdana", 30, "bold"), fg="white", bg="black", bd=0, highlightthickness=0, anchor="center")
-		self.search_text.pack(side=TOP)
-		self.search_frame_top=Canvas(self.search_frame,width=1700, height=400, bg="black", bd=0, highlightthickness=0)
-		self.search_frame_top.pack(side=TOP, fill=BOTH, expand= TRUE)
-		self.search_frame_bottom=Canvas(self.search_frame, width=1700, height=400, bg="black", bd=0, highlightthickness=0)
-		self.search_frame_bottom.pack(side=BOTTOM, fill=BOTH, expand= TRUE)
-		self.get_json=get_yt_data(search_command)
-		self.yt=self.get_json["videos"]
+		search_text=Label(search_frame, text=str(search_command).replace("_", " ").upper(), font=("verdana", 30, "bold"), fg="white", bg="black", bd=0, highlightthickness=0, anchor="center")
+		search_text.pack(side=TOP)
+		search_frame_top=Canvas(search_frame,width=1700, height=400, bg="black", bd=0, highlightthickness=0)
+		search_frame_top.pack(side=TOP, fill=BOTH, expand= TRUE)
+		search_frame_bottom=Canvas(search_frame, width=1700, height=400, bg="black", bd=0, highlightthickness=0)
+		search_frame_bottom.pack(side=BOTTOM, fill=BOTH, expand= TRUE)
+		get_json=get_yt_data(search_command)
+		yt=get_json["videos"]
 		coordinate=70
 		c=0
-		for i in self.yt:
+		for i in yt:
 			image_byt = urlopen(i["thumbnails"][0]).read()
 			load = PIL.Image.open(io.BytesIO(image_byt))
 			image_final=load.resize((250,200), PIL.Image.ANTIALIAS)
 			render = ImageTk.PhotoImage(image_final)
 			if (c<5):
-				self.search_frame_top.create_rectangle(coordinate,10, coordinate+300, 350, fill="black", outline="white")
+				search_frame_top.create_rectangle(coordinate,10, coordinate+300, 350, fill="black", outline="white")
 				try:
-					self.search_frame_top.create_text(coordinate+150,60, width=230, text=str(i["title"]), fill="white", font=("verdana", 12, "bold"))
-					img = Label(self.search_frame_top, image=render, width=250, height=200)
+					search_frame_top.create_text(coordinate+150,60, width=230, text=str(i["title"]), fill="white", font=("verdana", 12, "bold"))
+					img = Label(search_frame_top, image=render, width=250, height=200)
 					img.image = render
 					img.place(x=coordinate+20, y=120)
 					coordinate=coordinate+320
@@ -65,9 +65,9 @@ class yt_search(Frame):
 					coordinate=70
 				
 				try:
-					self.search_frame_bottom.create_rectangle(coordinate,10, coordinate+300, 350, fill="black", outline="white")
-					self.search_frame_bottom.create_text(coordinate+150,60, width=230, text=str(i["title"]), fill="white", font=("verdana", 12, "bold"))
-					img = Label(self.search_frame_bottom, image=render, width=250, height=200)
+					search_frame_bottom.create_rectangle(coordinate,10, coordinate+300, 350, fill="black", outline="white")
+					search_frame_bottom.create_text(coordinate+150,60, width=230, text=str(i["title"]), fill="white", font=("verdana", 12, "bold"))
+					img = Label(search_frame_bottom, image=render, width=250, height=200)
 					img.image = render
 					img.place(x=coordinate+20, y=120)
 					coordinate=coordinate+320
