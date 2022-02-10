@@ -4,7 +4,7 @@ from speech_listen import Speaking
 from news import display_news
 from wikipedia_window import Wikipedia_show
 from youtube import yt_search
-from youtube_stream import Video
+#from youtube_stream import Video
 from weather import weather_GUI
 from calibrate import Calibrate
 import asyncio
@@ -121,8 +121,8 @@ class Do_for_command:
 				
 				print(get_position)
 
-				yt_stream_task=loop.create_task(Video.main(self, get_position, tabcontrol))
-				thread_tasks.append(yt_stream_task)
-				await yt_stream_task
+				#yt_stream_task=loop.create_task(Video.main(self, get_position, tabcontrol))
+				#thread_tasks.append(yt_stream_task)
+				#await yt_stream_task
 			#else:
 			#	asistant.jarvis(command)

@@ -21,7 +21,7 @@ from tkinter import ttk
 class Login(Frame):
 	def __init__(self, parent, *args, **kwargs):
 		Frame.__init__(self, parent, bg='black')
-		pack(fill=BOTH, expand=YES)
+		self.pack(fill=BOTH, expand=YES)
 		main_q=Queue()
 		noteStyle = ttk.Style()
 		noteStyle.theme_use('default')
@@ -30,10 +30,10 @@ class Login(Frame):
 		noteStyle.map("TNotebook", background=[("selected", "#000000")])
 		tabControl = ttk.Notebook(self, height=10)
 		tabControl.pack(fill=BOTH, expand=YES)
-		update()
-		start_l=threading.Thread(target=get_listen, args=(main_q,))
+		self.update()
+		start_l=threading.Thread(target=Listening.listening_function, args=(main_q,))
 		start_l.start()
-		user_auth(tabControl, main_q)
+		self.user_auth(tabControl, main_q)
 	
 	def get_listen(self, threading_q):
 		l=""
@@ -70,10 +70,10 @@ class Login(Frame):
 						#create_new_user.new_user_GUI.main(self,tabs)
 						continue
 					else:
-						if(count_users>0 and len(tabs.tabs())==0 and "mirror" in login_q.get()):						
-							auth_label=Label(self, font=('Helvetica', 30), fg='white', bg='black', text="TEST")
-							auth_label.pack(side=TOP,fill=BOTH, expand= TRUE)
-							update()
+						if(count_users>0 and len(tabs.tabs())==0 ):						
+							auth_label=Label(self, font=('Helvetica', 30), fg='white', bg='black', text="STARTING USER AUTHENTICATION")
+							auth_label.pack(side=TOP,fill=BOTH, expand= TRUE, padx=0)
+							self.update()
 							get_user=Get_face.User_auth()
 							auth_label.pack_forget()
 							if (get_user is not None and len(get_user)>0):
@@ -87,15 +87,14 @@ class Login(Frame):
 			print(e)
 class Window_start:
 	def __init__(self):
-		tk=tk.Tk()
-		tk.configure(bg='black')
-		tk.title("Pozdravljeni")
-		tk.geometry("1920x1000")
-		#tk.attributes('-fullscreen', True)  
+		self.tk=tk.Tk()
+		self.tk.configure(bg='black')
+		self.tk.geometry("1920x1000")
+		#self.tk.attributes('-fullscreen', True)  
 		#fullScreenState = False
-		Frame=Frame(tk, bg='black')
+		Frame=tk.Frame(self.tk, bg='black')
 		Frame.pack(fill=BOTH, expand=YES)
 		login=Login(Frame)
 		login.pack()
-		tk.mainloop()
+		self.tk.mainloop()
 window=Window_start()

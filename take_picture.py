@@ -26,7 +26,7 @@ class take_pic:
 		self.user=user
 		self.tk=tk.Tk()
 		self.seconds_left=11
-		self.tk.configure(background='black')
+		self.tk.configure(background='white')
 		self.tk.title("Pozdravljeni")
 		self.tk.geometry("1920x1080")
 		self.Frame=Frame(self.tk, background='black')

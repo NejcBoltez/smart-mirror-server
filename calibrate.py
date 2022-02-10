@@ -25,7 +25,7 @@ class Calibrate():
 		auth_label.pack(side=TOP,fill=BOTH, expand= TRUE)
 		#my_thread=threading.Thread(target=start_user_calib())
 		#my_thread.start()
-		update()
+		self.update()
 		face_recognize.User_auth_GUI(Frame).pack()
 		#tk.mainloop()
 	def start_user_calib(self):
