@@ -1,12 +1,6 @@
-try:
-    import tkinter as tk
-    from tkinter import *
-except:
-    import Tkinter as tk
-    from Tkinter import *
 import random
 import time
-from tkinter import *
+
 new = 2
 ukaz = [""]
 izgovorjeno=[""]

@@ -7,14 +7,14 @@ except:
 
 class Popup_window:
 	def __init__(self):	
-		print("POPUP WINDOW")
 		self.popup = tk.Tk()
+		self.popup.title("LISTENING")
 		self.popup.geometry("500x200")
 		self.popup.configure(bg="black")
-		self.label = tk.Label(self.popup, text="Start to listen", bg="black",fg="white")
-		self.label.pack(side="top", fill="x", pady=10)
-		self.labelText = tk.Label(self.popup, text="Search youtube for ...\n Search Wikipedia for ...\n Show me the forecast for tommorow \n Show me the news", bg="black",fg="white")
-		self.labelText.pack(side="top", fill="x", pady=20)
+		self.label = tk.Label(self.popup,font=("Helvetica", 15), text="PLEASE SAY SOMETHING LIKE: ", bg="black",fg="white")
+		self.label.pack(side="top", fill="x")
+		self.labelText = tk.Label(self.popup,font=("Helvetica", 15), text="- SEARCH YOUTUBE FOR ...\n- SEARCH WIKIPEDIA FOR ...\n- SHOW ME THE FORECAST FOR ...\n- SHOW ME THE NEWS\n- CLOSE WINDOW\n- LOGOUT/EXIT APPLICATION", bg="black",fg="white")
+		self.labelText.pack(side="top", fill="x", pady=11)
 		self.textSaid=tk.Label(self.popup, text="", bg="black",fg="white")
 		self.textSaid.pack(side="top", fill="x", pady=80)
 		self.popup.lift()

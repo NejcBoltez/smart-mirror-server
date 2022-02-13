@@ -28,22 +28,25 @@ class Time(Frame):
 		Frame.__init__(self, parent, bg="black", padx=0, pady=0)
 		self.current_time=Label(self, font=("Helvetica", 100), fg="white", bg="black")
 		self.current_time.pack(side=TOP,anchor=E)
-		day_label=Label(self, font=("Helvetica", 20), fg="white", bg="black")
-		day_label.pack()
+		self.day_label=Label(self, font=("Helvetica", 20), fg="white", bg="black")
+		self.day_label.pack()
 		self.update_time()
 
 	def update_time(self):
 		ti=time.strftime("%H:%M:%S")
 		day=time.strftime("%A, %B %d %Y ")
 		self.update_clock(ti,day)
-		print("TEST TIME SECONDS")
-		#current_time.after(1000, update_time)
 		
 	def update_clock(self,ti,d):
 		self.current_time.config(text=ti)
 		self.day_label.config(text=d)	
 
 class Weather(Frame):
+	def __call__(args):
+		try: 
+			print("test:     "+args)
+		except:
+			print("")
 	def __init__(self, parent):
 		Frame.__init__(self, parent, bg="black", padx=0, pady=0)
 		self.WeatherTitle=Label(self, font=("Helvetica", 40), fg="white", bg="black", text="Weather:")
@@ -72,20 +75,12 @@ class Weather(Frame):
 		temp_min="Temp_min: " + str(weather_data["main"]["temp_min"])
 		temp_max="Temp_max: " + str(weather_data["main"]["temp_max"])
 		weather=temp +"\n" + humidity + "\n" + temp_min + "\n" + temp_max
-		try:
-			icon=weather_data["weather"][0]["icon"]
-			BASE_DIR= os.path.dirname(os.path.abspath(__file__))
-			image_dir=os.path.join(BASE_DIR, "Weather_widgets")
-			image_byt = str(image_dir+os.path.sep+icon+".PNG")
-			load = PIL.Image.open(image_byt)
-			image_final=load.resize((150,100), PIL.Image.ANTIALIAS)
-		except:
-			icon="13d"#weather_data["weather"][0]["icon"]
-			BASE_DIR= os.path.dirname(os.path.abspath(__file__))
-			image_dir=os.path.join(BASE_DIR, "Weather_widgets")
-			image_byt = str(image_dir+"/"+icon+".PNG")
-			load = PIL.Image.open(image_byt)
-			image_final=load.resize((150,100), PIL.Image.ANTIALIAS)
+		icon=weather_data["weather"][0]["icon"]
+		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
+		image_dir=os.path.join(BASE_DIR, "Weather_widgets")
+		image_byt = str(image_dir+os.path.sep+icon+".PNG")
+		load = PIL.Image.open(image_byt)
+		image_final=load.resize((150,100), PIL.Image.ANTIALIAS)
 		render = ImageTk.PhotoImage(image_final)
 		try:
 			self.img.config(image=render)
@@ -103,6 +98,12 @@ class Weather(Frame):
 		self.WeatherDataHours.config(text=w_data)
 
 class News(Frame):
+	def __call__(args):
+		try: 
+			print("test:     "+args)
+		except:
+			print("")
+
 	def __init__(self, parent):	
 		Frame.__init__(self, parent, bg="black")
 		self.NewsFrame=Frame(self, background="Black")
@@ -118,7 +119,6 @@ class News(Frame):
 		News=Work_with_files.read_news_data()
 		NewsList=News["articles"]
 		self.update_news(NewsList)
-		#NewsShow.after(60000000000, getNews)
 
 	def update_news(self,data):
 		select_news=""
@@ -132,6 +132,7 @@ class News(Frame):
 			elif (count_news==10):
 				break
 		self.NewsShow.config(text=select_news)
+
 class Home_screen(Frame):
 	def __call__(args):
 		try: 
@@ -199,24 +200,24 @@ async def get_home(self, user, tabs):
 	self.TopLeftFrame.pack(side = LEFT, fill=BOTH, padx=50, pady=50)
 	self.TopRightFrame.pack(side = RIGHT, fill=BOTH, padx=50, pady=50)
 
-	Clock=Time(self.TopLeftFrame)
-	Clock.pack(side=TOP)
-	Weather=Weather(self.TopRightFrame)
-	Weather.pack(side=TOP)
-	News=News(self.HomeFrame)
-	News.pack(side=BOTTOM)
+	self.Clock=Time(self.TopLeftFrame)
+	self.Clock.pack(side=TOP)
+	self.Weather=Weather(self.TopRightFrame)
+	self.Weather.pack(side=TOP)
+	self.News=News(self.HomeFrame)
+	self.News.pack(side=BOTTOM)
 	
-	CommandHelpHeader=Label(self.HomeFrame,font=("Helvetica", 40), fg="white", bg="black", text="HELLO "+user.upper())
-	CommandHelpHeader.pack()
-	CommandHelp=Label(self.HomeFrame,font=("Helvetica", 12), fg="white", bg="black",text="First say 'Hey Mirror' then you can try to say:")#Search youtube for\nShow me the forecast\nSearch wikipedia for\nStart the calibration")
-	CommandHelp.pack()
+	self.CommandHelpHeader=Label(self.HomeFrame,font=("Helvetica", 40), fg="white", bg="black", text="HELLO "+user.upper())
+	self.CommandHelpHeader.pack()
+	self.CommandHelp=Label(self.HomeFrame,font=("Helvetica", 12), fg="white", bg="black",text="First say 'Hey Mirror' then you can try to say:")#Search youtube for\nShow me the forecast\nSearch wikipedia for\nStart the calibration")
+	self.CommandHelp.pack()
 
 	while(len(tabs.tabs())>0):
 		await asyncio.sleep(1)
 		print(len(tabs.tabs()))
 		print(tabs.tabs())
-		Clock.update_time()
-		Clock.update()
+		self.Clock.update_time()
+		self.Clock.update()
 	#	tabs.update()
 		
 class Window:

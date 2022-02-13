@@ -1,22 +1,15 @@
-import multiprocessing
-import subprocess
 import os
 from speech_listen import Listening
 from speech_listen import Speaking
 import threading
 from working_with_files import Work_with_files
 import Home_screen_test as SmartMirror
-import calibrate
 import create_new_user
-from face_recognize import Get_face
+from face_recognize import User_auth_GUI
 from speech_listen import Listening
 import asyncio
-from multiprocessing import Value
-from multiprocessing import cpu_count
-from send_command import Do_for_command
-import concurrent.futures 
-from queue import Queue
-#import show_popup
+import requests
+#from queue import Queue
 try:
 	import tkinter as tk
 	from tkinter import *
@@ -25,13 +18,14 @@ except:
 	from Tkinter import *
 
 from tkinter import ttk
+from multiprocessing import Process, Queue
 
 
 
 class Login(Frame):
 	def __init__(self, parent, *args, **kwargs):
 		Frame.__init__(self, parent, bg='black')
-		pack(fill=BOTH, expand=YES)
+		self.pack(fill=BOTH, expand=YES)
 		main_q=Queue()
 		noteStyle = ttk.Style()
 		noteStyle.theme_use('default')
@@ -40,22 +34,14 @@ class Login(Frame):
 		noteStyle.map("TNotebook", background=[("selected", "#000000")])
 		tabControl = ttk.Notebook(self, height=10)
 		tabControl.pack(fill=BOTH, expand=YES)
-		update()
-		start_l=threading.Thread(target=get_listen, args=(main_q,))#(name='Listen 1', target=Listening)
-		#start_l.setDaemon(True)
+		self.update()
+		
+		start_l=Process(target=self.get_listen, args=(main_q,))
 		start_l.start()
-		#x=Listening()
-		user_auth(tabControl, main_q)
-		#user_auth()
+		self.user_auth(tabControl, main_q)
 	
 	def get_listen(self, threading_q):
-		displayed=5
 		l=""
-		print("TEST")
-		is_login=False
-		start_to_listen=False
-		not_recognize=0
-		user=""
 		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
 		users_dir=os.path.join(BASE_DIR, '../Users')
 		path, dirs, files = next(os.walk(users_dir))
@@ -78,9 +64,13 @@ class Login(Frame):
 		count_users= len(dirs)
 		is_login=False
 		try:
+			timeout=5
+			url = "http://www.google.com"
+			request = requests.get(url, timeout=timeout)
+			print("Connected to the Internet")
 			while(True):
 				#print("TESTING WHILE LOOP")
-				if (count_users==0):
+				if (count_users==2):
 					create_new_user.new_user_GUI.main(self, tabs)
 				else:
 					if (login_q.empty()):
@@ -89,34 +79,25 @@ class Login(Frame):
 						#create_new_user.new_user_GUI.main(self,tabs)
 						continue
 					else:
-						if(count_users>0 and len(tabs.tabs())==0 and "mirror" in login_q.get()):						
-							auth_label=Label(self, font=('Helvetica', 30), fg='white', bg='black', text="TEST")
-							auth_label.pack(side=TOP,fill=BOTH, expand= TRUE)
-							update()
-							get_user=Get_face.User_auth()
-							print("THIS IS WORKING")
-							auth_label.pack_forget()
+						if(count_users>0 and len(tabs.tabs())==0 and "mirror" in login_q.get()):
+							self.update()
+							get_user=User_auth_GUI.main(self)
 							if (get_user is not None and len(get_user)>0):
-								#threading.Thread(target=
-								
-								#Home=
 								SmartMirror.Home_screen.main(self, get_user,tabs, login_q)
-								#Home.pack(fill=BOTH, expand=YES)
-								print("MA NE DELA MI")
-							#HOME.pack()
-		except Exception as e:
-			print(e)
-class Window_start:
+		except (requests.ConnectionError, requests.Timeout) as exception:
+			self.no_network_error=Label(self, font=("Helvetica", 40), fg="white", bg="black", text="PLEASE CONNECT TO NETWORK AND RESTART SMARTMIRROR")
+			self.no_network_error.pack()
+class Window_start():
 	def __init__(self):
-		tk=tk.Tk()
-		tk.configure(bg='black')
-		tk.title("Pozdravljeni")
-		tk.geometry("1920x1000")
+		self.tk=tk.Tk()
+		self.tk.configure(bg='black')
+		self.tk.title("Pozdravljeni")
+		self.tk.geometry("1920x1000")
 		#tk.attributes('-fullscreen', True)  
 		#fullScreenState = False
-		Frame=Frame(tk, bg='black')
-		Frame.pack(fill=BOTH, expand=YES)
-		login=Login(Frame)
-		login.pack()
-		tk.mainloop()
+		self.Frame=Frame(self.tk, bg='black')
+		self.Frame.pack(fill=BOTH, expand=YES)
+		self.login=Login(self.Frame)
+		self.login.pack()
+		self.tk.mainloop()
 window=Window_start()

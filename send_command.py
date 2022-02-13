@@ -16,15 +16,11 @@ class Do_for_command:
 				print('test:     '+args)
 			except:
 				print('')
-	async def main(self, command, user, displayed, tabcontrol, loop, thread_tasks):
+	async def main(self, command, show_news, tabcontrol, loop, thread_tasks):
 
-		print('WE HAVE IT')
-		print(type(tabcontrol))
 		numbers_int=["1","2","3","4","5","6","7","8","9","10"]
 		numbers_string=["one","two","three","four","five","six","seven","eight","nine","ten"]
 		position=["first", "second","thirth","fourth","fifth","sixth","seventh","eighth","nineth","tenth"]
-		show_news=displayed
-		tabcontrol=tabcontrol
 		command=command.lower()
 		command_search=""
 		if (" for " in command):
@@ -74,9 +70,9 @@ class Do_for_command:
 					#t_thread.run_until_complete(yt_task)
 					#await yt_task
 
-			elif ("calibration" in command):
+			elif ("calibration" in command or "calibrate" in command):
 				calib_task = loop.create_task(Calibrate.main(self, tabcontrol))
-				#await calib_task
+				await calib_task
 
 			elif ("news" in command):
 				#display_news.main(self, show_news, tabcontrol)

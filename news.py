@@ -1,11 +1,7 @@
-import json
 import io
-import requests
 from urllib.request import urlopen
 from PIL import ImageTk
 import PIL.Image
-import sys
-import os
 from working_with_files import Work_with_files
 try:
 	import tkinter as tk
@@ -24,10 +20,10 @@ class display_news:
 			print("")
 	def main(self, displayed, tabControl):
 		print("TESTING NEWS")
-		Frame=Frame(tabControl, background="black")
-		Frame.pack(fill=BOTH, expand=YES)
+		self.Frame=Frame(tabControl, background="black")
+		self.Frame.pack(fill=BOTH, expand=YES)
 		newstab = ttk.Frame(tabControl)
-		tabControl.add(Frame, text ="NEWS")
+		tabControl.add(self.Frame, text ="NEWS")
 		tabControl.select(len(tabControl.tabs())-1)
 		title=Label(Frame, font=("Helvetica", 60), fg="white", bg="black", text="NEWS",anchor="w")
 		title.pack(padx=0, pady=25)
@@ -37,19 +33,19 @@ class display_news:
 		NewsList=News["articles"]
 		w=350
 		h=600
-		NewsFrame=Frame(Frame, width=1920, height=1000, bg="black",padx=25,pady=50)
-		NewsFrame.pack()
-		NewsDir1=Canvas(NewsFrame, width=w, height=h, bg="black")
-		NewsDir1.pack(side=LEFT, padx=10, pady=0) 
-		NewsDir2=Canvas(NewsFrame, width=w, height=h, bg="black")
-		NewsDir2.pack(side=LEFT, padx=10)
-		NewsDir3=Canvas(NewsFrame, width=w, height=h, bg="black")
-		NewsDir3.pack(side=LEFT, padx=10) 
-		NewsDir4=Canvas(NewsFrame, width=w, height=h, bg="black")
-		NewsDir4.pack(side=LEFT, padx=10)
-		NewsDir5=Canvas(NewsFrame, width=w, height=h, bg="black")
-		NewsDir5.pack(side=LEFT, padx=10)
-		update()
+		self.NewsFrame=Frame(self.Frame, width=1920, height=1000, bg="black",padx=25,pady=50)
+		self.NewsFrame.pack()
+		self.NewsDir1=Canvas(self.NewsFrame, width=w, height=h, bg="black")
+		self.NewsDir1.pack(side=LEFT, padx=10, pady=0) 
+		self.NewsDir2=Canvas(self.NewsFrame, width=w, height=h, bg="black")
+		self.NewsDir2.pack(side=LEFT, padx=10)
+		self.NewsDir3=Canvas(self.NewsFrame, width=w, height=h, bg="black")
+		self.NewsDir3.pack(side=LEFT, padx=10) 
+		self.NewsDir4=Canvas(self.NewsFrame, width=w, height=h, bg="black")
+		self.NewsDir4.pack(side=LEFT, padx=10)
+		self.NewsDir5=Canvas(self.NewsFrame, width=w, height=h, bg="black")
+		self.NewsDir5.pack(side=LEFT, padx=10)
+		self.update()
 		NewsD=1
 		displayed=int(displayed)
 		start= displayed-5
@@ -82,50 +78,50 @@ class display_news:
 					render = ImageTk.PhotoImage(load)
 				
 				if NewsD==1:
-					NewsDir1.create_rectangle(1,1, w-1, h-1,fill="black")
-					NewsDir1.create_text(20, 50, width=w-20, text=news_title[0],fill="white", font=("verdana", 12, "bold"), anchor="w")
-					NewsDir1.create_text(20, 90, width=w-20, text=news_title[len(news_title) - 1],fill="white", font=("verdana", 12), anchor="w")
-					img = Label(NewsDir1, image=render, width=310, height=200)
+					self.NewsDir1.create_rectangle(1,1, w-1, h-1,fill="black")
+					self.NewsDir1.create_text(20, 50, width=w-20, text=news_title[0],fill="white", font=("verdana", 12, "bold"), anchor="w")
+					self.NewsDir1.create_text(20, 90, width=w-20, text=news_title[len(news_title) - 1],fill="white", font=("verdana", 12), anchor="w")
+					img = Label(self.NewsDir1, image=render, width=310, height=200)
 					img.image = render
 					img.place(x=20, y=110)
-					NewsDir1.create_text(30,400,width=w-30, text=str(i["description"]), fill="white", font=("verdana", 12), anchor="w")
+					self.NewsDir1.create_text(30,400,width=w-30, text=str(i["description"]), fill="white", font=("verdana", 12), anchor="w")
 					
 
 				elif NewsD==2:
-					NewsDir2.create_rectangle(3,3, w-1, h-1,fill="black")
-					NewsDir2.create_text(20, 50, width=w-20, text=news_title[0],fill="white", font=("verdana", 12, "bold"), anchor="w")
-					NewsDir2.create_text(20, 90, width=w-20, text=news_title[len(news_title) - 1],fill="white", font=("verdana", 12), anchor="w")
-					img = Label(NewsDir2, image=render, width=310, height=200)
+					self.NewsDir2.create_rectangle(3,3, w-1, h-1,fill="black")
+					self.NewsDir2.create_text(20, 50, width=w-20, text=news_title[0],fill="white", font=("verdana", 12, "bold"), anchor="w")
+					self.NewsDir2.create_text(20, 90, width=w-20, text=news_title[len(news_title) - 1],fill="white", font=("verdana", 12), anchor="w")
+					img = Label(self.NewsDir2, image=render, width=310, height=200)
 					img.image = render
 					img.place(x=20, y=110)
-					NewsDir2.create_text(30,400,width=w-30, text=str(i["description"]), fill="white", font=("verdana", 12), anchor="w")
+					self.NewsDir2.create_text(30,400,width=w-30, text=str(i["description"]), fill="white", font=("verdana", 12), anchor="w")
 
 				elif NewsD==3:
-					NewsDir3.create_rectangle(3,3, w-1, h-1,fill="black")
-					NewsDir3.create_text(20, 50, width=w-20, text=news_title[0],fill="white", font=("verdana", 12, "bold"), anchor="w")
-					NewsDir3.create_text(20, 90, width=w-20, text=news_title[len(news_title) - 1],fill="white", font=("verdana", 12), anchor="w")
-					img = Label(NewsDir3, image=render, width=310, height=200)
+					self.NewsDir3.create_rectangle(3,3, w-1, h-1,fill="black")
+					self.NewsDir3.create_text(20, 50, width=w-20, text=news_title[0],fill="white", font=("verdana", 12, "bold"), anchor="w")
+					self.NewsDir3.create_text(20, 90, width=w-20, text=news_title[len(news_title) - 1],fill="white", font=("verdana", 12), anchor="w")
+					img = Label(self.NewsDir3, image=render, width=310, height=200)
 					img.image = render
 					img.place(x=20, y=110)
-					NewsDir3.create_text(30,400,width=w-30, text=str(i["description"]).replace(" - ", "\n"), fill="white", font=("verdana", 12), anchor="w")
+					self.NewsDir3.create_text(30,400,width=w-30, text=str(i["description"]).replace(" - ", "\n"), fill="white", font=("verdana", 12), anchor="w")
 
 				elif NewsD==4:
-					NewsDir4.create_rectangle(3,3, w-1, h-1,fill="black")
-					NewsDir4.create_text(20, 50, width=w-20, text=news_title[0],fill="white", font=("verdana", 12, "bold"), anchor="w")
-					NewsDir4.create_text(20, 90, width=w-20, text=news_title[len(news_title) - 1],fill="white", font=("verdana", 12), anchor="w")
-					img = Label(NewsDir4, image=render, width=310, height=200)
+					self.NewsDir4.create_rectangle(3,3, w-1, h-1,fill="black")
+					self.NewsDir4.create_text(20, 50, width=w-20, text=news_title[0],fill="white", font=("verdana", 12, "bold"), anchor="w")
+					self.NewsDir4.create_text(20, 90, width=w-20, text=news_title[len(news_title) - 1],fill="white", font=("verdana", 12), anchor="w")
+					img = Label(self.NewsDir4, image=render, width=310, height=200)
 					img.image = render
 					img.place(x=20, y=110)
-					NewsDir4.create_text(30,400,width=w-30, text=str(i["description"]).replace(" - ", "\n"), fill="white", font=("verdana", 12), anchor="w")
+					self.NewsDir4.create_text(30,400,width=w-30, text=str(i["description"]).replace(" - ", "\n"), fill="white", font=("verdana", 12), anchor="w")
 
 				elif NewsD==5:
-					NewsDir5.create_rectangle(3,3, w-1, h-1,fill="black")
-					NewsDir5.create_text(20, 50, width=w-20, text=news_title[0],fill="white", font=("verdana", 12, "bold"), anchor="w")
-					NewsDir5.create_text(20, 90, width=w-20, text=news_title[len(news_title) - 1],fill="white", font=("verdana", 12), anchor="w")
-					img = Label(NewsDir5, image=render, width=310, height=200)
+					self.NewsDir5.create_rectangle(3,3, w-1, h-1,fill="black")
+					self.NewsDir5.create_text(20, 50, width=w-20, text=news_title[0],fill="white", font=("verdana", 12, "bold"), anchor="w")
+					self.NewsDir5.create_text(20, 90, width=w-20, text=news_title[len(news_title) - 1],fill="white", font=("verdana", 12), anchor="w")
+					img = Label(self.NewsDir5, image=render, width=310, height=200)
 					img.image = render
 					img.place(x=20, y=110)
-					NewsDir5.create_text(30,400,width=w-30, text=str(i["content"]), fill="white", font=("verdana", 12), anchor="w")
+					self.NewsDir5.create_text(30,400,width=w-30, text=str(i["content"]), fill="white", font=("verdana", 12), anchor="w")
 				NewsD=NewsD+1
 				n=n+1
 			else:
