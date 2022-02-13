@@ -34,7 +34,6 @@ pip3 install signal
 pip3 install multiprocessing
 pip3 install matplotlib
 pip3 install wikipedia
-pip3 install webbrowser
 pip3 install youtube-dl
 pip3 install numpy
 pip3 install opencv-python
