@@ -56,7 +56,7 @@ pip3 install reportlab
 pip3 install PyAudio
 pip3 install seaborn
 pip3 install putils
-pip install opencv-contrib-python
+pip3 install opencv-contrib-python
 
 #create folder for user pictures
 cd ..
