@@ -19,6 +19,7 @@ sudo apt-get install python3-tk -y
 sudo apt-get install portaudio19-dev python-pyaudio -y
 sudo apt-get install espeak -y
 sudo apt-get install flac -y # import form speech_recognition
+sudo apt-get install libgtk2.0-dev -y
 
 #Install python packages
 pip3 install setuptools
