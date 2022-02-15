@@ -11,6 +11,7 @@ import time
 import asyncio
 from multiprocessing import Process
 import threading
+from queue import Queue
 try:
 	import tkinter as tk
 	from tkinter import *
@@ -25,35 +26,42 @@ def count_pics_for_user(user):
 	path, dirs, files = next(os.walk(image_dir))
 	count_files = len(files)
 	return count_files
-def get_user_from_stream(self, frame):
+def get_user_from_stream(self, loop, q):
 	BASE_DIR= os.path.dirname(os.path.abspath(__file__))
-	image_dir=os.path.join(BASE_DIR, "../Users")
+	image_dir=os.path.join(BASE_DIR, "Users")
+	datasets=image_dir
 	self.face_front=cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
 	user_name=""
 	faces = self.face_front.detectMultiScale(self.frame, scaleFactor=1.05, minNeighbors=6)	
 	print("STARTING RECOGNITION: "+ time.strftime("%H:%M:%S"))
-	loop = asyncio.get_event_loop()
+	
 	tasks=[]
 	#while(True):
-	cv2image = cv2.cvtColor(self.frame, cv2.COLOR_BGR2RGBA)
-	image = PIL.Image.fromarray(cv2image)
-	render = ImageTk.PhotoImage(image=image)
-	self.img.imgtk = render
-	self.img.configure(image=render)
-	self.update()
+
+	#Training model
+	(images, labels, names, id) = ([], [], {}, 0)
+	for (subdirs, dirs, files) in os.walk(datasets):
+		for subdir in dirs:
+			names[id] = subdir
+			subjectpath = os.path.join(datasets, subdir)
+			for filename in os.listdir(subjectpath):
+				path = subjectpath + '/' + filename
+				label = id
+				images.append(cv2.imread(path, 0))
+				labels.append(int(label))
+			id += 1
 	to_wait=0
-	print("RECOGNIZE: "+user_name)
+	print("RECOGNIZE: "+self.user_name)
 	if (self.user_name==""):
 		#if (len(faces)==0):
-		roi_color=Frame
-		image_encoding = face_recognition.face_encodings(frame)[0]
 		path, dirs, files = next(os.walk(image_dir))
 		for d in dirs:
 			if (self.user_name==""):
 				print(d)
 				#asyncio.run()
 				to_wait=to_wait+1.25
-				tasks.append(loop.create_task(check_for_user(self,image_dir,d,roi_color,image_encoding, to_wait)))
+				tasks.append(loop.create_task(check_for_user(self,image_dir,d,q, to_wait)))
+				print("USER: "+self.user_name)
 					#user_check.start()
 			
 		'''else:
@@ -72,10 +80,10 @@ def get_user_from_stream(self, frame):
 						to_wait=to_wait+1
 						tasks.append(loop.create_task(check_for_user(self,image_dir,d,roi_color,image_encoding,to_wait)))
 						#user_check.start()	'''
-	loop.run_until_complete(asyncio.gather(*tasks))
-	return self.user_name
+	#loop.run_until_complete(asyncio.gather(*tasks))
+	#return self.user_name
 
-async def check_for_user(self, img_dir, user_dir, roi_color, image_enc, wait):
+async def check_for_user(self, img_dir, user_dir,queue, wait):
 	print("USER_NAME: "+self.user_name)
 	print("STARTING RECOGNITION 1: " + user_dir + "       " + time.strftime("%H:%M:%S"))
 	path_users, dirs_users, files_users = next(os.walk(img_dir+"/"+user_dir))
@@ -97,6 +105,8 @@ async def check_for_user(self, img_dir, user_dir, roi_color, image_enc, wait):
 			#unknown_image = face_recognition.load_image_file(img_dir+"/"+user_dir+"/"+file)
 			#unknown_encoding=face_recognition.face_encodings(unknown_image)
 			for (x, y, w, h) in faces:
+				roi_color=self.frame[y:y+h, x:x+w]
+				image_encoding = face_recognition.face_encodings(self.frame)[0]
 				face_coordinates=str(x)+","+str(y)+","+str(w)+","+str(h)
 				print(face_coordinates)
 				roi_color=self.frame[y:y+h, x:x+w]
@@ -104,12 +114,18 @@ async def check_for_user(self, img_dir, user_dir, roi_color, image_enc, wait):
 				unknown_encoding=face_recognition.face_encodings(unknown_image)
 				if (len(unknown_encoding)>0):
 					unknown_encoding1=face_recognition.face_encodings(unknown_image)[0]
-					results=face_recognition.compare_faces([image_enc], unknown_encoding1)
+					results=face_recognition.compare_faces([image_encoding], unknown_encoding1)
 					if results[0]:
-						if (self.user_name==''):
+						if (self.user_name==""):
 							self.user_name=user_dir
+							#queue.put(user_dir)
 						root, dirs, files = next(os.walk(img_dir+'/'+user_dir))
 						file_count = len(files)
+						color=(255,0,0)
+						stroke=2
+						width=x+y
+						height=y+h
+						rectangle=cv2.rectangle(self.frame, (x, y), (width, height), color, stroke)
 						img_item=str(img_dir)+'/'+user_dir+'/'+user_dir+'_'+str(file_count+1)+'.jpg'
 						cv2.imwrite(img_item, roi_color)
 						break
@@ -117,7 +133,7 @@ async def check_for_user(self, img_dir, user_dir, roi_color, image_enc, wait):
 						continue
 			else:
 				break
-	return self.user_name
+	#return self.user_name
 def save_images(self, f_faces, user):
 	BASE_DIR= os.path.dirname(os.path.abspath(__file__))
 	save_image_dir=os.path.join(BASE_DIR, "../Users")
@@ -155,9 +171,7 @@ class User_auth_GUI ():
 		self.img.pack(padx=150, pady=150)
 		self.cap = cv2.VideoCapture(0)
 		self.update()
-		self.user_name=""
 		self.ret, self.frame = self.cap.read()
-		print(self.user_name)
 		self.camera_stream=threading.Thread(target=get_camera_stream_calibrate(self))
 		self.camera_stream.start()
 		#save_pic=Process(target=save_images, args=(self,self.found_faces,self.user_name,))
@@ -173,6 +187,10 @@ def get_camera_stream_calibrate(self):
 		self.count=0
 		self.found_faces=[]
 		self.file_count=0
+		self.user_name=""
+		loop = asyncio.get_event_loop()
+		#loop.
+		q=Queue()
 		while(self.count<5):
 			self.ret, self.frame = self.cap.read()
 			cv2image = cv2.cvtColor(self.frame, cv2.COLOR_BGR2RGBA)
@@ -200,8 +218,20 @@ def get_camera_stream_calibrate(self):
 							print(e)
 							
 			else:
-				self.user_name=get_user_from_stream(self, self.frame)
-				print(self.user_name)
+				#count_active_tasks = len(asyncio.all_tasks())
+				'''running_threads=[]
+				for thread in threading.enumerate(): 
+					running_threads.append(thread.name)
+					print(thread.name)
+				print(running_threads)
+				if (len(running_threads)==1):
+					user_get=threading.Thread(name="user_recognize", target=get_user_from_stream, args=(self,loop,q,))
+					user_get.start()
+				else:
+					#self.user_name=q.get()
+					print("USER_NAME -------------------------->"+self.user_name)'''
+				get_user_from_stream(self, loop,q)
+				print("USER_NAME -------------------------->"+self.user_name)
 				#self.main_label.config(text="Calibrating for user " + user_name)
 			cv2image = cv2.cvtColor(self.frame, cv2.COLOR_BGR2RGBA)
 			image = PIL.Image.fromarray(cv2image)
@@ -211,7 +241,7 @@ def get_camera_stream_calibrate(self):
 			self.update()
 			
 	except Exception as e:
-		print("TESTING"+str(e))
+		#print("TESTING"+str(e))
 		get_camera_stream_calibrate(self)
 		#self.get_camera_stream_calibrate()
 	self.main_label.config(text="Please wait while saving pictures")
