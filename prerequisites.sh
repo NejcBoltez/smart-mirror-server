@@ -60,11 +60,12 @@ pip3 install svglib
 pip3 install PyAudio
 
 pip3 install putils
-pip3 install opencv-contrib-python
+#pip3 install opencv-contrib-python
 
 #create folder for user pictures
 cd ..
 mkdir Users
+sudo chmod -R 777 Users
 sudo chmod -R 777 smart-mirror # if we would do 766 then we could only access directory with sudo
 
 

@@ -5,6 +5,7 @@ from PIL import ImageTk
 import PIL.Image
 import time
 import os
+import sys
 try:
 	import tkinter as tk
 	from tkinter import *
@@ -27,7 +28,7 @@ class weather_GUI:
 			print('test:     '+args)
 		except:
 			print('')
-	async def main(self,command, tabControl):
+	def main(self,command, tabControl):
 		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
 		image_dir=os.path.join(BASE_DIR, 'Weather_widgets')
 		
@@ -78,8 +79,8 @@ class weather_GUI:
 		overall_humidity="Humidity: " + str(read_day['main']['humidity'])
 		overall_temp_min="Temp_min: " + str(read_day['main']['temp_min'])
 		overall_temp_max="Temp_max: " + str(read_day['main']['temp_max'])
-		wind_speed="Wind speed: " + str(float(i['wind']['speed']))
-		overall_forecast=overall_temp +'\n' + overall_humidity + '\n' + overall_temp_min + '\n' + overall_temp_max + + '\n' + wind_speed + '\n\n'
+		wind_speed="Wind speed: " + str(float(read_day['wind']['speed']))
+		overall_forecast=overall_temp +'\n' + overall_humidity + '\n' + overall_temp_min + '\n' + overall_temp_max + '\n' + wind_speed + '\n\n'
 		img = Label(self.logo, image=render, width=300, height=200, background="black")
 		img.image = render
 		img.place(x=10, y=50)
@@ -110,6 +111,7 @@ class weather_GUI:
 		for i in read['list']:
 			date=str(i['dt_txt']).split(' ')
 			if (day_selected in date):
+				print(date)
 				cels=int(i['main']['temp'])
 				temp="Temp: " + str(cels)
 				humidity="Humidity: " + str(i['main']['humidity'])
@@ -130,7 +132,7 @@ class weather_GUI:
 				image_dir=os.path.join(BASE_DIR, "Weather_widgets")
 				image_byt = str(image_dir+os.path.sep+icon_id+".PNG")
 				load = PIL.Image.open(image_byt)
-				image_final=self.load.resize((150,100), PIL.Image.ANTIALIAS)
+				image_final=load.resize((150,100), PIL.Image.ANTIALIAS)
 				render = ImageTk.PhotoImage(image_final)
 				img = Label(self.data, image=render, width=150, height=100, background="black")
 				img.image = render
@@ -170,7 +172,7 @@ def create_graph(self,hours,t,h,ws):
 	self.f = Figure(figsize=(8, 4), dpi=100,facecolor='black', edgecolor="black")
 	self.temp = self.f.add_subplot(111,facecolor='black')
 	self.temp.scatter(hours,t, color='red', marker="X", s=200)
-	self.temp.scatter(hours,h, color='purple', marker="X", s=200)
+	self.temp.scatter(hours,h, color='yellow', marker="X", s=200)
 	self.temp.scatter(hours,ws, color='blue', marker="X", s=200)
 	self.temp.xaxis.label.set_color('white')#set x axis value color to white        		https://stackoverflow.com/questions/4761623/how-to-change-the-color-of-the-axis-ticks-and-labels-for-a-plot-in-matplotlib
 	self.temp.tick_params(axis='x', colors='white')#set x axis  value color to white
@@ -180,7 +182,7 @@ def create_graph(self,hours,t,h,ws):
 	self.temp.set_xlabel('HOURS',color="white")
 	self.temp.set_ylabel('VALUES',color="white")
 	self.temp.plot(hours,t, color='red',linewidth=3,label="temp")
-	self.temp.plot(hours,h,color='purple',linewidth=3,label="humidity")
+	self.temp.plot(hours,h,color='yellow',linewidth=3,label="humidity")
 	self.temp.plot(hours,ws,color='blue',linewidth=3,label="wind speed")
 	self.temp.legend()
 	self.f.tight_layout()
@@ -188,3 +190,23 @@ def create_graph(self,hours,t,h,ws):
 	self.canvas = FigureCanvasTkAgg(self.f,self.chart)
 	self.canvas.get_tk_widget().pack(pady=100)
 
+class Window:
+	def __init__(self, user):
+		self.tk=tk.Tk()
+		self.tk.configure(background="black")
+		self.tk.title("Pozdravljeni")
+		self.tk.geometry("1920x1000")
+		self.Frame=Frame(self.tk, background="black")
+		self.Frame.pack(fill=BOTH, expand=YES)
+		tabControl = ttk.Notebook(self.Frame, height=100)
+		tabControl.pack(expand = 1, fill ="both")
+		self.recognize(user, tabControl)
+		self.tk.update()
+		self.tk.mainloop()
+	def recognize(self, user, tabControl):
+		cam=weather_GUI.main(self.Frame, user, tabControl)
+		#cam.pack()
+
+
+#arguments = list(sys.argv)	
+#win=Window(arguments[1])

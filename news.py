@@ -25,7 +25,7 @@ class display_news:
 		newstab = ttk.Frame(tabControl)
 		tabControl.add(self.Frame, text ="NEWS")
 		tabControl.select(len(tabControl.tabs())-1)
-		title=Label(Frame, font=("Helvetica", 60), fg="white", bg="black", text="NEWS",anchor="w")
+		title=Label(self.Frame, font=("Helvetica", 60), fg="white", bg="black", text="NEWS",anchor="w")
 		title.pack(padx=0, pady=25)
 		n=0
 		NewsList=[]

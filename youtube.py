@@ -31,7 +31,7 @@ class yt_search(Frame):
 		yt_tab = ttk.Frame(tabControl)
 		tabControl.add(search_frame, text ="SEARCH YOUTUBE FOR " + search_command.upper())
 		tabControl.select(len(tabControl.tabs())-1)
-
+		self.update()
 		search_text=Label(search_frame, text=str(search_command).replace("_", " ").upper(), font=("verdana", 30, "bold"), fg="white", bg="black", bd=0, highlightthickness=0, anchor="center")
 		search_text.pack(side=TOP)
 		search_frame_top=Canvas(search_frame,width=1700, height=400, bg="black", bd=0, highlightthickness=0)

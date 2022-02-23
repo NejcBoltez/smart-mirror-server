@@ -1,9 +1,9 @@
 # It helps in identifying the faces
 import cv2, sys, numpy, os
 BASE_DIR= os.path.dirname(os.path.abspath(__file__))
-image_dir=os.path.join(BASE_DIR, "../Users")
+image_dir=os.path.join(BASE_DIR, "Users")
 size = 4
-haar_file = 'haarcascade_frontalface_default.xml'
+haar_file = cv2.data.haarcascades + 'haarcascade_frontalface_default.xml'
 datasets = image_dir#'datasets'
  
 # Part 1: Create fisherRecognizer
@@ -43,6 +43,7 @@ while True:
         face_resize = cv2.resize(face, (width, height))
         # Try to recognize the face
         prediction = model.predict(face_resize)
+        print(prediction)
         cv2.rectangle(im, (x, y), (x + w, y + h), (0, 255, 0), 3)
  
         if prediction[1]<500:

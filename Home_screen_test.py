@@ -15,6 +15,9 @@ import os
 import subprocess
 from speech_listen import Speaking
 import signal
+from queue import Queue
+import speech_recognition as sr
+import threading
 #import show_popup
 
 
@@ -36,6 +39,7 @@ class Time(Frame):
 		ti=time.strftime("%H:%M:%S")
 		day=time.strftime("%A, %B %d %Y ")
 		self.update_clock(ti,day)
+		self.current_time.after(1000, self.update_time)
 		
 	def update_clock(self,ti,d):
 		self.current_time.config(text=ti)
@@ -76,15 +80,20 @@ class Weather(Frame):
 		temp_max="Temp_max: " + str(weather_data["main"]["temp_max"])
 		weather=temp +"\n" + humidity + "\n" + temp_min + "\n" + temp_max
 		icon=weather_data["weather"][0]["icon"]
+		print(icon)
 		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
 		image_dir=os.path.join(BASE_DIR, "Weather_widgets")
 		image_byt = str(image_dir+os.path.sep+icon+".PNG")
+		print(image_byt)
 		load = PIL.Image.open(image_byt)
-		image_final=load.resize((150,100), PIL.Image.ANTIALIAS)
+		image_final=load.resize((120,70), PIL.Image.ANTIALIAS)
 		render = ImageTk.PhotoImage(image_final)
 		try:
-			self.img.config(image=render)
-		except AttributeError:
+			img = Label(self.WeatherIcon, image=render, width=150, height=100, background="black")
+			img.image = render
+			img.place(x=0, y=0)
+		except AttributeError as e:
+			print(e)
 			img = Label(self.WeatherIcon, image=render, width=150, height=100, background="red")
 			img.pack(side=LEFT, fill=BOTH, expand= TRUE, anchor="w")
 		self.WeatherData.config(text=weather)
@@ -146,28 +155,26 @@ class Home_screen(Frame):
 		isListening=True
 		self.HomeFrame=Frame(tabs, background="black")
 		self.HomeFrame.pack(fill=BOTH, expand=YES)
+		self.popup_id=0
 		home_tab = ttk.Frame(tabs)
-		tasks=[]
+		self.tasks=[]
+		self.is_listening=False
+		self.listening_word=""
 		tabs.add(self.HomeFrame, text ="HOME SCREEN")
 		
 		loop = asyncio.get_event_loop()
-		tasks.append(loop.create_task(get_home(self, user, tabs)))
+		self.tasks.append(loop.create_task(get_home(self, user, tabs, loop)))
 		
-		tasks.append(loop.create_task(get_thread(self, listening_q, user, tabs, loop, tasks)))
-		loop.run_until_complete(asyncio.gather(*tasks))
-		#loop.run_forever()
-		#loop.run_until_complete(get_home(self, user, tabs))
-		#loop.run_until_complete(get_thread(self, listening_q, user, tabs))
+		#tasks.append(loop.create_task(get_thread(self, listening_q, tabs, loop, tasks)))
+		loop.run_until_complete(asyncio.gather(*self.tasks))
 		while(True):
 			if(len(tabs.tabs())==0):
 				print("STOPING TASKS")
-				for task in tasks:
+				for task in self.tasks:
 					task.cancel()
-				#loop.stop()
-
 				break
-					#destroy()
-async def get_thread(self, thread_q, user, tabControl, loop, tasks):
+
+async def get_thread(self, thread_q, tabControl, loop, tasks):
 	is_listening=False
 	popup_id=0
 	while(len(tabControl.tabs())>0):
@@ -175,23 +182,28 @@ async def get_thread(self, thread_q, user, tabControl, loop, tasks):
 		l= await thread_value(thread_q)
 		displayed=5
 		print("TEST:  " + l)
-		if ("mirror" in l.lower()):
+		if ("mirror" in l.lower() and is_listening==False):
 			Speaking.to_say('OK. I AM LISTENING.')
 			start_popup=subprocess.Popen(["python3", "./show_popup.py"])
 			popup_id=str(start_popup.pid)
 			is_listening=True	
 		elif (is_listening==True and len(l.lower())>0):
 			print("TEST1234321 WORKING OK")
+			if ("next" in l.lower()):
+				displayed=displayed  + 5
+			loop.create_task(Do_for_command.main(self, l.lower(), str(displayed), tabControl, loop, tasks))
 			os.kill(int(popup_id), signal.SIGKILL)
-			loop.create_task(Do_for_command.main(self, l.lower(), user, str(displayed), tabControl, loop, tasks))
-
+			is_listening=False
+		if(len(tabControl.tabs())==0):
+			break
 		else:
 			continue
-			#break
+
 async def thread_value(q):
 	value=q.get()
 	return value
-async def get_home(self, user, tabs):
+
+async def get_home(self, user, tabs, loop):
 	self.TopFrame = Frame(self.HomeFrame, background="black", padx=0, pady=0)
 	self.TopLeftFrame=Frame(self.TopFrame, background="black")
 	self.TopRightFrame=Frame(self.TopFrame, background="black")
@@ -211,29 +223,53 @@ async def get_home(self, user, tabs):
 	self.CommandHelpHeader.pack()
 	self.CommandHelp=Label(self.HomeFrame,font=("Helvetica", 12), fg="white", bg="black",text="First say 'Hey Mirror' then you can try to say:")#Search youtube for\nShow me the forecast\nSearch wikipedia for\nStart the calibration")
 	self.CommandHelp.pack()
+	self.update()
 
 	while(len(tabs.tabs())>0):
 		await asyncio.sleep(1)
-		print(len(tabs.tabs()))
-		print(tabs.tabs())
-		self.Clock.update_time()
-		self.Clock.update()
-	#	tabs.update()
+		#print(len(tabs.tabs()))
+		#print(tabs)
+		self.update()
+		print(self.listening_word)
+		l=str(self.listening_word)
+		displayed=5
+		print("TEST:  " + l)
+		if ("mirror" in l.lower() and self.is_listening==False):
+			speak=threading.Thread(target=Speaking.to_say, args=('OK. I AM LISTENING.',))
+			speak.start()
+			start_popup=subprocess.Popen(["python3", "./show_popup.py"])
+			popup_id=str(start_popup.pid)
+			self.is_listening=True	
+			self.listening_word=""
+		elif (self.is_listening==True and len(l.lower())>0):
+			print("TEST1234321 WORKING OK")
+			if ("next" in l.lower()):
+				displayed=displayed  + 5
+			loop.create_task(Do_for_command.main(self, l.lower(), str(displayed), tabs, loop, self.tasks))
+			os.kill(int(popup_id), signal.SIGKILL)
+			self.is_listening=False
+			self.listening_word=""
+		else:
+			continue
+		self.update()
+		#self.Clock.update_time()
+		#self.Clock.update()
 		
 class Window:
 	def __init__(self, user):
 		self.tk=tk.Tk()
-		tk.configure(background="black")
-		tk.title("Pozdravljeni")
-		tk.geometry("1920x1000")
-		Frame=tk.Frame(self.tk, background="black")
-		Frame.pack(fill=BOTH, expand=YES)
-		#tabControl = ttk.Notebook(Frame, height=100)
-		#tabControl.pack(expand = 1, fill ="both")
+		self.main_q=Queue()
+		self.tk.configure(background="black")
+		self.tk.title("Pozdravljeni")
+		self.tk.geometry("1920x1000")
+		self.Frame=tk.Frame(self.tk, background="black")
+		self.Frame.pack(fill=BOTH, expand=YES)
+		self.tabControl = ttk.Notebook(self.Frame, height=100)
+		self.tabControl.pack(expand = 1, fill ="both")
 		self.recognize(user)
-		tk.mainloop()
+		self.tk.mainloop()
 	def recognize(self, user):
-		cam=Home_screen(Frame, user)#, tabControl)
+		cam=Home_screen.main(self.Frame, user, self.tabControl, self.main_q)
 		cam.pack()
 	
 #win=Window("nejc")
