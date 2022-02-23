@@ -15,7 +15,10 @@ import os
 import subprocess
 from speech_listen import Speaking
 import signal
-import show_popup
+from queue import Queue
+import speech_recognition as sr
+import threading
+#import show_popup
 
 
 class Time(Frame):
@@ -33,17 +36,21 @@ class Time(Frame):
 		self.update_time()
 
 	def update_time(self):
-		self.ti=time.strftime("%H:%M:%S")
-		self.day=time.strftime("%A, %B %d %Y ")
-		self.update_clock(self.ti,self.day)
-		print("TEST TIME SECONDS")
-		#self.current_time.after(1000, self.update_time)
+		ti=time.strftime("%H:%M:%S")
+		day=time.strftime("%A, %B %d %Y ")
+		self.update_clock(ti,day)
+		self.current_time.after(1000, self.update_time)
 		
 	def update_clock(self,ti,d):
 		self.current_time.config(text=ti)
 		self.day_label.config(text=d)	
 
 class Weather(Frame):
+	def __call__(args):
+		try: 
+			print("test:     "+args)
+		except:
+			print("")
 	def __init__(self, parent):
 		Frame.__init__(self, parent, bg="black", padx=0, pady=0)
 		self.WeatherTitle=Label(self, font=("Helvetica", 40), fg="white", bg="black", text="Weather:")
@@ -61,38 +68,35 @@ class Weather(Frame):
 		self.getWeather()
 		
 	def getWeather(self):
-		self.read_weather=Work_with_files.read_weather_main()
-		self.read_weather_h=Work_with_files.read_weather_data()
-		self.update_weather_main(self.read_weather)
-		self.update_weather_hours(self.read_weather_h)
+		read_weather=Work_with_files.read_weather_main()
+		read_weather_h=Work_with_files.read_weather_data()
+		self.update_weather_main(read_weather)
+		self.update_weather_hours(read_weather_h)
 
 	def update_weather_main(self,weather_data):
-		self.temp="Temp: " + str(weather_data["main"]["temp"])
-		self.humidity="Humidity: " + str(weather_data["main"]["humidity"])
-		self.temp_min="Temp_min: " + str(weather_data["main"]["temp_min"])
-		self.temp_max="Temp_max: " + str(weather_data["main"]["temp_max"])
-		self.weather=self.temp +"\n" + self.humidity + "\n" + self.temp_min + "\n" + self.temp_max
+		temp="Temp: " + str(weather_data["main"]["temp"])
+		humidity="Humidity: " + str(weather_data["main"]["humidity"])
+		temp_min="Temp_min: " + str(weather_data["main"]["temp_min"])
+		temp_max="Temp_max: " + str(weather_data["main"]["temp_max"])
+		weather=temp +"\n" + humidity + "\n" + temp_min + "\n" + temp_max
+		icon=weather_data["weather"][0]["icon"]
+		print(icon)
+		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
+		image_dir=os.path.join(BASE_DIR, "Weather_widgets")
+		image_byt = str(image_dir+os.path.sep+icon+".PNG")
+		print(image_byt)
+		load = PIL.Image.open(image_byt)
+		image_final=load.resize((120,70), PIL.Image.ANTIALIAS)
+		render = ImageTk.PhotoImage(image_final)
 		try:
-			self.icon=weather_data["weather"][0]["icon"]
-			self.BASE_DIR= os.path.dirname(os.path.abspath(__file__))
-			self.image_dir=os.path.join(self.BASE_DIR, "Weather_widgets")
-			self.image_byt = str(self.image_dir+os.path.sep+self.icon+".PNG")
-			self.load = PIL.Image.open(self.image_byt)
-			image_final=self.load.resize((150,100), PIL.Image.ANTIALIAS)
-		except:
-			self.icon="13d"#weather_data["weather"][0]["icon"]
-			self.BASE_DIR= os.path.dirname(os.path.abspath(__file__))
-			self.image_dir=os.path.join(self.BASE_DIR, "Weather_widgets")
-			self.image_byt = str(self.image_dir+"/"+self.icon+".PNG")
-			self.load = PIL.Image.open(self.image_byt)
-			image_final=self.load.resize((150,100), PIL.Image.ANTIALIAS)
-		self.render = ImageTk.PhotoImage(image_final)
-		try:
-			self.img.config(image=self.render)
-		except AttributeError:
-			self.img = Label(self.WeatherIcon, image=self.render, width=150, height=100, background="red")
-			self.img.pack(side=LEFT, fill=BOTH, expand= TRUE, anchor="w")
-		self.WeatherData.config(text=self.weather)
+			img = Label(self.WeatherIcon, image=render, width=150, height=100, background="black")
+			img.image = render
+			img.place(x=0, y=0)
+		except AttributeError as e:
+			print(e)
+			img = Label(self.WeatherIcon, image=render, width=150, height=100, background="red")
+			img.pack(side=LEFT, fill=BOTH, expand= TRUE, anchor="w")
+		self.WeatherData.config(text=weather)
 
 	def update_weather_hours(self,data):
 		day=time.strftime("%Y-%m-%d")
@@ -103,6 +107,12 @@ class Weather(Frame):
 		self.WeatherDataHours.config(text=w_data)
 
 class News(Frame):
+	def __call__(args):
+		try: 
+			print("test:     "+args)
+		except:
+			print("")
+
 	def __init__(self, parent):	
 		Frame.__init__(self, parent, bg="black")
 		self.NewsFrame=Frame(self, background="Black")
@@ -114,11 +124,10 @@ class News(Frame):
 		self.getNews()
 		
 	def getNews(self):
-		self.NewsList=[]
-		self.News=Work_with_files.read_news_data()
-		self.NewsList=self.News["articles"]
-		self.update_news(self.NewsList)
-		#self.NewsShow.after(60000000000, self.getNews)
+		NewsList=[]
+		News=Work_with_files.read_news_data()
+		NewsList=News["articles"]
+		self.update_news(NewsList)
 
 	def update_news(self,data):
 		select_news=""
@@ -132,6 +141,7 @@ class News(Frame):
 			elif (count_news==10):
 				break
 		self.NewsShow.config(text=select_news)
+
 class Home_screen(Frame):
 	def __call__(args):
 		try: 
@@ -140,33 +150,31 @@ class Home_screen(Frame):
 			print("")
 	def main(self, user, tabs, listening_q):
 		#Frame.__init__(self, parent, bg="black", padx=0, pady=0)
-		self.user=user
+		user=user
 		tabs=tabs
-		self.isListening=True
+		isListening=True
 		self.HomeFrame=Frame(tabs, background="black")
 		self.HomeFrame.pack(fill=BOTH, expand=YES)
+		self.popup_id=0
 		home_tab = ttk.Frame(tabs)
 		self.tasks=[]
+		self.is_listening=False
+		self.listening_word=""
 		tabs.add(self.HomeFrame, text ="HOME SCREEN")
 		
 		loop = asyncio.get_event_loop()
-		self.tasks.append(loop.create_task(get_home(self, user, tabs)))
+		self.tasks.append(loop.create_task(get_home(self, user, tabs, loop)))
 		
-		self.tasks.append(loop.create_task(get_thread(self, listening_q, user, tabs, loop)))
+		#tasks.append(loop.create_task(get_thread(self, listening_q, tabs, loop, tasks)))
 		loop.run_until_complete(asyncio.gather(*self.tasks))
-		#self.loop.run_forever()
-		#self.loop.run_until_complete(get_home(self, user, self.tabs))
-		#self.loop.run_until_complete(get_thread(self, listening_q, user, self.tabs))
 		while(True):
 			if(len(tabs.tabs())==0):
 				print("STOPING TASKS")
 				for task in self.tasks:
 					task.cancel()
-				#loop.stop()
-
 				break
-					#self.destroy()
-async def get_thread(self, thread_q, user, tabControl, loop):
+
+async def get_thread(self, thread_q, tabControl, loop, tasks):
 	is_listening=False
 	popup_id=0
 	while(len(tabControl.tabs())>0):
@@ -174,24 +182,28 @@ async def get_thread(self, thread_q, user, tabControl, loop):
 		l= await thread_value(thread_q)
 		displayed=5
 		print("TEST:  " + l)
-		if ("mirror" in l.lower()):
+		if ("mirror" in l.lower() and is_listening==False):
 			Speaking.to_say('OK. I AM LISTENING.')
-			popup=show_popup.Popup_window()
-			#start_popup=subprocess.Popen(["python3", "./show_popup.py"])
-			#popup_id=str(start_popup.pid)
+			start_popup=subprocess.Popen(["python3", "./show_popup.py"])
+			popup_id=str(start_popup.pid)
 			is_listening=True	
-		elif ("exit" not in l.lower() and is_listening==True):
+		elif (is_listening==True and len(l.lower())>0):
 			print("TEST1234321 WORKING OK")
-			#os.kill(int(popup_id), signal.SIGKILL)
-			loop.create_task(Do_for_command.main(self, l.lower(), user, str(displayed), tabControl, loop))
-
+			if ("next" in l.lower()):
+				displayed=displayed  + 5
+			loop.create_task(Do_for_command.main(self, l.lower(), str(displayed), tabControl, loop, tasks))
+			os.kill(int(popup_id), signal.SIGKILL)
+			is_listening=False
+		if(len(tabControl.tabs())==0):
+			break
 		else:
-			print("EXITING")
-			#break
+			continue
+
 async def thread_value(q):
 	value=q.get()
 	return value
-async def get_home(self, user, tabs):
+
+async def get_home(self, user, tabs, loop):
 	self.TopFrame = Frame(self.HomeFrame, background="black", padx=0, pady=0)
 	self.TopLeftFrame=Frame(self.TopFrame, background="black")
 	self.TopRightFrame=Frame(self.TopFrame, background="black")
@@ -207,40 +219,57 @@ async def get_home(self, user, tabs):
 	self.News=News(self.HomeFrame)
 	self.News.pack(side=BOTTOM)
 	
-	#self.ast=Asistant(self.HomeFrame, thread_q)
-	#self.ast.pack(side=BOTTOM)
 	self.CommandHelpHeader=Label(self.HomeFrame,font=("Helvetica", 40), fg="white", bg="black", text="HELLO "+user.upper())
 	self.CommandHelpHeader.pack()
 	self.CommandHelp=Label(self.HomeFrame,font=("Helvetica", 12), fg="white", bg="black",text="First say 'Hey Mirror' then you can try to say:")#Search youtube for\nShow me the forecast\nSearch wikipedia for\nStart the calibration")
 	self.CommandHelp.pack()
+	self.update()
 
-	print(len(tabs.tabs()))
-	print(tabs.tabs())
 	while(len(tabs.tabs())>0):
 		await asyncio.sleep(1)
-		print(len(tabs.tabs()))
-		print(tabs.tabs())
-		self.Clock.update_time()
-		self.Clock.update()
-	#	tabs.update()
+		#print(len(tabs.tabs()))
+		#print(tabs)
+		self.update()
+		print(self.listening_word)
+		l=str(self.listening_word)
+		displayed=5
+		print("TEST:  " + l)
+		if ("mirror" in l.lower() and self.is_listening==False):
+			speak=threading.Thread(target=Speaking.to_say, args=('OK. I AM LISTENING.',))
+			speak.start()
+			start_popup=subprocess.Popen(["python3", "./show_popup.py"])
+			popup_id=str(start_popup.pid)
+			self.is_listening=True	
+			self.listening_word=""
+		elif (self.is_listening==True and len(l.lower())>0):
+			print("TEST1234321 WORKING OK")
+			if ("next" in l.lower()):
+				displayed=displayed  + 5
+			loop.create_task(Do_for_command.main(self, l.lower(), str(displayed), tabs, loop, self.tasks))
+			os.kill(int(popup_id), signal.SIGKILL)
+			self.is_listening=False
+			self.listening_word=""
+		else:
+			continue
+		self.update()
+		#self.Clock.update_time()
+		#self.Clock.update()
 		
 class Window:
 	def __init__(self, user):
-		self.user=user
 		self.tk=tk.Tk()
+		self.main_q=Queue()
 		self.tk.configure(background="black")
 		self.tk.title("Pozdravljeni")
 		self.tk.geometry("1920x1000")
-		self.Frame=Frame(self.tk, background="black")
+		self.Frame=tk.Frame(self.tk, background="black")
 		self.Frame.pack(fill=BOTH, expand=YES)
-		#self.tabControl = ttk.Notebook(self.Frame, height=100)
-		#self.tabControl.pack(expand = 1, fill ="both")
-		self.recognize()
+		self.tabControl = ttk.Notebook(self.Frame, height=100)
+		self.tabControl.pack(expand = 1, fill ="both")
+		self.recognize(user)
 		self.tk.mainloop()
-	def recognize(self):
-		self.cam=Home_screen(self.Frame, self.user)#, self.tabControl)
-		self.cam.pack()
+	def recognize(self, user):
+		cam=Home_screen.main(self.Frame, user, self.tabControl, self.main_q)
+		cam.pack()
 	
 #win=Window("nejc")
-
-s
