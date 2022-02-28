@@ -1,30 +1,60 @@
-from face_recognize import *
+import tkinter
 
-class Save_picture():
-    def main(self, f_faces, user):
-        BASE_DIR= os.path.dirname(os.path.abspath(__file__))
-        save_image_dir=os.path.join(BASE_DIR, "../Users")
-        self.user=user
-        for f in f_faces:
-            f_split=str(f).replace("'","").split(",")
-            try:
-                f_x=f_split[0]
-                f_y=f_split[1]
-                f_w=f_split[2]
-                f_h=f_split[3]
-                roi_color=self.frame[int(f_y):int(f_y)+int(f_h), int(f_x):int(f_x)+int(f_w)]
-                self.user_name=get_user_from_stream(self.frame)
-                if (self.user_name == self.user):
-                    t=time.strftime("%Y%m%d%H%M%S")
-                    new_file_count=count_pics_for_user(self.user)
-                    while (new_file_count >= 100):
-                        last_mod_file=Work_with_files.get_last_mod_file(save_image_dir+"/"+self.user_name)
-                        Work_with_files.remove_file(last_mod_file)
-                        new_file_count=count_pics_for_user(self.user)
-                    img_item2=save_image_dir+"/"+user+"/"+user+"_"+t+".png"
+from matplotlib.backends.backend_tkagg import (
+    FigureCanvasTkAgg, NavigationToolbar2Tk)
+# Implement the default Matplotlib key bindings.
+from matplotlib.backend_bases import key_press_handler
+from matplotlib.figure import Figure
 
-                    #save the image
-                    cv2.imwrite(img_item2, roi_color)
-            except Exception as e:
-                print(e)
-                continue
+import numpy as np
+
+
+root = tkinter.Tk()
+root.wm_title("Embedding in Tk")
+
+fig = Figure(figsize=(5, 4), dpi=100)
+t = np.arange(0, 3, .01)
+ax = fig.add_subplot()
+line, = ax.plot(t, 2 * np.sin(2 * np.pi * t))
+ax.set_xlabel("time [s]")
+ax.set_ylabel("f(t)")
+
+canvas = FigureCanvasTkAgg(fig, master=root)  # A tk.DrawingArea.
+canvas.draw()
+
+# pack_toolbar=False will make it easier to use a layout manager later on.
+toolbar = NavigationToolbar2Tk(canvas, root, pack_toolbar=False)
+toolbar.update()
+
+canvas.mpl_connect(
+    "key_press_event", lambda event: print(f"you pressed {event.key}"))
+canvas.mpl_connect("key_press_event", key_press_handler)
+
+button_quit = tkinter.Button(master=root, text="Quit", command=root.quit)
+
+
+def update_frequency(new_val):
+    # retrieve frequency
+    f = float(new_val)
+
+    # update data
+    y = 2 * np.sin(2 * np.pi * f * t)
+    line.set_data(t, y)
+
+    # required to update canvas and attached toolbar!
+    canvas.draw()
+
+
+slider_update = tkinter.Scale(root, from_=1, to=5, orient=tkinter.HORIZONTAL,
+                              command=update_frequency, label="Frequency [Hz]")
+
+# Packing order is important. Widgets are processed sequentially and if there
+# is no space left, because the window is too small, they are not displayed.
+# The canvas is rather flexible in its size, so we pack it last which makes
+# sure the UI controls are displayed as long as possible.
+button_quit.pack(side=tkinter.BOTTOM)
+slider_update.pack(side=tkinter.BOTTOM)
+toolbar.pack(side=tkinter.BOTTOM, fill=tkinter.X)
+canvas.get_tk_widget().pack(side=tkinter.TOP, fill=tkinter.BOTH, expand=1)
+
+tkinter.mainloop()

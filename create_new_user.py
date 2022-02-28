@@ -1,6 +1,6 @@
 import subprocess
 import os
-import face_recognize
+from face_recognize import User_auth_GUI
 from speech_listen import Listening
 from working_with_files import Work_with_files
 try:
@@ -11,8 +11,8 @@ except:
 	from Tkinter import *
 from tkinter import ttk
 
-class new_user_GUI(Frame):
-	def main(self, tabcontrol):
+class new_user_GUI():
+	async def main(self, tabcontrol):
 		print("NEW USER TESTING")
 		self.Frame=Frame(self, background="Black")
 		self.Frame.pack(fill=BOTH, expand= TRUE)
@@ -21,7 +21,7 @@ class new_user_GUI(Frame):
 		create_new_user_tab = ttk.Frame(tabcontrol)
 		tabcontrol.add(self.Frame, text ="CREATING NEW USER")
 		tabcontrol.select(len(tabcontrol.tabs())-1)
-		if (users_c < 6):
+		if (users_c < 0):
 			self.auth_label=Label(self.Frame, font=("Helvetica", 30), fg="white", bg="black", text="")
 			self.auth_label.pack(side=TOP,fill=BOTH, expand= TRUE)
 			self.say_new_user_name=Label(self.Frame, font=("Helvetica", 30), fg="white", bg="black", text="")
@@ -31,16 +31,21 @@ class new_user_GUI(Frame):
 			self.update()
 			new_user_create(self, tabcontrol)
 		else:
+			self.auth_frame=Frame(self.Frame, background="Black")
+			self.auth_frame.pack(fill=BOTH, expand= TRUE)
+			get_user=User_auth_GUI.main(self.auth_frame)
+			self.auth_frame.pack_forget()
 			self.auth_label=Label(self.Frame, font=("Helvetica", 30), fg="white", bg="black", text="User authontication")
 			self.auth_label.pack(side=TOP,fill=BOTH, expand= TRUE)
 			self.say_new_user_name=Label(self.Frame, font=("Helvetica", 30), fg="white", bg="black", text="")
 			self.say_new_user_name.pack(fill=BOTH, expand= TRUE)
 			self.get_new_user_name=Label(self.Frame, font=("Helvetica", 30), fg="white", bg="black", text="")
 			self.get_new_user_name.pack(fill=BOTH, expand= TRUE)
+			self.update()
+			new_user_create()
 			#my_thread=threading.Thread(target=self.check_for_user)
 			#my_thread.start()
 			#self.check_for_user()
-			self.update()
 			#self.tk.mainloop()
 def check_for_users(self):
 	BASE_DIR= os.path.dirname(os.path.abspath(__file__))
@@ -72,9 +77,6 @@ def new_user_create(self,tabcontrol):
 	for t in tabcontrol.tabs():
 		tabcontrol.forget(t)
 	#pic_thread.start()
-def new_user_calib(self,user):
-	self.calibrate_user=face_recognize.User_calibration(self.Frame, user)
-	self.calibrate_user.pack()
 
 
 #new_user_name()

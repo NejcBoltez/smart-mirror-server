@@ -67,15 +67,12 @@ def most_common(lst):
 
 class User_auth_GUI ():
 	def main(self):
-		#Frame.__init__(self, parent, bg="black")
 		self.main_label=Label(self, text="Recognizing the user.", font=("Helvetica", 60), fg="white", bg="black")
 		self.main_label.pack(padx=20, pady=20)
 		self.img = Label(self, width=700, height=700, bg="black")
 		self.img.pack(padx=150, pady=150)
 		self.user_name=""
 		self.update()
-		#self.camera_stream=threading.Thread(target=get_camera_stream_calibrate(self))
-		#self.camera_stream.start()
 		get_camera_stream_calibrate(self)
 		return self.user_name
 
@@ -114,7 +111,7 @@ def get_camera_stream_calibrate(self):
 			
 			cv2image = cv2.cvtColor(self.video_frame, cv2.COLOR_BGR2RGBA)
 			image_gray=cv2.cvtColor(self.video_frame, cv2.COLOR_BGR2GRAY)
-			faces = face_front.detectMultiScale(image_gray, 1.05, 5)
+			faces = face_front.detectMultiScale(image_gray, 1.89, 5)
 			for (x, y, w, h) in faces:
 				cv2.rectangle(self.video_frame, (x, y), (x + w, y + h), (255, 0, 0), 2)
 				face = image_gray[y:y + h, x:x + w]
@@ -126,8 +123,9 @@ def get_camera_stream_calibrate(self):
 				if prediction[1]<500:
 					recognized_users.append(str(names[prediction[0]]))
 					cv2.putText(self.video_frame, names[prediction[0]], (x-10, y-10), cv2.FONT_HERSHEY_SIMPLEX, 1, (36,255,12), 2)
-					self.take_picture=threading.Thread(target=save_images, args=(self, face_color, str(names[prediction[0]]),))
+					self.take_picture=threading.Thread(target=save_images, args=(face_color, str(names[prediction[0]]),))
 					self.take_picture.start()
+			cv2image = cv2.cvtColor(self.video_frame, cv2.COLOR_BGR2RGBA)
 			image = PIL.Image.fromarray(cv2image)
 			render = ImageTk.PhotoImage(image=image)
 			self.img.imgtk = render

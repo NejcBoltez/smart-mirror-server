@@ -148,62 +148,19 @@ class Home_screen(Frame):
 			print("test:     "+args)
 		except:
 			print("")
-	def main(self, user, tabs, listening_q):
-		#Frame.__init__(self, parent, bg="black", padx=0, pady=0)
-		user=user
-		tabs=tabs
-		isListening=True
+	def main(self, user, tabs):
 		self.HomeFrame=Frame(tabs, background="black")
 		self.HomeFrame.pack(fill=BOTH, expand=YES)
 		self.popup_id=0
 		home_tab = ttk.Frame(tabs)
-		self.tasks=[]
 		self.is_listening=False
 		self.listening_word=""
+		self.tasks=[]
 		tabs.add(self.HomeFrame, text ="HOME SCREEN")
-		
 		loop = asyncio.get_event_loop()
-		self.tasks.append(loop.create_task(get_home(self, user, tabs, loop)))
-		
-		#tasks.append(loop.create_task(get_thread(self, listening_q, tabs, loop, tasks)))
-		loop.run_until_complete(asyncio.gather(*self.tasks))
-		while(True):
-			if(len(tabs.tabs())==0):
-				print("STOPING TASKS")
-				for task in self.tasks:
-					task.cancel()
-				break
+		get_home(self, user, tabs, loop)
 
-async def get_thread(self, thread_q, tabControl, loop, tasks):
-	is_listening=False
-	popup_id=0
-	while(len(tabControl.tabs())>0):
-		await asyncio.sleep(5)
-		l= await thread_value(thread_q)
-		displayed=5
-		print("TEST:  " + l)
-		if ("mirror" in l.lower() and is_listening==False):
-			Speaking.to_say('OK. I AM LISTENING.')
-			start_popup=subprocess.Popen(["python3", "./show_popup.py"])
-			popup_id=str(start_popup.pid)
-			is_listening=True	
-		elif (is_listening==True and len(l.lower())>0):
-			print("TEST1234321 WORKING OK")
-			if ("next" in l.lower()):
-				displayed=displayed  + 5
-			loop.create_task(Do_for_command.main(self, l.lower(), str(displayed), tabControl, loop, tasks))
-			os.kill(int(popup_id), signal.SIGKILL)
-			is_listening=False
-		if(len(tabControl.tabs())==0):
-			break
-		else:
-			continue
-
-async def thread_value(q):
-	value=q.get()
-	return value
-
-async def get_home(self, user, tabs, loop):
+def get_home(self, user, tabs, loop):
 	self.TopFrame = Frame(self.HomeFrame, background="black", padx=0, pady=0)
 	self.TopLeftFrame=Frame(self.TopFrame, background="black")
 	self.TopRightFrame=Frame(self.TopFrame, background="black")
@@ -220,21 +177,24 @@ async def get_home(self, user, tabs, loop):
 	self.News.pack(side=BOTTOM)
 	
 	self.CommandHelpHeader=Label(self.HomeFrame,font=("Helvetica", 40), fg="white", bg="black", text="HELLO "+user.upper())
-	self.CommandHelpHeader.pack()
-	self.CommandHelp=Label(self.HomeFrame,font=("Helvetica", 12), fg="white", bg="black",text="First say 'Hey Mirror' then you can try to say:")#Search youtube for\nShow me the forecast\nSearch wikipedia for\nStart the calibration")
-	self.CommandHelp.pack()
+	self.CommandHelpHeader.pack(pady=10)
+	self.CommandHelp=Label(self.HomeFrame,font=("Helvetica", 12), fg="white", bg="black",text="First say 'Hey Mirror' then wait for the window to open:")#Search youtube for\nShow me the forecast\nSearch wikipedia for\nStart the calibration")
+	self.CommandHelp.pack(pady=10)
 	self.update()
 
 	while(len(tabs.tabs())>0):
-		await asyncio.sleep(1)
-		#print(len(tabs.tabs()))
-		#print(tabs)
+		time.sleep(1)
 		self.update()
 		print(self.listening_word)
 		l=str(self.listening_word)
 		displayed=5
 		print("TEST:  " + l)
-		if ("mirror" in l.lower() and self.is_listening==False):
+		if ("hi mirror" in l.lower() and self.is_listening==False):
+			try:
+				print(type(self.player))
+				self.player.set_pause(1)
+			except Exception as e:
+				print(e)
 			speak=threading.Thread(target=Speaking.to_say, args=('OK. I AM LISTENING.',))
 			speak.start()
 			start_popup=subprocess.Popen(["python3", "./show_popup.py"])
@@ -245,7 +205,8 @@ async def get_home(self, user, tabs, loop):
 			print("TEST1234321 WORKING OK")
 			if ("next" in l.lower()):
 				displayed=displayed  + 5
-			loop.create_task(Do_for_command.main(self, l.lower(), str(displayed), tabs, loop, self.tasks))
+			Do_for_command.main(self, l.lower(), str(displayed), tabs, loop, self.tasks)
+			
 			os.kill(int(popup_id), signal.SIGKILL)
 			self.is_listening=False
 			self.listening_word=""
@@ -254,7 +215,7 @@ async def get_home(self, user, tabs, loop):
 		self.update()
 		#self.Clock.update_time()
 		#self.Clock.update()
-		
+			
 class Window:
 	def __init__(self, user):
 		self.tk=tk.Tk()

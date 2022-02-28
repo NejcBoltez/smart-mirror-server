@@ -2,19 +2,6 @@ import os
 import json
 
 class Work_with_files:
-	def save_start_phrases(phrases, user):
-		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
-		file_to_open=os.path.join(BASE_DIR, "json_data"+os.path.sep+"start_phrases.json")	
-		with open(file_to_open, "r") as f_r:
-			f_read=f_r.read()
-		read_phrases=f_read.replace(']','')
-		new_phrases={
-			"user" : user,
-			"start_phrases" : phrases
-		}
-		with open(file_to_open,"w") as f_w:
-			f_w.write(str(read_phrases)+','+str(new_phrases).replace("'", '"')+"]")
-		print(f_read)
 	def create_dir_for_user(new_user):
 		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
 		image_dir=os.path.join(BASE_DIR, '../Users')
@@ -34,64 +21,6 @@ class Work_with_files:
 		with open(api_keys_dir, "r") as f_api:
 			read_api=json.load(f_api)
 		return read_api
-
-	def print_process_to_file(p_id, p_name):
-		p="{"
-		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
-		open_processes=os.path.join(BASE_DIR, "../open_processes.json")
-		
-		with open(open_processes, "r") as f_r:
-			f_read=f_r.read()
-			p=p+f_read.replace("{","").replace("}","")
-			print("Read lines:"+str(p))
-
-		p_to_file="'"+p_name+"': '"+p_id+"'}"
-		p_to_file=p_to_file.replace("'",'"')
-		if (p=="{"):
-			p=p+p_to_file
-		else:
-			p=p+","+p_to_file
-		print(p)
-		with open(open_processes,"w") as f_w:
-			f_w.write(str(p))
-
-	def remove_process_from_file(p_id):
-		p="{"
-		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
-		open_processes=os.path.join(BASE_DIR, "../open_processes.json")
-		with open(open_processes, "r") as f_r:
-			f_read=f_r.read()
-			p=p+f_read.replace("{","").replace("}","")
-		p_split=p.split(",")
-		print(p_split)
-		p_new="{"
-		for s in p_split:
-			if (p_id in s):
-				continue
-			else:
-				if(p_new=="{"):
-					p_new=p_new+s	
-				else:
-					p_new=p_new+","+s
-		p_new=p_new+"}"
-		with open(open_processes, "w") as f_w:
-			f_w.write(p_new)
-
-	def read_process_from_file():
-		r_p=""
-		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
-		open_processes=os.path.join(BASE_DIR, "../open_processes.json")
-		with open(open_processes, "r") as f_r:
-			#f_read=f.read()
-			r_p=json.load(f_r)
-		return r_p
-
-	def remove_all_processes_from_file():
-		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
-		open_processes=os.path.join(BASE_DIR, "../open_processes.json")
-		with open(open_processes, "w") as f:
-			f.write("")
-		#return f_read
 	def save_youtube_data(yt_data):
 		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
 		file_to_open=os.path.join(BASE_DIR, "json_data"+os.path.sep+"youtube_data.json")
