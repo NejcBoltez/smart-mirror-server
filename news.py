@@ -52,29 +52,37 @@ class display_news:
 		end=displayed
 		for i in NewsList:
 			Nov = str(i["title"]).split("- ")
-			if start<=n<end:
+			news_source=i["source"]["name"]
+			print(news_source)
+			if (news_source.lower() in ("24ur.com", "rtvslo.si", "siol.net", "racunalniske-novice.com") and start<=n<end):
 				
 				news_title=str(i["title"]).split("-")
 				image_url=str(i["urlToImage"])
 				render=""
 				try:
-					if ("https" in image_url):
+					if ("http" in image_url):
 						image_byt = urlopen(image_url).read()
 						load = PIL.Image.open(io.BytesIO(image_byt))
 						image_final=load.resize((300,200), PIL.Image.BOX, reducing_gap=1)
 						render = ImageTk.PhotoImage(image_final)
 					elif ("//" in image_url):
-						image_byt = urlopen("https:"+image_url).read()
-						load = PIL.Image.open(io.BytesIO(image_byt))
-						image_final=load.resize((300,200), PIL.Image.BOX, reducing_gap=1)
-						render = ImageTk.PhotoImage(image_final)
+						try:
+							image_byt = urlopen("https:"+image_url).read()
+							load = PIL.Image.open(io.BytesIO(image_byt))
+							image_final=load.resize((300,200), PIL.Image.BOX, reducing_gap=1)
+							render = ImageTk.PhotoImage(image_final)
+						except:
+							image_byt = urlopen("http:"+image_url).read()
+							load = PIL.Image.open(io.BytesIO(image_byt))
+							image_final=load.resize((300,200), PIL.Image.BOX, reducing_gap=1)
+							render = ImageTk.PhotoImage(image_final)
 					elif("dnevnik" in str(i["url"])):
 						image_byt = urlopen("https://www.dnevnik.si"+image_url).read()
 						load = PIL.Image.open(io.BytesIO(image_byt))
 						image_final=load.resize((300,200), PIL.Image.ANTIALIAS)
 						render = ImageTk.PhotoImage(image_final)
 				except:
-					load = PIL.Image.open("jaz_color.png")
+					load = PIL.Image.open("no_image.PNG")
 					render = ImageTk.PhotoImage(load)
 				
 				if NewsD==1:
@@ -124,5 +132,25 @@ class display_news:
 					self.NewsDir5.create_text(30,400,width=w-30, text=str(i["content"]), fill="white", font=("verdana", 12), anchor="w")
 				NewsD=NewsD+1
 				n=n+1
-			else:
-				n=n+1
+			#else:
+				#n=n+1
+class Window:
+	def __init__(self, user):
+		self.tk=tk.Tk()
+		self.tk.configure(background="black")
+		self.tk.title("Pozdravljeni")
+		self.tk.geometry("1920x1000")
+		self.Frame=Frame(self.tk, background="black")
+		self.Frame.pack(fill=BOTH, expand=YES)
+		tabControl = ttk.Notebook(self.Frame, height=100)
+		tabControl.pack(expand = 1, fill ="both")
+		self.recognize(user, tabControl)
+		self.tk.update()
+		self.tk.mainloop()
+	def recognize(self, user, tabControl):
+		cam=display_news.main(self.Frame, user, tabControl)
+		#cam.pack()
+
+
+#arguments = list(sys.argv)	
+#win=Window(5)

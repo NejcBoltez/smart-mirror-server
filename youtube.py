@@ -23,9 +23,9 @@ def get_yt_data(search_for):
 	return get_results
 
 class yt_search(Frame):
-	async def main(self, search_command, tabControl):
+	def main(self, search_command, tabControl):
 		#Frame.__init__(self, parent)
-		search_frame=Frame(self, width=1920, height=1080, bg="black", bd=0, highlightthickness=0)
+		search_frame=Frame(self, bg="black", bd=0, highlightthickness=0)
 		search_frame.pack(fill=BOTH, expand=YES)
 
 		yt_tab = ttk.Frame(tabControl)
@@ -34,9 +34,9 @@ class yt_search(Frame):
 		self.update()
 		search_text=Label(search_frame, text=str(search_command).replace("_", " ").upper(), font=("verdana", 30, "bold"), fg="white", bg="black", bd=0, highlightthickness=0, anchor="center")
 		search_text.pack(side=TOP)
-		search_frame_top=Canvas(search_frame,width=1700, height=400, bg="black", bd=0, highlightthickness=0)
+		search_frame_top=Canvas(search_frame, bg="black", bd=0, highlightthickness=0)
 		search_frame_top.pack(side=TOP, fill=BOTH, expand= TRUE)
-		search_frame_bottom=Canvas(search_frame, width=1700, height=400, bg="black", bd=0, highlightthickness=0)
+		search_frame_bottom=Canvas(search_frame,  bg="black", bd=0, highlightthickness=0)
 		search_frame_bottom.pack(side=BOTTOM, fill=BOTH, expand= TRUE)
 		get_json=get_yt_data(search_command)
 		yt=get_json["videos"]

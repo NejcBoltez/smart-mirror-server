@@ -40,6 +40,8 @@ class Login(Frame):
 		noteStyle.map("TNotebook", background=[("selected", "#000000")])
 		tabControl = ttk.Notebook(self, height=10)
 		tabControl.pack(fill=BOTH, expand=YES)
+		self.what_i_say=Label(self, font=("Helvetica", 40), fg="white", bg="black", text="")
+		self.what_i_say.pack(side=TOP, fill=BOTH)
 		self.listening_word=""
 		self.to_wait=0
 		self.update()
@@ -56,7 +58,7 @@ class Login(Frame):
 		try:
 			while(True):
 				if(count_users>0):
-					time.sleep(3)
+					time.sleep(self.to_wait)
 					speach=Listening.listening_function()
 					print(speach)
 					self.listening_word=speach.replace('.','')
@@ -76,6 +78,7 @@ class Login(Frame):
 			url = "http://www.google.com"
 			request = requests.get(url, timeout=timeout)
 			print("Connected to the Internet")
+			self.what_i_say.config(text=self.listening_word)
 			while(True):
 				if (count_users==0):
 					create_new_user.new_user_GUI.main(self, tabs)
@@ -104,6 +107,8 @@ class Window_start():
 		self.login=Login(self.Frame)
 		self.login.pack()
 		self.tk.mainloop()
+BASE_DIR= os.path.dirname(os.path.abspath(__file__))
+os.chdir(BASE_DIR)
 start_popup=subprocess.Popen(["./do_not_go_to_sleep.sh"])
-get_json_data=subprocess.Popen(["python3", "get_json_data.py"])
+get_json_data=subprocess.Popen(["python3", BASE_DIR+os.path.sep+"get_json_data.py"])
 window=Window_start()

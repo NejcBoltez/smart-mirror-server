@@ -3,7 +3,7 @@ import pyttsx3 as pyttsx
 import os
 import asyncio
 import time
-from wit import Wit
+#from wit import Wit
 import requests
 import json
 try:
@@ -59,10 +59,10 @@ class Listening:
 			#await audio
 		try:
 			print("LISTENING END: " + time.strftime("%H:%M:%S"))
-			speach_audio=audio.get_wav_data()
-			#speach=r.recognize_google(audio).lower()
-			url = "https://api.wit.ai/speech?v=20170307"
-			request = Request(url, data=speach_audio, headers={"Authorization": "Bearer {}".format(API_KEY), "Content-Type": "audio/wav"})
+			#speach=audio.get_wav_data()
+			speach=r.recognize_google(audio).lower()
+			'''url = "https://api.wit.ai/speech?v=20170307"
+			request = Request(url, data=speach, headers={"Authorization": "Bearer {}".format(API_KEY), "Content-Type": "audio/wav"})
 			try:
 				response = urlopen(request, timeout=10)
 			except HTTPError as e:
@@ -82,10 +82,10 @@ class Listening:
 				if (s=="mirror"):	
 					for p in entities[s]:
 						if (p["confidence"]>0.9 and "hi " in result["_text"].lower()):
-								speach="hi mirror"
+								speach="mirror"
 
 			if(len(speach)==0):
-				speach=result["_text"].lower()
+				speach=result["_text"].lower()'''
 		#l= Listening.listening_function()
 		except sr.UnknownValueError:
 			print("WIT Speech Recognition could not understand audio")
