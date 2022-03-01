@@ -1,4 +1,3 @@
-import Virtual_asistent as asistant
 from working_with_files import Work_with_files
 from speech_listen import Speaking
 from news import display_news
@@ -74,7 +73,7 @@ class Do_for_command:
 			
 			elif ("home" in command):
 				for t in tabcontrol.tabs():
-					if (t>0):
+					if (int(t)>0):
 						tabcontrol.forget(t)
 			elif ("exit" in command):
 				for t in tabcontrol.tabs():

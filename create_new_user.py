@@ -42,11 +42,8 @@ class new_user_GUI():
 			self.get_new_user_name=Label(self.Frame, font=("Helvetica", 30), fg="white", bg="black", text="")
 			self.get_new_user_name.pack(fill=BOTH, expand= TRUE)
 			self.update()
-			new_user_create()
-			#my_thread=threading.Thread(target=self.check_for_user)
-			#my_thread.start()
-			#self.check_for_user()
-			#self.tk.mainloop()
+			if (len(get_user)>0):
+				new_user_create()
 def check_for_users(self):
 	BASE_DIR= os.path.dirname(os.path.abspath(__file__))
 	users_dir=os.path.join(BASE_DIR, '../Users')
@@ -74,10 +71,6 @@ def new_user_create(self,tabcontrol):
 				self.update()
 			else:
 				continue
-	for t in tabcontrol.tabs():
-		tabcontrol.forget(t)
-	#pic_thread.start()
-
-
+	tabcontrol.forget(tabcontrol.tabs()-1)
 #new_user_name()
 #new_user_GUI()

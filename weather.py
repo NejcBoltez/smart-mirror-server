@@ -1,11 +1,9 @@
 import datetime
 from PIL import ImageTk
-from urllib.request import urlopen
 from PIL import ImageTk
 import PIL.Image
 import time
 import os
-import sys
 try:
 	import tkinter as tk
 	from tkinter import *
@@ -16,7 +14,6 @@ import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from working_with_files import Work_with_files
-from speech_listen import Speaking
 
 from tkinter import ttk
 

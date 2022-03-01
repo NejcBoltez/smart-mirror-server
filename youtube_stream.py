@@ -1,9 +1,4 @@
-from datetime import datetime, timedelta, timezone
-import urllib
-import m3u8
 import streamlink
-import time
-import cv2 #openCV
 import vlc
 import sys
 import json
@@ -20,7 +15,7 @@ from tkinter import ttk
 import asyncio
 
 
-arguments = list(sys.argv)
+#arguments = list(sys.argv)
 
 #Youtube video https://www.youtube.com/watch?v=qmQr0Uyi0Ls
 class Video(Frame):

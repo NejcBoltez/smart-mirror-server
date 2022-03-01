@@ -1,4 +1,3 @@
-import asyncio
 import requests
 from urllib3 import *
 from working_with_files import Work_with_files

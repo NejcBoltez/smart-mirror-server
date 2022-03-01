@@ -16,7 +16,6 @@ import subprocess
 from speech_listen import Speaking
 import signal
 from queue import Queue
-import speech_recognition as sr
 import threading
 #import show_popup
 

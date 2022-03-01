@@ -1,18 +1,13 @@
 import cv2
-import face_recognition
 import os
 import threading
 from PIL import ImageTk
 import PIL.Image
 import time
-import numpy as np
+import numpy
 from working_with_files import Work_with_files
 import time
-import asyncio
-from multiprocessing import Process
 import threading
-from queue import Queue
-import numpy
 try:
 	import tkinter as tk
 	from tkinter import *
