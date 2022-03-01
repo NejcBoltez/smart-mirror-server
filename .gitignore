@@ -1,0 +1,6 @@
+#Exclude JSON data
+json_data/
+#exclude pictures from wikipedia
+wiki_pictures/
+#exclude __pycache__
+__pycache__/
