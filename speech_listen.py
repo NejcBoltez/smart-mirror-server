@@ -61,31 +61,6 @@ class Listening:
 			print("LISTENING END: " + time.strftime("%H:%M:%S"))
 			#speach=audio.get_wav_data()
 			speach=r.recognize_google(audio).lower()
-			'''url = "https://api.wit.ai/speech?v=20170307"
-			request = Request(url, data=speach, headers={"Authorization": "Bearer {}".format(API_KEY), "Content-Type": "audio/wav"})
-			try:
-				response = urlopen(request, timeout=10)
-			except HTTPError as e:
-				raise print("recognition request failed: {}".format(e.reason))
-			except URLError as e:
-				raise print("recognition connection failed: {}".format(e.reason))
-			print("RESPONSE ACCEPTED: " + time.strftime("%H:%M:%S"))
-			response_text = response.read().decode("utf-8")
-			result = json.loads(response_text)
-			print(str(result) + time.strftime("%H:%M:%S"))
-			entities=result["entities"]
-			print(type(entities))
-			print (entities.keys())
-			#print(result["entities"]["mirror"]["confidence"])
-			for s in entities:
-				print(entities[s])
-				if (s=="mirror"):	
-					for p in entities[s]:
-						if (p["confidence"]>0.9 and "hi " in result["_text"].lower()):
-								speach="mirror"
-
-			if(len(speach)==0):
-				speach=result["_text"].lower()'''
 		#l= Listening.listening_function()
 		except sr.UnknownValueError:
 			print("WIT Speech Recognition could not understand audio")
@@ -93,41 +68,6 @@ class Listening:
 			print("Could not request results from WIT Speech Recognition service;{0}".format(e))
 		except Exception as e:
 			print(e)
-		'''BASE_DIR= os.path.dirname(os.path.abspath(__file__))
-		users_dir=os.path.join(BASE_DIR, '../Users')
-		path, dirs, files = next(os.walk(users_dir))
-		count_users= len(dirs)
-		r = sr.Recognizer()
-		speach=""		
-		API_KEY="UNYDMIHRNPDM53AKFKF4G3NSZNQIWXFZ"
-		print("STARTING TO LISTEN: " + time.strftime("%H:%M:%S"))
-		with sr.Microphone() as source:
-			r.adjust_for_ambient_noise(source)
-			audio = r.listen(source)
-			#await audio
-		try:
-			print("LISTENING END: " + time.strftime("%H:%M:%S"))
-			speach=audio.get_wav_data()
-			#speach=recognize_wit(r, audio, API_KEY).lower()
-			url = "https://api.wit.ai/speech?v=20170307"
-			request = Request(url, data=speach, headers={"Authorization": "Bearer {}".format(API_KEY), "Content-Type": "audio/wav"})
-			try:
-				response = urlopen(request, timeout=10)
-			except HTTPError as e:
-				raise RequestError("recognition request failed: {}".format(e.reason))
-			except URLError as e:
-				raise RequestError("recognition connection failed: {}".format(e.reason))
-			print("RESPONSE ACCEPTED: " + time.strftime("%H:%M:%S"))
-			response_text = response.read().decode("utf-8")
-			result = json.loads(response_text)
-			print(str(result) + time.strftime("%H:%M:%S"))
-			#print("Google Speech Recognition thinks you said " + speach + '----------->' + time.strftime("%H:%M:%S"))
-			
-			#threading_q.put(l)
-		except sr.UnknownValueError:
-			print("Google Speech Recognition could not understand audio")
-		except sr.RequestError as e:
-			print("Could not request results from Google Speech Recognition service;{0}".format(e))'''
 		return speach
 		#return razgovor
 #Listening.listening_function()	

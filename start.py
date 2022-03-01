@@ -40,7 +40,7 @@ class Login(Frame):
 		noteStyle.map("TNotebook", background=[("selected", "#000000")])
 		tabControl = ttk.Notebook(self, height=10)
 		tabControl.pack(fill=BOTH, expand=YES)
-		self.what_i_say=Label(self, font=("Helvetica", 40), fg="white", bg="black", text="")
+		self.what_i_say=Label(self, font=("Helvetica", 40), fg="white", bg="black", text="TESTING")
 		self.what_i_say.pack(side=TOP, fill=BOTH)
 		self.listening_word=""
 		self.to_wait=0
