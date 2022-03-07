@@ -61,7 +61,16 @@ class take_pic:
 	def save_picture(self):
 		try:
 			save_as="../Users/"+str(self.user)+"/"+self.user+".png"
-			cv2.imwrite(save_as, self.frame_image)
+			face_image=None
+			haar_file = cv2.data.haarcascades + 'haarcascade_frontalface_default.xml'
+			face_front = cv2.CascadeClassifier(haar_file)
+			record_cam = cv2.VideoCapture(0)
+			image_gray=cv2.cvtColor(self.video_frame, cv2.COLOR_BGR2GRAY)
+			faces = face_front.detectMultiScale(image_gray, 1.89, 5)
+			for (x, y, w, h) in faces:
+				face_image = image_gray[y:y + h, x:x + w]
+			if (face_image is not None):
+				cv2.imwrite(save_as, face_image)
 			time.sleep(2)
 			self.cap.release()
 			cv2.destroyAllWindows()

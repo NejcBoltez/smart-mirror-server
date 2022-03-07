@@ -12,7 +12,7 @@ except:
 from tkinter import ttk
 
 class new_user_GUI():
-	async def main(self, tabcontrol):
+	def main(self, tabcontrol):
 		print("NEW USER TESTING")
 		self.Frame=Frame(self, background="Black")
 		self.Frame.pack(fill=BOTH, expand= TRUE)
@@ -43,7 +43,7 @@ class new_user_GUI():
 			self.get_new_user_name.pack(fill=BOTH, expand= TRUE)
 			self.update()
 			if (len(get_user)>0):
-				new_user_create()
+				new_user_create(self, tabcontrol)
 def check_for_users(self):
 	BASE_DIR= os.path.dirname(os.path.abspath(__file__))
 	users_dir=os.path.join(BASE_DIR, '../Users')
@@ -71,6 +71,6 @@ def new_user_create(self,tabcontrol):
 				self.update()
 			else:
 				continue
-	tabcontrol.forget(tabcontrol.tabs()-1)
+	tabcontrol.forget(len(tabcontrol.tabs())-1)
 #new_user_name()
 #new_user_GUI()

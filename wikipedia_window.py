@@ -51,7 +51,7 @@ class Wikipedia_show:
 		question=command
 
 		title=['']
-		FrameWiki=Canvas(tabControl, background="black", width=400, height=280)
+		FrameWiki=Canvas(tabControl, bg="black", width=400, height=280)
 		FrameWiki.pack(fill=BOTH, expand= TRUE)
 		wiki_tab = ttk.Frame(tabControl)
 		tabControl.add(FrameWiki, text ="WIKIPEDIA")

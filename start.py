@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import os
 #from speech_listen import Listening
 #from speech_listen import Speaking
@@ -40,8 +42,8 @@ class Login(Frame):
 		noteStyle.map("TNotebook", background=[("selected", "#000000")])
 		tabControl = ttk.Notebook(self, height=10)
 		tabControl.pack(fill=BOTH, expand=YES)
-		self.what_i_say=Label(self, font=("Helvetica", 40), fg="white", bg="black", text="TESTING")
-		self.what_i_say.pack(side=TOP, fill=BOTH)
+		#self.what_i_say=Label(self, font=("Helvetica", 40), fg="white", bg="black", text="TEST")
+		#self.what_i_say.pack(side=BOTTOM, fill=BOTH)
 		self.listening_word=""
 		self.to_wait=0
 		self.update()
@@ -78,8 +80,8 @@ class Login(Frame):
 			url = "http://www.google.com"
 			request = requests.get(url, timeout=timeout)
 			print("Connected to the Internet")
-			self.what_i_say.config(text=self.listening_word)
 			while(True):
+				self.update()
 				if (count_users==0):
 					create_new_user.new_user_GUI.main(self, tabs)
 				else:
@@ -100,6 +102,7 @@ class Window_start():
 	def __init__(self):
 		self.tk=tk.Tk()
 		self.tk.configure(bg='black')
+		#self.tk.geometry("1920x1000")
 		self.tk.attributes('-fullscreen', True)  
 		fullScreenState = False
 		self.Frame=Frame(self.tk, bg='black')

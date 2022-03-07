@@ -97,7 +97,7 @@ class weather_GUI:
 				temp_min=str(i['main']['temp_min'])
 				temp_max=str(i['main']['temp_max'])
 				hour_wind_speed= str(float(i['wind']['speed']))
-				day_forecast=str(str(i['dt_txt']).split(' ')[1]) + '\n' +"Temp: " + temp +'\n' +"Humidity: " +  humidity + '\n' +"Temp_min: " +  temp_min + '\n' +"Temp_max: " +  temp_max + '\n' +"Wind speed: " + hour_wind_speed + '\n\n'
+				day_forecast=str(str(i['dt_txt']).split(' ')[1]) + '\n' + "Temp: " + temp +'\n' +"Humidity: " +  humidity + '\n' +"Temp_min: " +  temp_min + '\n' +"Temp_max: " +  temp_max + '\n' +"Wind speed: " + hour_wind_speed + '\n\n'
 				
 				t.append(float(temp))
 				t_max.append(float(temp_max))

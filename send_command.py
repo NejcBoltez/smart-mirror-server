@@ -7,6 +7,7 @@ from youtube_stream import Video
 from weather import weather_GUI
 from create_new_user import new_user_GUI
 import asyncio
+import threading
 
 		
 class Do_for_command:
@@ -15,7 +16,7 @@ class Do_for_command:
 				print('test:     '+args)
 			except:
 				print('')
-	def main(self, command, show_news, tabcontrol, loop, thread_tasks):
+	def main(self, command, show_news, tabcontrol):
 
 		numbers_int=["1","2","3","4","5","6","7","8","9","10"]
 		numbers_string=["one","two","three","four","five","six","seven","eight","nine","ten"]
@@ -73,23 +74,33 @@ class Do_for_command:
 			
 			elif ("home" in command):
 				for t in tabcontrol.tabs():
-					if (int(t)>0):
-						tabcontrol.forget(t)
+					if (len(tabcontrol.tabs())>1):
+						tabcontrol.forget(len(tabcontrol.tabs())-1)
+						#new_thread=threading.Thread(target=tabcontrol.forget(len(tabcontrol.tabs())-1))
+						#new_thread.start()
 			elif ("exit" in command):
 				for t in tabcontrol.tabs():
-					tabcontrol.forget(t)
+					if (len(tabcontrol.tabs())>0):
+						tabcontrol.forget(len(tabcontrol.tabs())-1)
+						#new_thread=threading.Thread(target=tabcontrol.forget(len(tabcontrol.tabs())-1))
+						#new_thread.start()
 			
 			elif ("close" in command):
 				tabcontrol.forget(len(tabcontrol.tabs())-1)
-				if self.player is not None:
+				try:
 					self.player.stop()
+					self.player=None
+				except Exception as e: 
+					print(e)
 
 			elif ("next" in command):
 					news_next_task=display_news.main(self, show_news, tabcontrol)
 					#thread_tasks.append(news_next_task)
 			elif ("resume" in command):
-				if (self.player is not None):
-					self.player.set_pause(0)
+				try:
+					self.player.set_pause(1)
+				except Exception as e: 
+					print(e)
 			elif ("play" in command or "video" in command):
 				print("TESTING VIDEO")
 				get_position=0

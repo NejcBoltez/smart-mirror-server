@@ -5,6 +5,7 @@ try:
 except:
 	import Tkinter as tk
 	from Tkinter import *
+from difflib import IS_LINE_JUNK
 import time
 import asyncio
 from send_command import Do_for_command
@@ -114,7 +115,7 @@ class News(Frame):
 
 	def __init__(self, parent):	
 		Frame.__init__(self, parent, bg="black")
-		self.NewsFrame=Frame(self, background="Black")
+		self.NewsFrame=Frame(self, bg="black")
 		self.NewsFrame.pack(side=RIGHT)
 		self.NewsTitle=Label(self.NewsFrame, font=("Helvetica", 30), fg="white", bg="black", text="News:")
 		self.NewsTitle.pack()
@@ -144,25 +145,27 @@ class News(Frame):
 class Home_screen(Frame):
 	def __call__(args):
 		try: 
-			print("test:     "+args)
+			print("dummy call")
 		except:
 			print("")
 	def main(self, user, tabs):
-		self.HomeFrame=Frame(tabs, background="black")
+		self.HomeFrame=Frame(tabs, bg="black")
 		self.HomeFrame.pack(fill=BOTH, expand=YES)
 		self.popup_id=0
 		home_tab = ttk.Frame(tabs)
 		self.is_listening=False
 		self.listening_word=""
 		self.tasks=[]
+		self.player=None
+		self.count_empty=0
 		tabs.add(self.HomeFrame, text ="HOME SCREEN")
 		loop = asyncio.get_event_loop()
 		get_home(self, user, tabs, loop)
 
 def get_home(self, user, tabs, loop):
-	self.TopFrame = Frame(self.HomeFrame, background="black", padx=0, pady=0)
-	self.TopLeftFrame=Frame(self.TopFrame, background="black")
-	self.TopRightFrame=Frame(self.TopFrame, background="black")
+	self.TopFrame = Frame(self.HomeFrame, bg="black", padx=0, pady=0)
+	self.TopLeftFrame=Frame(self.TopFrame, bg="black")
+	self.TopRightFrame=Frame(self.TopFrame, bg="black")
 	
 	self.TopFrame.pack(side=TOP, fill=BOTH)
 	self.TopLeftFrame.pack(side = LEFT, fill=BOTH, padx=50, pady=50)
@@ -177,7 +180,7 @@ def get_home(self, user, tabs, loop):
 	
 	self.CommandHelpHeader=Label(self.HomeFrame,font=("Helvetica", 40), fg="white", bg="black", text="HELLO "+user.upper())
 	self.CommandHelpHeader.pack(pady=10)
-	self.CommandHelp=Label(self.HomeFrame,font=("Helvetica", 12), fg="white", bg="black",text="First say 'Hey Mirror' then wait for the window to open:")#Search youtube for\nShow me the forecast\nSearch wikipedia for\nStart the calibration")
+	self.CommandHelp=Label(self.HomeFrame,font=("Helvetica", 12), fg="white", bg="black",text="First say 'Hi Mirror' then wait for the window to open.")#Search youtube for\nShow me the forecast\nSearch wikipedia for\nStart the calibration")
 	self.CommandHelp.pack(pady=10)
 	self.update()
 
@@ -186,13 +189,16 @@ def get_home(self, user, tabs, loop):
 		self.update()
 		print(self.listening_word)
 		l=str(self.listening_word)
+		#self.what_i_say.config(text="You said: " + str(self.listening_word))
+		#self.update()
 		displayed=5
+		print (tabs)
+		#for t in tabs.tabs():
 		print("TEST:  " + l)
 		if ("hi mirror" in l.lower() and self.is_listening==False):
 			try:
-				print(type(self.player))
 				self.player.set_pause(1)
-			except Exception as e:
+			except Exception as e: 
 				print(e)
 			speak=threading.Thread(target=Speaking.to_say, args=('OK. I AM LISTENING.',))
 			speak.start()
@@ -200,18 +206,28 @@ def get_home(self, user, tabs, loop):
 			popup_id=str(start_popup.pid)
 			self.is_listening=True	
 			self.listening_word=""
+			self.count_empty=0
 		elif (self.is_listening==True and len(l.lower())>0):
 			print("TEST1234321 WORKING OK")
 			if ("next" in l.lower()):
 				displayed=displayed  + 5
-			Do_for_command.main(self, l.lower(), str(displayed), tabs, loop, self.tasks)
+			Do_for_command.main(self, l.lower(), str(displayed), tabs)
 			
 			os.kill(int(popup_id), signal.SIGKILL)
 			self.is_listening=False
+			self.count_empty=0
 			self.listening_word=""
+		elif (len(l)==0 and self.count_empty<20):
+				print("count_empty: " + str(self.count_empty))
+				self.count_empty=self.count_empty+1
 		else:
+			if (self.count_empty>=200):
+				for t in tabs.tabs():
+					if (len(tabs.tabs())>0):
+						tabs.forget(len(tabs.tabs())-1)
 			continue
 		self.update()
+		
 		#self.Clock.update_time()
 		#self.Clock.update()
 			

@@ -45,22 +45,25 @@ def load_dataset(self, data_dir):
 	self.model = cv2.face.LBPHFaceRecognizer_create()
 	self.model.train(images, labels)
 
-def save_images(f_faces, user):
+def save_images(self, f_faces, user, names):
 	BASE_DIR= os.path.dirname(os.path.abspath(__file__))
 	save_image_dir=os.path.join(BASE_DIR, "../Users")
 	t=time.strftime("%Y%m%d%H%M%S")
 	new_file_count=count_pics_for_user(user)
-	img_item2=save_image_dir+"/"+user+"/"+user+"_"+t+".png"
-	while (new_file_count >= 100):
-		last_mod_file=Work_with_files.get_last_mod_file(save_image_dir+"/"+user)
-		Work_with_files.remove_file(last_mod_file)
-		new_file_count=count_pics_for_user(user)
-	cv2.imwrite(img_item2, f_faces)
+	prediction=self.model.predict(f_faces)
+	if prediction[1]<500:
+		if (user==str(names[prediction[0]])):
+			img_item2=save_image_dir+"/"+user+"/"+user+"_"+t+".png"
+			while (new_file_count >= 100):
+				last_mod_file=Work_with_files.get_last_mod_file(save_image_dir+"/"+user)
+				Work_with_files.remove_file(last_mod_file)
+				new_file_count=count_pics_for_user(user)
+			cv2.imwrite(img_item2, f_faces)
 	
 def most_common(lst):
     return max(set(lst), key=lst.count)
 
-class User_auth_GUI ():
+class User_auth_GUI():
 	def main(self):
 		self.main_label=Label(self, text="Recognizing the user.", font=("Helvetica", 60), fg="white", bg="black")
 		self.main_label.pack(padx=20, pady=20)
@@ -74,7 +77,7 @@ class User_auth_GUI ():
 def get_camera_stream_calibrate(self):
 	try:
 		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
-		image_dir=os.path.join(BASE_DIR, "Users")
+		image_dir=os.path.join(BASE_DIR, "../Users")
 		width=130
 		height=100
 		datasets = image_dir
@@ -118,7 +121,7 @@ def get_camera_stream_calibrate(self):
 				if prediction[1]<500:
 					recognized_users.append(str(names[prediction[0]]))
 					cv2.putText(self.video_frame, names[prediction[0]], (x-10, y-10), cv2.FONT_HERSHEY_SIMPLEX, 1, (36,255,12), 2)
-					self.take_picture=threading.Thread(target=save_images, args=(face_color, str(names[prediction[0]]),))
+					self.take_picture=threading.Thread(target=save_images, args=(self, face_color, str(names[prediction[0]]), names))
 					self.take_picture.start()
 			cv2image = cv2.cvtColor(self.video_frame, cv2.COLOR_BGR2RGBA)
 			image = PIL.Image.fromarray(cv2image)

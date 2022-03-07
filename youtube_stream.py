@@ -1,4 +1,4 @@
-import streamlink
+#import streamlink
 import vlc
 import sys
 import json
@@ -20,19 +20,19 @@ import asyncio
 #Youtube video https://www.youtube.com/watch?v=qmQr0Uyi0Ls
 class Video(Frame):
 	def main(self,pos, tabControl):
-		self.videoframe=Frame(tabControl, background="black", width=1400, height=700)
+		self.videoframe=Frame(tabControl, bg="black", width=1400, height=700)
 		self.videoframe.pack(fill=BOTH, expand=YES)
 		play_yt_tab = ttk.Frame(tabControl)
 		tabControl.add(self.videoframe, text ="PLAYING YOUTUBE VIDEO")
 		tabControl.select(len(tabControl.tabs())-1)
 		self.update()
-		self.video_name=Label(self.videoframe, fg="white", background="black")
+		self.video_name=Label(self.videoframe,font=("Helvetica", 40), fg="white", bg="black")
 		self.video_name.pack(side=TOP)
-		self.video_play=Frame(self.videoframe, background="black", width=1400, height=650)
+		self.video_play=Frame(self.videoframe, bg="black", width=1400, height=650)
 		self.video_play.pack(fill=BOTH, expand=YES)
 		video_URL=get_URL(self,pos)
 		video= pafy.new(get_URL(self,pos)) #pip3 install youtube-dl  
-		video_streams=streamlink.streams(video_URL)
+		#video_streams=streamlink.streams(video_URL)
 		lowest_resolution=1000000
 		lowest_resolution_link=''
 		streams=video.streams
