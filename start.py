@@ -42,8 +42,8 @@ class Login(Frame):
 		noteStyle.map("TNotebook", background=[("selected", "#000000")])
 		tabControl = ttk.Notebook(self, height=10)
 		tabControl.pack(fill=BOTH, expand=YES)
-		#self.what_i_say=Label(self, font=("Helvetica", 40), fg="white", bg="black", text="TEST")
-		#self.what_i_say.pack(side=BOTTOM, fill=BOTH)
+		self.what_i_say=Label(self, font=("Helvetica", 40), fg="white", bg="black", text="TEST")
+		self.what_i_say.pack(side=BOTTOM, fill=BOTH)
 		self.listening_word=""
 		self.to_wait=0
 		self.update()
@@ -85,6 +85,7 @@ class Login(Frame):
 				if (count_users==0):
 					create_new_user.new_user_GUI.main(self, tabs)
 				else:
+					self.what_i_say.config(text=self.listening_word)
 					if (len(self.listening_word)==0):
 						path, dirs, files = next(os.walk(users_dir))
 						count_users= len(dirs)

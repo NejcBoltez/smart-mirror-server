@@ -18,7 +18,7 @@ from speech_listen import Speaking
 import signal
 from queue import Queue
 import threading
-#import show_popup
+#from show_popup import Popup_window
 
 
 class Time(Frame):
@@ -213,6 +213,7 @@ def get_home(self, user, tabs, loop):
 				displayed=displayed  + 5
 			Do_for_command.main(self, l.lower(), str(displayed), tabs)
 			
+			#start_popup.destroy()
 			os.kill(int(popup_id), signal.SIGKILL)
 			self.is_listening=False
 			self.count_empty=0
