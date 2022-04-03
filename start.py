@@ -10,7 +10,7 @@ import create_new_user
 from face_recognize import User_auth_GUI
 from speech_listen import Listening
 import asyncio
-import requests
+#import requests
 import subprocess
 #from queue import Queue
 try:
@@ -22,8 +22,9 @@ except:
 import json
 import time
 import os
-import requests
+#import requests
 from tkinter import ttk
+from urllib import request
 from multiprocessing import Process, Queue
 from urllib.request import Request, urlopen
 from urllib.error import URLError, HTTPError
@@ -64,6 +65,8 @@ class Login(Frame):
 					speach=Listening.listening_function()
 					print(speach)
 					self.listening_word=speach.replace('.','')
+					if ("hi mirror" in self.listening_word):
+						self.to_wait=1
 				else:
 					continue
 				
@@ -78,7 +81,7 @@ class Login(Frame):
 		try:
 			timeout=5
 			url = "http://www.google.com"
-			request = requests.get(url, timeout=timeout)
+			request = request.urlopen(url, timeout=timeout)
 			print("Connected to the Internet")
 			while(True):
 				self.update()
@@ -96,16 +99,16 @@ class Login(Frame):
 							get_user=User_auth_GUI.main(self)
 							if (get_user is not None and len(get_user)>0):
 								Home_screen.main(self, get_user,tabs)
-		except (requests.ConnectionError, requests.Timeout) as exception:
+		except (request.ConnectionError, request.Timeout) as exception:
 			self.no_network_error=Label(self, font=("Helvetica", 40), fg="white", bg="black", text="PLEASE CONNECT TO NETWORK AND RESTART SMARTMIRROR")
 			self.no_network_error.pack(side=TOP, fill=BOTH)
 class Window_start():
 	def __init__(self):
 		self.tk=tk.Tk()
 		self.tk.configure(bg='black')
-		#self.tk.geometry("1920x1000")
-		self.tk.attributes('-fullscreen', True)  
-		fullScreenState = False
+		self.tk.geometry("1920x1080")
+		#self.tk.attributes('-fullscreen', True)  
+		#fullScreenState = False
 		self.Frame=Frame(self.tk, bg='black')
 		self.Frame.pack(fill=BOTH, expand=YES)
 		self.login=Login(self.Frame)

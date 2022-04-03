@@ -158,6 +158,7 @@ class Home_screen(Frame):
 		self.tasks=[]
 		self.player=None
 		self.count_empty=0
+		self.displayed=5
 		tabs.add(self.HomeFrame, text ="HOME SCREEN")
 		loop = asyncio.get_event_loop()
 		get_home(self, user, tabs, loop)
@@ -183,7 +184,6 @@ def get_home(self, user, tabs, loop):
 	self.CommandHelp=Label(self.HomeFrame,font=("Helvetica", 12), fg="white", bg="black",text="First say 'Hi Mirror' then wait for the window to open.")#Search youtube for\nShow me the forecast\nSearch wikipedia for\nStart the calibration")
 	self.CommandHelp.pack(pady=10)
 	self.update()
-
 	while(len(tabs.tabs())>0):
 		time.sleep(1)
 		self.update()
@@ -191,9 +191,10 @@ def get_home(self, user, tabs, loop):
 		l=str(self.listening_word)
 		#self.what_i_say.config(text="You said: " + str(self.listening_word))
 		#self.update()
-		displayed=5
-		print (tabs)
-		#for t in tabs.tabs():
+		#displayed=5
+		#print (tabs)
+		for t in tabs.tabs():
+			print(tabs.tab(len(tabs.tabs())-1, 'text'))
 		print("TEST:  " + l)
 		if ("hi mirror" in l.lower() and self.is_listening==False):
 			try:
@@ -210,15 +211,20 @@ def get_home(self, user, tabs, loop):
 		elif (self.is_listening==True and len(l.lower())>0):
 			print("TEST1234321 WORKING OK")
 			if ("next" in l.lower()):
-				displayed=displayed  + 5
-			Do_for_command.main(self, l.lower(), str(displayed), tabs)
+				self.displayed=self.displayed  + 5
+			Do_for_command.main(self, l.lower(), str(self.displayed), tabs)
 			
 			#start_popup.destroy()
 			os.kill(int(popup_id), signal.SIGKILL)
 			self.is_listening=False
 			self.count_empty=0
 			self.listening_word=""
-		elif (len(l)==0 and self.count_empty<20):
+			self.to_wait=0
+		elif (len(l)==0 and self.count_empty<200):
+			last_tab=str(tabs.tab(len(tabs.tabs())-1, "text"))
+			for t in tabs.tabs():
+				print(tabs.tab(len(tabs.tabs())-1, 'text'))
+			if (last_tab!="PLAYING YOUTUBE VIDEO"):
 				print("count_empty: " + str(self.count_empty))
 				self.count_empty=self.count_empty+1
 		else:

@@ -88,23 +88,31 @@ class Do_for_command:
 			elif ("close" in command):
 				tabcontrol.forget(len(tabcontrol.tabs())-1)
 				try:
-					self.player.stop()
-					self.player=None
+					last_tab=str(tabcontrol.tab(len(tabcontrol.tabs())-1, "text"))
+					if (last_tab!="PLAYING YOUTUBE VIDEO"):
+						self.player.stop()
+						self.player=None
 				except Exception as e: 
 					print(e)
 
 			elif ("next" in command):
 					news_next_task=display_news.main(self, show_news, tabcontrol)
+					last_tab=str(tabcontrol.tab(len(tabcontrol.tabs())-1, "text"))
+					if (last_tab=="NEWS"):
+						#news_task=display_news.main(self, show_news, tabcontrol)
+						tabcontrol.forget(len(tabcontrol.tabs())-2)
 					#thread_tasks.append(news_next_task)
 			elif ("resume" in command):
 				try:
-					self.player.set_pause(1)
+					last_tab=str(tabcontrol.tab(len(tabcontrol.tabs())-1, "text"))
+					if (last_tab!="PLAYING YOUTUBE VIDEO"):
+						self.player.set_pause(1)
 				except Exception as e: 
 					print(e)
 			elif ("play" in command or "video" in command):
 				print("TESTING VIDEO")
 				get_position=0
-				for i in range(0,9):
+				for i in range(9,0):
 					if (numbers_int[i] in command or numbers_string[i] in command or position[i] in command):
 						get_position=i
 				print(get_position)

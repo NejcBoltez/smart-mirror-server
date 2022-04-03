@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from working_with_files import Work_with_files
-
+import sys
 from tkinter import ttk
 
 class weather_GUI:
@@ -72,8 +72,7 @@ class weather_GUI:
 		for d in read['list']:
 			if (str(d['dt_txt']).split(' ')[0] not in self.days_table):
 				self.days_table.append(str(d['dt_txt']).split(' ')[0])
-				
-
+		
 		day_selected=day_position(self,command)
 
 		for f in self.days_table:
@@ -151,7 +150,7 @@ def day_position(self, arg):
 	day_number=0
 	day_name=datetime.datetime.strptime(self.days_table[0], '%Y-%m-%d')
 	day_name_txt= str(day_name.strftime("%A")).lower()
-	days_in_week=["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+	days_in_week=["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday","monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
 	#next_day=datetime.
 
 	if ("tomorrow" in arg):
@@ -159,23 +158,17 @@ def day_position(self, arg):
 	elif("today" in arg):
 		day_number=0
 	elif (arg!=""):
-		day_index=days_in_week.index(day_name_txt)
-		'''if (arg==days_in_week[day_index-1]):
-			Speaking.to_say("I don't have Data for that day")
-		else:'''
-		for day in days_in_week:
+		for d in self.days_table:
+			da = datetime.datetime.strptime(d, '%Y-%m-%d')
+			day=da.strftime("%A").lower()
 			print(day)
 			if (day_name_txt==day):
 				day_number=0
 			elif(day==arg):
 				day_number=day_number+1
 				break
-			elif (day_number==4):
-				break
 			else:
 				day_number=day_number+1
-	
-	print("DAY_NUMBER: " + self.days_table[int(day_number)])
 	return self.days_table[int(day_number)]
 
 def create_graph(self,hours,t,h,ws):

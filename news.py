@@ -12,6 +12,8 @@ except:
 
 from tkinter import ttk
 
+import sys
+
 class display_news:
 	def __call__(args):
 		try: 
@@ -50,12 +52,16 @@ class display_news:
 		displayed=int(displayed)
 		start= displayed-5
 		end=displayed
+		print("START: " + str(start))
+		print("END: " + str(end))
 		for i in NewsList:
 			Nov = str(i["title"]).split("- ")
 			news_source=i["source"]["name"]
+			#print(i)
 			print(news_source)
 			if (news_source.lower() in ("24ur.com", "rtvslo.si", "siol.net", "racunalniske-novice.com") and start<=n<end):
-				
+				print(NewsD)
+				print(n)
 				news_title=str(i["title"]).split("-")
 				image_url=str(i["urlToImage"])
 				render=""
@@ -132,8 +138,9 @@ class display_news:
 					self.NewsDir5.create_text(30,400,width=w-30, text=str(i["content"]), fill="white", font=("verdana", 12), anchor="w")
 				NewsD=NewsD+1
 				n=n+1
-			#else:
-				#n=n+1
+			else:
+				if (NewsD==1 and news_source.lower() in ("24ur.com", "rtvslo.si", "siol.net", "racunalniske-novice.com")):
+					n=n+1
 class Window:
 	def __init__(self, user):
 		self.tk=tk.Tk()
@@ -153,4 +160,4 @@ class Window:
 
 
 #arguments = list(sys.argv)	
-#win=Window(5)
+#win=Window(arguments[1])
