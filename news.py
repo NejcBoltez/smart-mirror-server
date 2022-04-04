@@ -159,5 +159,5 @@ class Window:
 		#cam.pack()
 
 
-#arguments = list(sys.argv)	
-#win=Window(arguments[1])
+arguments = list(sys.argv)	
+win=Window(arguments[1])

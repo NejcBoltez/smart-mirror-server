@@ -81,7 +81,7 @@ class Login(Frame):
 		try:
 			timeout=5
 			url = "http://www.google.com"
-			request = request.urlopen(url, timeout=timeout)
+			check_request = request.urlopen(url, timeout=timeout)
 			print("Connected to the Internet")
 			while(True):
 				self.update()
@@ -99,7 +99,7 @@ class Login(Frame):
 							get_user=User_auth_GUI.main(self)
 							if (get_user is not None and len(get_user)>0):
 								Home_screen.main(self, get_user,tabs)
-		except (request.ConnectionError, request.Timeout) as exception:
+		except:# (request.ConnectionError, request.Timeout) as exception:
 			self.no_network_error=Label(self, font=("Helvetica", 40), fg="white", bg="black", text="PLEASE CONNECT TO NETWORK AND RESTART SMARTMIRROR")
 			self.no_network_error.pack(side=TOP, fill=BOTH)
 class Window_start():
