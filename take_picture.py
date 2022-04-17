@@ -21,6 +21,7 @@ class take_pic:
 			print('test:     '+args)
 		except:
 			print('')
+	
 	def __init__(self,user):
 		self.user=user
 		self.tk=tk.Tk()
@@ -40,6 +41,7 @@ class take_pic:
 		self.camera_stream=threading.Thread(target=self.get_camera_stream)
 		self.camera_stream.start()
 		self.tk.mainloop()
+	
 	def get_camera_stream(self):
 		self.rec, self.frame_image = self.cap.read()
 		self.cv2image = cv2.cvtColor(self.frame_image, cv2.COLOR_BGR2RGBA)
@@ -58,6 +60,7 @@ class take_pic:
 			self.save_picture()
 		if(self.count_number>=0):
 			self.img.after(10, self.get_camera_stream)
+	
 	def save_picture(self):
 		try:
 			save_as="../Users/"+str(self.user)+"/"+self.user+".png"

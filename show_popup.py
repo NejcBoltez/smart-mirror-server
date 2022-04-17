@@ -19,8 +19,11 @@ class Popup_window:
 		self.textSaid.pack(side="top", fill="x", pady=80)
 		self.popup.lift()
 		self.popup.mainloop()
+	
 	def change_what_is_said(self, text):
 		self.textSaid.config(text=text)
+	
 	def close(self):
 		self.destroy()
+
 Popup_window()

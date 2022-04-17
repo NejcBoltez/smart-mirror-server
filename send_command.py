@@ -99,9 +99,8 @@ class Do_for_command:
 					news_next_task=display_news.main(self, show_news, tabcontrol)
 					last_tab=str(tabcontrol.tab(len(tabcontrol.tabs())-1, "text"))
 					if (last_tab=="NEWS"):
-						#news_task=display_news.main(self, show_news, tabcontrol)
 						tabcontrol.forget(len(tabcontrol.tabs())-2)
-					#thread_tasks.append(news_next_task)
+						
 			elif ("resume" in command):
 				try:
 					last_tab=str(tabcontrol.tab(len(tabcontrol.tabs())-1, "text"))
@@ -109,11 +108,15 @@ class Do_for_command:
 						self.player.set_pause(1)
 				except Exception as e: 
 					print(e)
+			
 			elif ("play" in command or "video" in command):
 				print("TESTING VIDEO")
 				get_position=0
-				for i in range(9,0):
+				for i in range(0,9):
 					if (numbers_int[i] in command or numbers_string[i] in command or position[i] in command):
+						if ("10" in command):
+							get_position=9
+							break 
 						get_position=i
 				print(get_position)
 

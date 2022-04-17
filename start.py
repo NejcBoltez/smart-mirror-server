@@ -102,6 +102,7 @@ class Login(Frame):
 		except:# (request.ConnectionError, request.Timeout) as exception:
 			self.no_network_error=Label(self, font=("Helvetica", 40), fg="white", bg="black", text="PLEASE CONNECT TO NETWORK AND RESTART SMARTMIRROR")
 			self.no_network_error.pack(side=TOP, fill=BOTH)
+
 class Window_start():
 	def __init__(self):
 		self.tk=tk.Tk()

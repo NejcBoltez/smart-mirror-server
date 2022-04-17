@@ -43,7 +43,7 @@ while(True):
 		#read_weather_h=r_hours.json()
 		Work_with_files.save_weather_data(read_weather_h)
 		time.sleep(3600)
-		#await asyncio.sleep(3600)
+		
 	except Exception as e:
 		print(e)
 		time.sleep(3600)

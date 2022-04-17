@@ -134,6 +134,7 @@ def get_camera_stream_calibrate(self):
 			
 	except Exception as e:
 		get_camera_stream_calibrate(self)
+		
 	record_cam.release()
 	self.main_label.pack_forget()
 	self.img.pack_forget()

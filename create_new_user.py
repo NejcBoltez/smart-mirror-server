@@ -44,12 +44,14 @@ class new_user_GUI():
 			self.update()
 			if (len(get_user)>0):
 				new_user_create(self, tabcontrol)
+
 def check_for_users(self):
 	BASE_DIR= os.path.dirname(os.path.abspath(__file__))
 	users_dir=os.path.join(BASE_DIR, '../Users')
 	path, dirs, files = next(os.walk(users_dir))
 	count_users= len(dirs)
 	return count_users
+	
 def new_user_create(self,tabcontrol):
 	self.auth_label.config(text="Plase say your name without spaces")
 	self.update()

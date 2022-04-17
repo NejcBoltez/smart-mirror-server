@@ -20,6 +20,7 @@ class display_news:
 			print("test:     "+args)
 		except:
 			print("")
+	
 	def main(self, displayed, tabControl):
 		print("TESTING NEWS")
 		self.Frame=Frame(tabControl, background="black")
@@ -141,6 +142,7 @@ class display_news:
 			else:
 				if (NewsD==1 and news_source.lower() in ("24ur.com", "rtvslo.si", "siol.net", "racunalniske-novice.com")):
 					n=n+1
+
 class Window:
 	def __init__(self, user):
 		self.tk=tk.Tk()
@@ -154,10 +156,11 @@ class Window:
 		self.recognize(user, tabControl)
 		self.tk.update()
 		self.tk.mainloop()
+
 	def recognize(self, user, tabControl):
 		cam=display_news.main(self.Frame, user, tabControl)
 		#cam.pack()
 
 
-arguments = list(sys.argv)	
-win=Window(arguments[1])
+#arguments = list(sys.argv)	
+#win=Window(arguments[1])

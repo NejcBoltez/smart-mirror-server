@@ -51,6 +51,7 @@ class Weather(Frame):
 			print("test:     "+args)
 		except:
 			print("")
+	
 	def __init__(self, parent):
 		Frame.__init__(self, parent, bg="black", padx=0, pady=0)
 		self.WeatherTitle=Label(self, font=("Helvetica", 40), fg="white", bg="black", text="Weather:")
@@ -251,6 +252,7 @@ class Window:
 		self.tabControl.pack(expand = 1, fill ="both")
 		self.recognize(user)
 		self.tk.mainloop()
+	
 	def recognize(self, user):
 		cam=Home_screen.main(self.Frame, user, self.tabControl, self.main_q)
 		cam.pack()

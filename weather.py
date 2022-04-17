@@ -20,11 +20,13 @@ from tkinter import ttk
 class weather_GUI:
 	def __enter__(self):
 		return self
+	
 	def __call__(args):
 		try: 
 			print('test:     '+args)
 		except:
 			print('')
+	
 	def main(self,command, tabControl):
 		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
 		image_dir=os.path.join(BASE_DIR, 'Weather_widgets')
@@ -138,14 +140,17 @@ class weather_GUI:
 		img.place(x=10, y=50)
 		self.logo.create_text(150,350, width=300, text=overall_forecast, fill="white", font=('Helvetica', 20))
 		create_graph(self, hours, t, h, ws)
+
 def most_common_weather(lst):
 	return str(max(set(lst), key=lst.count))
+
 def average_weather(lst):
 	count_e=0
 	for i in lst:
 		print(i)
 		count_e=count_e+float(i)
 	return str('{0:.2f}'.format(count_e/len(lst)))
+
 def day_position(self, arg):
 	day_number=0
 	day_name=datetime.datetime.strptime(self.days_table[0], '%Y-%m-%d')
@@ -192,6 +197,7 @@ def create_graph(self,hours,t,h,ws):
 
 	self.canvas = FigureCanvasTkAgg(self.f,self.chart)
 	self.canvas.get_tk_widget().pack(pady=100)
+
 class Window:
 	def __init__(self, user):
 		self.tk=tk.Tk()
@@ -205,10 +211,11 @@ class Window:
 		self.recognize(user, tabControl)
 		self.tk.update()
 		self.tk.mainloop()
+
 	def recognize(self, user, tabControl):
 		cam=weather_GUI.main(self.Frame, user, tabControl)
 		#cam.pack()
 
 
-arguments = list(sys.argv)	
-win=Window(arguments[1])
+#arguments = list(sys.argv)	
+#win=Window(arguments[1])

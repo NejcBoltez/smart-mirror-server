@@ -23,6 +23,7 @@ class Wikipedia_show:
 			print('test:     '+args)
 		except:
 			print('')
+	
 	def main(self, command, tabControl):
 		def save_image(url_of_image):
 			url_split=url_of_image.split('.')
@@ -98,10 +99,11 @@ class Window:
 		self.recognize(user, tabControl)
 		self.tk.update()
 		self.tk.mainloop()
+
 	def recognize(self, user, tabControl):
 		cam=Wikipedia_show.main(self.Frame, user, tabControl)
 		#cam.pack()
 
 
-arguments = list(sys.argv)	
-win=Window(arguments[1])
+#arguments = list(sys.argv)	
+#win=Window(arguments[1])
