@@ -15,8 +15,8 @@ while(True):
 		#print(type(str(News_request)))
 		with request.urlopen(URLnews) as news_resp:
 			news_response=json.loads(news_resp.read().decode())
-			print(news_response["articles"])
-			print("TEST")
+			#print(news_response["articles"])
+			#print("TEST")
 		#News=json.loads(News_request.decode('ISO-8859-1'))#news_response.json()
 		Work_with_files.save_news_data(news_response)
 
@@ -29,14 +29,14 @@ while(True):
 		#r = request.Request(URL_main)
 		with request.urlopen(URL_main) as main_resp:
 			read_weather=json.loads(main_resp.read().decode())
-			print("TEST")
-			print(read_weather)
+			#print("TEST")
+			#print(read_weather)
 		
 		Work_with_files.save_weather_data_main(read_weather)
 		with request.urlopen(URL_hours) as hour_resp:
 			read_weather_h=json.loads(hour_resp.read().decode())
-			print("TEST")
-			print(read_weather_h)
+			#print("TEST")
+			#print(read_weather_h)
 		#read_weather = r.json()
 		#Work_with_files.save_weather_data_main(read_weather)
 		#r_hours = request.Request(URL_hours)

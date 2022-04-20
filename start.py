@@ -43,8 +43,8 @@ class Login(Frame):
 		noteStyle.map("TNotebook", background=[("selected", "#000000")])
 		tabControl = ttk.Notebook(self, height=10)
 		tabControl.pack(fill=BOTH, expand=YES)
-		self.what_i_say=Label(self, font=("Helvetica", 40), fg="white", bg="black", text="TEST")
-		self.what_i_say.pack(side=BOTTOM, fill=BOTH)
+		#self.what_i_say=Label(self, font=("Helvetica", 40), fg="white", bg="black", text="TEST")
+		#self.what_i_say.pack(side=BOTTOM, fill=BOTH)
 		self.listening_word=""
 		self.to_wait=0
 		self.update()
@@ -88,28 +88,28 @@ class Login(Frame):
 				if (count_users==0):
 					create_new_user.new_user_GUI.main(self, tabs)
 				else:
-					self.what_i_say.config(text=self.listening_word)
+					#self.what_i_say.config(text=self.listening_word)
 					if (len(self.listening_word)==0):
 						path, dirs, files = next(os.walk(users_dir))
 						count_users= len(dirs)
 						continue
 					else:
-						if(count_users>0 and len(tabs.tabs())==0 and "hi mirror" in self.listening_word):
+						if(count_users>0 and len(tabs.tabs())==0 and ("hi mirror" in self.listening_word.lower() or "mirror" in self.listening_word.lower() or "himirror" in self.listening_word.lower())):
 							self.update()
 							get_user=User_auth_GUI.main(self)
 							if (get_user is not None and len(get_user)>0):
 								Home_screen.main(self, get_user,tabs)
-		except:# (request.ConnectionError, request.Timeout) as exception:
-			self.no_network_error=Label(self, font=("Helvetica", 40), fg="white", bg="black", text="PLEASE CONNECT TO NETWORK AND RESTART SMARTMIRROR")
+		except Exception as e:# (request.ConnectionError, request.Timeout) as exception:
+			self.no_network_error=Label(self, font=("Helvetica", 40), fg="white", bg="black", text="PLEASE CONNECT TO NETWORK AND RESTART SMARTMIRROR" + e)
 			self.no_network_error.pack(side=TOP, fill=BOTH)
 
 class Window_start():
 	def __init__(self):
 		self.tk=tk.Tk()
 		self.tk.configure(bg='black')
-		self.tk.geometry("1920x1080")
-		#self.tk.attributes('-fullscreen', True)  
-		#fullScreenState = False
+		#self.tk.geometry("1920x1080")
+		self.tk.attributes('-fullscreen', True)  
+		fullScreenState = False
 		self.Frame=Frame(self.tk, bg='black')
 		self.Frame.pack(fill=BOTH, expand=YES)
 		self.login=Login(self.Frame)

@@ -50,6 +50,7 @@ def save_images(self, f_faces, user, names):
 	save_image_dir=os.path.join(BASE_DIR, "../Users")
 	t=time.strftime("%Y%m%d%H%M%S")
 	new_file_count=count_pics_for_user(user)
+	#f_faces_gray=cv2.cvtColor(f_faces, cv2.COLOR_BGR2GRAY)
 	prediction=self.model.predict(f_faces)
 	if prediction[1]<500:
 		if (user==str(names[prediction[0]])):
@@ -121,7 +122,7 @@ def get_camera_stream_calibrate(self):
 				if prediction[1]<500:
 					recognized_users.append(str(names[prediction[0]]))
 					cv2.putText(self.video_frame, names[prediction[0]], (x-10, y-10), cv2.FONT_HERSHEY_SIMPLEX, 1, (36,255,12), 2)
-					self.take_picture=threading.Thread(target=save_images, args=(self, face_color, str(names[prediction[0]]), names))
+					self.take_picture=threading.Thread(target=save_images, args=(self, face, str(names[prediction[0]]), names))
 					self.take_picture.start()
 			cv2image = cv2.cvtColor(self.video_frame, cv2.COLOR_BGR2RGBA)
 			image = PIL.Image.fromarray(cv2image)

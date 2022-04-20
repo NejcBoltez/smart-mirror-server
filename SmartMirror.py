@@ -191,19 +191,19 @@ def get_home(self, user, tabs, loop):
 		print(self.listening_word)
 		l=str(self.listening_word)
 		#self.what_i_say.config(text="You said: " + str(self.listening_word))
-		#self.update()
+		self.update()
 		#displayed=5
 		#print (tabs)
 		for t in tabs.tabs():
 			print(tabs.tab(len(tabs.tabs())-1, 'text'))
 		print("TEST:  " + l)
-		if ("hi mirror" in l.lower() and self.is_listening==False):
+		if (("hi mirror" in l.lower() or "mirror" in l.lower() or "himirror" in l.lower() or "hi" in l.lower()) and self.is_listening==False):
 			try:
 				self.player.set_pause(1)
 			except Exception as e: 
 				print(e)
-			speak=threading.Thread(target=Speaking.to_say, args=('OK. I AM LISTENING.',))
-			speak.start()
+			#speak=threading.Thread(target=Speaking.to_say, args=('OK. I AM LISTENING.',))
+			#speak.start()
 			start_popup=subprocess.Popen(["python3", "./show_popup.py"])
 			popup_id=str(start_popup.pid)
 			self.is_listening=True	
