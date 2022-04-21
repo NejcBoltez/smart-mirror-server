@@ -11,9 +11,7 @@ class Speaking:
 class Listening:
 	def listening_function():
 		r = sr.Recognizer()
-		speach=""		
-		print("TEST")
-		API_KEY="UNYDMIHRNPDM53AKFKF4G3NSZNQIWXFZ"
+		speach=""
 		print("STARTING TO LISTEN: " + time.strftime("%H:%M:%S"))
 		with sr.Microphone() as source:
 			r.adjust_for_ambient_noise(source)

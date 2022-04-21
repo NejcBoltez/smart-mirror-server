@@ -3,18 +3,13 @@ import os
 from face_recognize import User_auth_GUI
 from speech_listen import Listening
 from working_with_files import Work_with_files
-try:
-	import tkinter as tk
-	from tkinter import *
-except:
-	import Tkinter as tk
-	from Tkinter import *
+import tkinter as tk
+from tkinter import *
 from tkinter import ttk
 
 class new_user_GUI():
 	def main(self, tabcontrol):
-		print("NEW USER TESTING")
-		self.Frame=Frame(self, background="Black")
+		self.Frame=Frame(self, background="black")
 		self.Frame.pack(fill=BOTH, expand= TRUE)
 		users_c=check_for_users(self)
 		
@@ -47,7 +42,7 @@ class new_user_GUI():
 
 def check_for_users(self):
 	BASE_DIR= os.path.dirname(os.path.abspath(__file__))
-	users_dir=os.path.join(BASE_DIR, '../Users')
+	users_dir=os.path.join(BASE_DIR, "../Users")
 	path, dirs, files = next(os.walk(users_dir))
 	count_users= len(dirs)
 	return count_users
@@ -58,16 +53,15 @@ def new_user_create(self,tabcontrol):
 	while (True):
 		new_user=Listening.listening_function()
 		if (new_user is not None or new_user != ""):
-			self.say_new_user_name.config(text="Your new name would be " + new_user.replace(' ','') + ". IS THAT OK?")
+			self.say_new_user_name.config(text="Your new name would be " + new_user.replace(" ","") + ". IS THAT OK?")
 			self.update()
 			user_ok=Listening.listening_function()
 			if ("yes" in user_ok.lower()):
-				print("test")
-				Work_with_files.create_dir_for_user(new_user.replace(' ',''))
-				subprocess.Popen(["python3","take_picture.py", new_user.replace(' ','')])
+				Work_with_files.create_dir_for_user(new_user.replace(" ",""))
+				subprocess.Popen(["python3","take_picture.py", new_user.replace(" ","")])
 				break
 			elif ("yes" not in user_ok.lower()):
-				print("USER_OK: "+user_ok)
+				#print("USER_OK: "+user_ok)
 				self.auth_label.config(text="Plase say your name again without spaces")
 				self.say_new_user_name.config(text="")
 				self.update()

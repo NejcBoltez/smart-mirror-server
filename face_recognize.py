@@ -8,12 +8,8 @@ import numpy
 from working_with_files import Work_with_files
 import time
 import threading
-try:
-	import tkinter as tk
-	from tkinter import *
-except:
-	import Tkinter as tk
-	from Tkinter import *
+import tkinter as tk
+from tkinter import *
 
 def count_pics_for_user(user):
 	BASE_DIR= os.path.dirname(os.path.abspath(__file__))
@@ -32,7 +28,7 @@ def load_dataset(self, data_dir):
 			names[id] = subdir
 			subjectpath = os.path.join(datasets, subdir)
 			for filename in os.listdir(subjectpath):
-				path = subjectpath + '/' + filename
+				path = subjectpath + "/" + filename
 				label = id
 				images.append(cv2.imread(path, 0))
 				labels.append(int(label))
@@ -90,7 +86,7 @@ def get_camera_stream_calibrate(self):
 				names[id] = subdir
 				subjectpath = os.path.join(datasets, subdir)
 				for filename in os.listdir(subjectpath):
-					path = subjectpath + '/' + filename
+					path = subjectpath + "/" + filename
 					label = id
 					images.append(cv2.imread(path, 0))
 					labels.append(int(label))
@@ -102,7 +98,7 @@ def get_camera_stream_calibrate(self):
 		self.model.train(images, labels)
 		recognized_users=[]
 		# Part 2: Use fisherRecognizer on camera stream
-		haar_file = cv2.data.haarcascades + 'haarcascade_frontalface_default.xml'
+		haar_file = cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
 		face_front = cv2.CascadeClassifier(haar_file)
 		record_cam = cv2.VideoCapture(0)
 		while (len(recognized_users)<=10):

@@ -3,12 +3,8 @@ from urllib.request import urlopen
 from PIL import ImageTk
 import PIL.Image
 from working_with_files import Work_with_files
-try:
-	import tkinter as tk
-	from tkinter import *
-except:
-	import Tkinter as tk
-	from Tkinter import *
+import tkinter as tk
+from tkinter import *
 
 from tkinter import ttk
 
@@ -17,12 +13,11 @@ import sys
 class display_news:
 	def __call__(args):
 		try: 
-			print("test:     "+args)
+			print("dummy call")
 		except:
 			print("")
 	
 	def main(self, displayed, tabControl):
-		print("TESTING NEWS")
 		self.Frame=Frame(tabControl, background="black")
 		self.Frame.pack(fill=BOTH, expand=YES)
 		newstab = ttk.Frame(tabControl)
@@ -53,16 +48,10 @@ class display_news:
 		displayed=int(displayed)
 		start= displayed-5
 		end=displayed
-		print("START: " + str(start))
-		print("END: " + str(end))
 		for i in NewsList:
 			Nov = str(i["title"]).split("- ")
 			news_source=i["source"]["name"]
-			#print(i)
-			print(news_source)
 			if (news_source.lower() in ("24ur.com", "rtvslo.si", "siol.net", "racunalniske-novice.com") and start<=n<end):
-				print(NewsD)
-				print(n)
 				news_title=str(i["title"]).split("-")
 				image_url=str(i["urlToImage"])
 				render=""

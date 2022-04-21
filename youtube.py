@@ -1,9 +1,5 @@
-try:
-	import tkinter as tk
-	from tkinter import *
-except:
-	import Tkinter as tk
-	from Tkinter import *
+import tkinter as tk
+from tkinter import *
 #Youtube video https://www.youtube.com/watch?v=qmQr0Uyi0Ls
 
 from youtube_search import YoutubeSearch
@@ -19,7 +15,7 @@ def get_yt_data(search_for):
 	results = YoutubeSearch(str(search_for).replace("_", " "), max_results=20).to_json()
 	get_results=json.loads(results)
 	Work_with_files.save_youtube_data(get_results)
-	print(get_results)
+	#print(get_results)
 	return get_results
 
 class yt_search(Frame):

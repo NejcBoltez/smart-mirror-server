@@ -1,9 +1,5 @@
-try:
-	import tkinter as tk
-	from tkinter import *
-except:
-	import Tkinter as tk
-	from Tkinter import *
+import tkinter as tk
+from tkinter import *
 
 class Popup_window:
 	def __init__(self):	

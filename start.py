@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 
 import os
-#from speech_listen import Listening
-#from speech_listen import Speaking
 import threading
 from working_with_files import Work_with_files
 from SmartMirror import Home_screen
@@ -10,19 +8,12 @@ import create_new_user
 from face_recognize import User_auth_GUI
 from speech_listen import Listening
 import asyncio
-#import requests
 import subprocess
-#from queue import Queue
-try:
-	import tkinter as tk
-	from tkinter import *
-except:
-	import Tkinter as tk
-	from Tkinter import *
+import tkinter as tk
+from tkinter import *
 import json
 import time
 import os
-#import requests
 from tkinter import ttk
 from urllib import request
 from multiprocessing import Process, Queue
@@ -34,10 +25,10 @@ import speech_recognition as sr
 
 class Login(Frame):
 	def __init__(self, parent, *args, **kwargs):
-		Frame.__init__(self, parent, bg='black')
+		Frame.__init__(self, parent, bg="black")
 		self.pack(fill=BOTH, expand=YES)
 		noteStyle = ttk.Style()
-		noteStyle.theme_use('default')
+		noteStyle.theme_use("default")
 		noteStyle.configure("TNotebook", background="#000000", borderwidth=0)
 		noteStyle.configure("TNotebook.Tab", background="#F9F3F2", borderwidth=0)
 		noteStyle.map("TNotebook", background=[("selected", "#000000")])
@@ -55,7 +46,7 @@ class Login(Frame):
 
 	def get_listen(self):
 		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
-		users_dir=os.path.join(BASE_DIR, '../Users')
+		users_dir=os.path.join(BASE_DIR, "../Users")
 		path, dirs, files = next(os.walk(users_dir))
 		count_users= len(dirs)
 		try:
@@ -63,8 +54,8 @@ class Login(Frame):
 				if(count_users>0):
 					time.sleep(self.to_wait)
 					speach=Listening.listening_function()
-					print(speach)
-					self.listening_word=speach.replace('.','')
+					#print(speach)
+					self.listening_word=speach.replace(".","")
 					if ("hi mirror" in self.listening_word):
 						self.to_wait=1
 				else:
@@ -75,7 +66,7 @@ class Login(Frame):
 
 	def user_auth(self, tabs):
 		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
-		users_dir=os.path.join(BASE_DIR, '../Users')
+		users_dir=os.path.join(BASE_DIR, "../Users")
 		path, dirs, files = next(os.walk(users_dir))
 		count_users= len(dirs)
 		try:
@@ -100,17 +91,17 @@ class Login(Frame):
 							if (get_user is not None and len(get_user)>0):
 								Home_screen.main(self, get_user,tabs)
 		except Exception as e:# (request.ConnectionError, request.Timeout) as exception:
-			self.no_network_error=Label(self, font=("Helvetica", 40), fg="white", bg="black", text="PLEASE CONNECT TO NETWORK AND RESTART SMARTMIRROR" + e)
+			self.no_network_error=Label(self, font=("Helvetica", 40), fg="white", bg="black", text="PLEASE CONNECT TO NETWORK AND RESTART SMARTMIRROR" + "/n" + str(e))
 			self.no_network_error.pack(side=TOP, fill=BOTH)
 
 class Window_start():
 	def __init__(self):
 		self.tk=tk.Tk()
-		self.tk.configure(bg='black')
+		self.tk.configure(bg="black")
 		#self.tk.geometry("1920x1080")
-		self.tk.attributes('-fullscreen', True)  
+		self.tk.attributes("-fullscreen", True)  
 		fullScreenState = False
-		self.Frame=Frame(self.tk, bg='black')
+		self.Frame=Frame(self.tk, bg="black")
 		self.Frame.pack(fill=BOTH, expand=YES)
 		self.login=Login(self.Frame)
 		self.login.pack()

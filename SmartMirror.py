@@ -1,10 +1,6 @@
-try:
-	import tkinter as tk
-	from tkinter import *
-	from tkinter import ttk
-except:
-	import Tkinter as tk
-	from Tkinter import *
+import tkinter as tk
+from tkinter import *
+from tkinter import ttk
 from difflib import IS_LINE_JUNK
 import time
 import asyncio
@@ -18,13 +14,12 @@ from speech_listen import Speaking
 import signal
 from queue import Queue
 import threading
-#from show_popup import Popup_window
 
 
 class Time(Frame):
 	def __call__(args):
 		try: 
-			print("test:     "+args)
+			print("dummy call")
 		except:
 			print("")
 	def __init__(self, parent):#, tabcontrol):
@@ -48,7 +43,7 @@ class Time(Frame):
 class Weather(Frame):
 	def __call__(args):
 		try: 
-			print("test:     "+args)
+			print("dummy call")
 		except:
 			print("")
 	
@@ -81,11 +76,9 @@ class Weather(Frame):
 		temp_max="Temp_max: " + str(weather_data["main"]["temp_max"])
 		weather=temp +"\n" + humidity + "\n" + temp_min + "\n" + temp_max
 		icon=weather_data["weather"][0]["icon"]
-		print(icon)
 		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
 		image_dir=os.path.join(BASE_DIR, "Weather_widgets")
 		image_byt = str(image_dir+os.path.sep+icon+".PNG")
-		print(image_byt)
 		load = PIL.Image.open(image_byt)
 		image_final=load.resize((120,70), PIL.Image.ANTIALIAS)
 		render = ImageTk.PhotoImage(image_final)
@@ -110,7 +103,7 @@ class Weather(Frame):
 class News(Frame):
 	def __call__(args):
 		try: 
-			print("test:     "+args)
+			print("dummy call")
 		except:
 			print("")
 
@@ -182,27 +175,22 @@ def get_home(self, user, tabs, loop):
 	
 	self.CommandHelpHeader=Label(self.HomeFrame,font=("Helvetica", 40), fg="white", bg="black", text="HELLO "+user.upper())
 	self.CommandHelpHeader.pack(pady=10)
-	self.CommandHelp=Label(self.HomeFrame,font=("Helvetica", 12), fg="white", bg="black",text="First say 'Hi Mirror' then wait for the window to open.")#Search youtube for\nShow me the forecast\nSearch wikipedia for\nStart the calibration")
+	self.CommandHelp=Label(self.HomeFrame,font=("Helvetica", 12), fg="white", bg="black",text="First say 'Hi Mirror' then wait for the window to open.")
 	self.CommandHelp.pack(pady=10)
 	self.update()
 	while(len(tabs.tabs())>0):
 		time.sleep(1)
 		self.update()
-		print(self.listening_word)
 		l=str(self.listening_word)
 		#self.what_i_say.config(text="You said: " + str(self.listening_word))
 		self.update()
-		#displayed=5
-		#print (tabs)
-		for t in tabs.tabs():
-			print(tabs.tab(len(tabs.tabs())-1, 'text'))
-		print("TEST:  " + l)
+		print("You said:  " + l)
 		if (("hi mirror" in l.lower() or "mirror" in l.lower() or "himirror" in l.lower() or "hi" in l.lower()) and self.is_listening==False):
 			try:
 				self.player.set_pause(1)
 			except Exception as e: 
 				print(e)
-			#speak=threading.Thread(target=Speaking.to_say, args=('OK. I AM LISTENING.',))
+			#speak=threading.Thread(target=Speaking.to_say, args=("OK. I AM LISTENING.",))
 			#speak.start()
 			start_popup=subprocess.Popen(["python3", "./show_popup.py"])
 			popup_id=str(start_popup.pid)
@@ -210,12 +198,9 @@ def get_home(self, user, tabs, loop):
 			self.listening_word=""
 			self.count_empty=0
 		elif (self.is_listening==True and len(l.lower())>0):
-			print("TEST1234321 WORKING OK")
 			if ("next" in l.lower()):
 				self.displayed=self.displayed  + 5
 			Do_for_command.main(self, l.lower(), str(self.displayed), tabs)
-			
-			#start_popup.destroy()
 			os.kill(int(popup_id), signal.SIGKILL)
 			self.is_listening=False
 			self.count_empty=0
@@ -223,8 +208,6 @@ def get_home(self, user, tabs, loop):
 			self.to_wait=0
 		elif (len(l)==0 and self.count_empty<200):
 			last_tab=str(tabs.tab(len(tabs.tabs())-1, "text"))
-			for t in tabs.tabs():
-				print(tabs.tab(len(tabs.tabs())-1, 'text'))
 			if (last_tab!="PLAYING YOUTUBE VIDEO"):
 				print("count_empty: " + str(self.count_empty))
 				self.count_empty=self.count_empty+1
