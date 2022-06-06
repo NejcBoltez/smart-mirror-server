@@ -39,3 +39,8 @@ class News(models.Model):
 
     def __str__(self):
         return self.name
+
+class APIkeys(models.Model):
+    news_API_key = models.CharField(max_length=200)
+    weather_API_key = models.CharField(max_length=200)
+    user_fk_key = models.CharField(max_length=200)
