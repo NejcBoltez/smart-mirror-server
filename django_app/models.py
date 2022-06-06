@@ -2,7 +2,7 @@ from django.db import models
 
 
 
-class Room(models.Model):
+class Weather(models.Model):
     #host = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     #topic = models.ForeignKey(Topic, on_delete=models.SET_NULL, null=True)
     name = models.CharField(max_length=200)
