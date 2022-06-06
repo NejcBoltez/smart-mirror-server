@@ -57,7 +57,7 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             BASE_DIR / 'templates',
-            BASE_DIR / 'smartmirror_django/templates'
+            BASE_DIR / 'django_app/templates'
         ],
         'APP_DIRS': True,
         'OPTIONS': {
