@@ -11,7 +11,7 @@ def NewsPage(request):
 def WeatherPage(request):
 
     form=WeatherForm()
-    return render(request,'smartmirror_django/weather.html', {'form': form})
+    return render(request,'smartmirror_django/weather.html')
 def WeatherConfSave(request):
     weatherForm=WeatherForm()
     if request.method == 'POST':

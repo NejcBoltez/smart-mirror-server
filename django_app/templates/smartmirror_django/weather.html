@@ -2,14 +2,14 @@
 <h1>WEATHER</h1>
 
 <h2>CITY TO SHOW WEATHER FOR</h2>
-{% csrf_token %}
+<!--{% csrf_token %}
 {% for field in form %}
 <div class="form__group form__group">
   <label for="room_name">{{field.label}}</label>
   {{field}}
 </div>
-{% endfor %}
-<!--
+{% endfor %}-->
+
 <table>
     <tr>
         <td>
@@ -36,7 +36,7 @@
             <input type="submit" text="SUBMIT"/>
         </td>
     </tr>
-<table>-->
+<table>
 <h2>WEATHER API</h2>
 <p1>Please put your weather API here: </p1>
 <input type="text" placeholder="Weather API"/>
