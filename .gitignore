@@ -4,3 +4,4 @@ json_data/
 wiki_pictures/
 #exclude __pycache__
 __pycache__/
+db.sqlite3
