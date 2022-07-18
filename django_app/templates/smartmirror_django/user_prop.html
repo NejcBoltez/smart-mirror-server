@@ -1,2 +1,13 @@
 {% include 'main_header.html'%}
-<p1>USER PROPERTIES</p1>
+<h1>USER PROPERTIES</h1>
+
+<form class="form" action="" method="POST">
+    {% csrf_token %}
+    {% for field in form %}
+        <div class="form__group form__group">
+        <label for="name">{{field.label}}: </label>
+        {{field}}
+        </div>
+    {% endfor %}
+    <input type="submit"/>
+</form>

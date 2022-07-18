@@ -1,7 +1,17 @@
 from dataclasses import field
-from .models import Weather, News, APIkeys
+from .models import Weather, News, User
 from django import forms
 
+class UserForm(forms.Form):
+    
+    #host = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    #topic = models.ForeignKey(Topic, on_delete=models.SET_NULL, null=True)
+    name = forms.CharField(max_length=200)
+    weather_api = forms.CharField(max_length=200)
+    news_api = forms.CharField(max_length=200)
+    class Meta:
+        model=User
+        fields = '__all__'
 class WeatherForm(forms.Form):
     
     #host = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
@@ -18,9 +28,4 @@ class NewsForm():
     news_to_select = forms.CharField(max_length=200)
     class Meta:
         model=News
-        fields = '__all__'
-
-class APIForm():
-    class Meta:
-        model=APIkeys
         fields = '__all__'
