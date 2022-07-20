@@ -22,5 +22,6 @@ urlpatterns = [
     path('', views.homePage, name="home"),
     path('news', views.NewsPage, name="news"),
     path('weather', views.WeatherPage, name="weather"),
-    path('user_profile', views.UserPage, name="user_prop")
+    path('user_profile', views.UserPage, name="user_prop"),
+    path('new_user', views.NewUserPage, name="new_user")
 ]
