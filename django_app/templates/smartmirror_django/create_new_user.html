@@ -1,0 +1,13 @@
+{% include 'main_header.html' %}
+<h1>This is a tab for creating a new user</h1>
+<br>
+<form class="form" action="" method="POST">
+    {% csrf_token %}
+    {% for field in form %}
+        <div class="form__group form__group">
+        <label for="name">{{field.label}}: </label>
+        {{field}}
+        </div>
+    {% endfor %}
+    <input type="submit"/>
+</form>

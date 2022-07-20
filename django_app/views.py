@@ -38,6 +38,23 @@ def WeatherConfSave(request):
         print(request.POST.get('weather_api'))
     return redirect('home', RequestContext(request))
 
+def NewUserPage(request):
+    if request.method == 'POST':
+
+        form=UserForm(request.POST)
+        User.objects.create(
+            name = request.POST.get('name'),
+            #user_id = uuid.any(),
+            #request.POST.get('user_id'),
+            weather_api = request.POST.get('weather_api'),
+            news_api = request.POST.get('news_api')
+        )
+    else:
+        form=UserForm()
+    
+    context = {'form': form}
+    return render(request,'smartmirror_django/user_prop.html', context)
+
 def UserPage(request):
     if request.method == 'POST':
 
