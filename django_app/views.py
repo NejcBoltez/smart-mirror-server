@@ -11,6 +11,9 @@ def homePage(request):
 
 def NewsPage(request):
     return render(request,'smartmirror_django/news.html')
+    
+def LoginPage(request):
+    return render(request,'login.html')
 
 def WeatherPage(request):
     if request.method == 'POST':
