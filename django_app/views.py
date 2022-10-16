@@ -13,7 +13,7 @@ video = 'null'
 class VideoCamera(object):
     def __init__(self):
         try:
-            self.video = cv2.VideoCapture(-1)
+            self.video = cv2.VideoCapture(0)
             (self.grabbed, self.frame) = self.video.read()
             c = threading.Thread(target=self.update, args=())
             c.setName("CAM_thread")
@@ -51,7 +51,7 @@ def homePage(request):
 
 def NewsPage(request):
     return render(request,'smartmirror_django/news.html')
-    
+
 def WeatherPage(request):
     if request.method == 'POST':
 
