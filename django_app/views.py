@@ -121,7 +121,7 @@ def UserPicture(request):
         return StreamingHttpResponse(gen(cam), content_type="multipart/x-mixed-replace;boundary=frame")
     except Exception as e:  # This is bad! replace it with proper handling
         print(e)
-
+        
 def UserPage(request):
     
     if request.method == 'POST':
