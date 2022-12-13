@@ -14,6 +14,8 @@
     <style>
         body {
             width: 100%;
+            margin: 0;
+            padding: 0;
         }
         
         .home-container {
@@ -35,15 +37,12 @@
             width: 100%;
         }
         
-        footer {
+        .footer {
             background-color: green;
             position: absolute;
             bottom: 0;
-            margin: 0px;
-            padding: 0px;
-            min-width: 100%;
-            max-width: 100%;
-            padding-left: 0 px;
+            margin: auto;
+            width: 100%;
         }
     </style>
     <header>
@@ -65,7 +64,11 @@
         </div>
         <div class="value-container">
             {% block content%} {% endblock %}
-            <div>
+        </div>
+
+        <div class="footer">
+            <h1>NEJC BOLTEZ</h1>
+        </div>
 </body>
 
 </html>
