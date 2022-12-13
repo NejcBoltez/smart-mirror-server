@@ -1,66 +1,6 @@
 <!DOCTYPE html>
 
 <html>
-    <head>
-        <meta charset="UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="shortcut icon" href="assets/favicon.ico" type="image/x-icon" />
-        <title>Smart mirror web app</title>
-    </head>
-    <body>
-        <style>
-            body{
-                width:100%;
-            }
-            .home-container {
-                display: grid;
-                background-color: red;
-                grid-template-columns: 1fr 6fr 1fr;
-                width: 100%;
-            }
-            .nav-container{
-                background-color: coral;
-                color:red;
-                height: 80%;
-                width: 100%;
-            }
-            .value-container{
-                padding-left: 100px;
-                width: 100%;
-            }
-            footer {
-                background-color: green;
-                position: absolute;
-                bottom: 0;
-                margin: 0px;
-                padding: 0px;
-                min-width:100%;
-                max-width:100%;
-                padding-left: 0 px;
-            }
-        </style>
-        <header>
-            <h1>WELCOME TO MY SMART MIRROR WEB APP</h1>
-        </header>
-        <div class="home-container">
-            <div class="nav-container">
-                <h2>NAVIGATION BAR</h2>
-                <a href="/">HOME</a>
-                <br></br>
-                <a href="/weather">WEATHER</a>
-                <br></br>
-                <a href="/news">NEWS</a>
-                <br></br>
-                <a href="/user_profile">USER PROFILE</a>
-                <br></br>
-                <a href="/new_user">CREATE NEW USER</a>
-                <br></br>
-            </div>
-            <div class="value-container">
-                {% block content%}
-                {% endblock %}
-            <div>
 
 <head>
     <meta charset="UTF-8" />
@@ -74,8 +14,6 @@
     <style>
         body {
             width: 100%;
-            margin: 0;
-            padding: 0;
         }
         
         .home-container {
@@ -97,12 +35,15 @@
             width: 100%;
         }
         
-        .footer {
+        footer {
             background-color: green;
             position: absolute;
             bottom: 0;
-            margin: auto;
-            width: 100%;
+            margin: 0px;
+            padding: 0px;
+            min-width: 100%;
+            max-width: 100%;
+            padding-left: 0 px;
         }
     </style>
     <header>
@@ -124,11 +65,7 @@
         </div>
         <div class="value-container">
             {% block content%} {% endblock %}
-        </div>
-
-        <div class="footer">
-            <h1>NEJC BOLTEZ</h1>
-        </div>
+            <div>
 </body>
 
 </html>
