@@ -9,4 +9,5 @@ urlpatterns = [
     path('news', views.NewsPage, name="news"),
     path('weather', views.WeatherPage, name="weather"),
     path('user_profile', views.UserPage, name="user_prop"),
+    path('picture', views.UserPicture, name="UserPicture")
 ]
