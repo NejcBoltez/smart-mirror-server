@@ -10,6 +10,7 @@ from django.views.decorators.gzip import gzip_page
 import time
 
 video = 'null'
+usedCam = 'null'
 class VideoCamera(object):
     def __init__(self):
         try:
@@ -25,8 +26,6 @@ class VideoCamera(object):
             c.setName("CAM_thread")
             c.start()
             
-
-
     def __del__(self):
         self.video.release()
 
@@ -39,7 +38,7 @@ class VideoCamera(object):
         #(self.grabbed, self.frame) = self.video.read()
         while True:
             (self.grabbed, self.frame) = self.video.read()
-            time.sleep(0.5)
+            time.sleep(0.1)
 def gen(camera):
     while True:
         frame = camera.get_frame()
@@ -47,12 +46,15 @@ def gen(camera):
               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
 
 def homePage(request):
+    closeCamera()
     return render(request,'smartmirror_django/home.html')
 
 def NewsPage(request):
+    closeCamera()
     return render(request,'smartmirror_django/news.html')
 
 def WeatherPage(request):
+    closeCamera()
     if request.method == 'POST':
 
         form=WeatherForm(request.POST)
@@ -67,6 +69,7 @@ def WeatherPage(request):
     context = {'form': form}
     return render(request,'smartmirror_django/weather.html', context)
 def WeatherConfSave(request):
+    closeCamera()
     weatherForm=WeatherForm()
     if request.method == 'POST':
         Weather.objects.create(
@@ -79,6 +82,7 @@ def WeatherConfSave(request):
     return redirect('home', RequestContext(request))
 
 def NewUserPage(request):
+    closeCamera()
     if request.method == 'POST':
 
         form=UserForm(request.POST)
@@ -95,35 +99,25 @@ def NewUserPage(request):
     context = {'form': form}
     return render(request,'smartmirror_django/user_prop.html', context)
 
-class Set_cam():
-    def main(self):
-        self.used_cam=''
-        UserPicture()
-
 @gzip_page
 def UserPicture(request):
-    #print(video)
+    global usedCam
     try:
-        cam_thread=threading.enumerate()
-        for c in cam_thread:
-            print(c)
-            print(c.getName())
-            if(c.getName() == 'CAM_thread'):
-                c.join()
-        try:
-            cam_thread=threading.enumerate
-            for c in cam_thread:
-                print(c)
-        except Exception as e:
-            cam_thread=''
-        print(threading.current_thread())
-        cam = VideoCamera()
-        return StreamingHttpResponse(gen(cam), content_type="multipart/x-mixed-replace;boundary=frame")
+        if (usedCam == 'null'):
+            usedCam = VideoCamera()
+            return StreamingHttpResponse(gen(usedCam), content_type="multipart/x-mixed-replace;boundary=frame")
+        else:
+            return StreamingHttpResponse(gen(usedCam), content_type="multipart/x-mixed-replace;boundary=frame")
     except Exception as e:  # This is bad! replace it with proper handling
         print(e)
-        
+
+def closeCamera():
+    global usedCam
+    if (usedCam != 'null'):
+        usedCam.__del__()
+        usedCam = 'null'
+
 def UserPage(request):
-    
     if request.method == 'POST':
 
         form=UserForm(request.POST)
