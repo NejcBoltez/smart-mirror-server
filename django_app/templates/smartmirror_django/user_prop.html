@@ -1,12 +1,15 @@
-{% include 'main_header.html'%}
-<h1>USER PROPERTIES</h1>
+{% extends 'main_header.html'%} {% block content %}
+<div>
+    <h1>USER PROPERTIES</h1>
 
-<form class="form" action="" method="POST">
-    {% csrf_token %} {% for field in form %}
-    <div class="form__group form__group">
-        <label for="name">{{field.label}}: </label> {{field}}
-    </div>
-    {% endfor %}
-    <input type="submit" />
-    <img width="800" class="userImage" src="/picture" alt="TEST" />
-</form>
+    <form class="form" action="" method="POST">
+        {% csrf_token %} {% for field in form %}
+        <div class="form__group form__group">
+            <label for="name">{{field.label}}: </label> {{field}}
+        </div>
+        {% endfor %}
+        <input type="submit" />
+        <img width="800" class="userImage" src="/picture" alt="TEST" />
+    </form>
+</div>
+{% endblock %}

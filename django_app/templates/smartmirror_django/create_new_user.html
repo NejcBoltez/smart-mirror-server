@@ -1,13 +1,12 @@
-{% include 'main_header.html' %}
+{% extends 'main_header.html' %} {% block content %}
 <h1>This is a tab for creating a new user</h1>
 <br>
 <form class="form" action="" method="POST">
-    {% csrf_token %}
-    {% for field in form %}
-        <div class="form__group form__group">
-        <label for="name">{{field.label}}: </label>
-        {{field}}
-        </div>
+    {% csrf_token %} {% for field in form %}
+    <div class="form__group form__group">
+        <label for="name">{{field.label}}: </label> {{field}}
+    </div>
     {% endfor %}
-    <input type="submit"/>
+    <input type="submit" />
 </form>
+{% endblock %}
