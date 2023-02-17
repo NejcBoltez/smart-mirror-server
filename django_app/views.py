@@ -1,11 +1,14 @@
 from django.shortcuts import redirect, render
-from django.http import HttpResponseRedirect, StreamingHttpResponse
+from django.http import HttpResponseRedirect, StreamingHttpResponse, JsonResponse
 from django.template import RequestContext
 from .models import User, Weather
 from .forms import WeatherForm,UserForm
 import uuid
 import threading
 import cv2
+import os
+import base64
+from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.gzip import gzip_page
 import time
 
@@ -44,6 +47,14 @@ def gen(camera):
         frame = camera.get_frame()
         yield(b'--frame\r\n'
               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
+def detect(camera):
+    while True:
+    
+        _, img = gen(camera)
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        faces = face_cascade.detectMultiScale(gray, 1.1, 4)
+        for (x, y, w, h) in faces:
+            cv2.rectangle(img, (x, y), (x+w, y+h), (255, 0, 0), 2)
 
 def homePage(request):
     closeCamera()
@@ -133,3 +144,24 @@ def UserPage(request):
     
     context = {'form': form}
     return render(request,'smartmirror_django/user_prop.html', context)
+def showCamera(request):
+    return render(request,'smartmirror_django/cameraTest.html')
+
+@csrf_exempt
+def process_image(request):
+    if request.method == 'POST':
+        image_data = request.POST.get('image')
+        if image_data:
+            # Decode the base64 image data
+            image_data = base64.b64decode(image_data.split(',')[1])
+            
+            # Save the image to a file
+            image_name = 'captured_image.png'
+            with open(os.path.join('', image_name), 'wb') as f:
+                f.write(image_data)
+                
+            # Return a JSON response indicating success
+            return JsonResponse({'success': True})
+        
+    # Return a JSON response indicating failure
+    return JsonResponse({'success': False})
