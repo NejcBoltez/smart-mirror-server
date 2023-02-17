@@ -9,7 +9,48 @@
         </div>
         {% endfor %}
         <input type="submit" />
-        <img width="800" class="userImage" src="/picture" alt="TEST" />
+        <!--<img width="800" class="userImage" src="/picture" alt="TEST" />-->
     </form>
+    <video id="video" width="640" height="480" autoplay></video>
+    <button id="capture-btn">Capture Image</button>
+    <canvas id="canvas" width="640" height="480" style="display:none;"></canvas>
+
+    <script>
+        var video = document.querySelector("#video");
+        var canvas = document.querySelector("#canvas");
+        var captureBtn = document.querySelector("#capture-btn");
+
+        // Get access to the camera stream
+        navigator.mediaDevices.getUserMedia({
+                video: true
+            })
+            .then(function(stream) {
+                video.srcObject = stream;
+            })
+            .catch(function(err) {
+                console.log("An error occurred: " + err);
+            });
+
+        // Capture the image and send it to the server
+        captureBtn.addEventListener("click", function() {
+            canvas.getContext("2d").drawImage(video, 0, 0, 640, 480);
+            var dataUrl = canvas.toDataURL("image/png");
+
+            // Send the image data to the server
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/process_image/");
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+            xhr.onload = function() {
+                var response = JSON.parse(xhr.responseText);
+                if (response.success) {
+                    console.log("Image processed and saved successfully");
+                } else {
+                    console.log("An error occurred while processing or saving the image");
+                }
+            };
+            xhr.send("image=" + encodeURIComponent(dataUrl));
+        });
+    </script>
 </div>
 {% endblock %}
