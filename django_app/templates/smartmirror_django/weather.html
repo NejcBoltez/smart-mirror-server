@@ -71,18 +71,52 @@
     <p1>Use city name</p1>
     <label class="switch">
         <input type="checkbox">
-        <span class="slider round"></span>
+        <span class="slider round" onclick="btnClick()"></span>
     </label>
     <p1>Use coordinates</p1>
     <br></br>
-    <form class="form" action="" method="POST">
-        {% csrf_token %} {% for field in form %}
-        <div class="form__group form__group">
-            <label for="field_name">{{field.label}}: </label> {{field}}
-        </div>
-        {% endfor %}
-        <br>
-        <input type="submit" />
-    </form>
+    <div class="divForm">
+        <form class="form" action="" method="POST">
+            <table>
+                {% csrf_token %} {% for field in form %}
+                <tr class="form__group">
+                    <td><label for="field_name">{{field.label}}: </label></td>
+                    <td>{{field}}</td>
+                </tr>
+                {% endfor %}
+                <tr>
+                    <td><input class="submitForm" type="submit"></input>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <script>
+        var useCoordinates = false;
+        document.getElementById("id_country").type = "text";
+        document.getElementById("id_city").type = "text";
+        document.getElementById("id_coordX").type = "hidden";
+        document.getElementById("id_coordY").type = "hidden";
+
+
+        function btnClick(event) {
+            console.log(useCoordinates)
+            if (useCoordinates == false) {
+                useCoordinates = true;
+                document.getElementById("id_country").type = "hidden";
+                document.getElementById("id_city").type = "hidden";
+                document.getElementById("id_coordX").type = "text";
+                document.getElementById("id_coordY").type = "text";
+                console.log(document.getElementById("id_coordX"));
+            } else if (useCoordinates == true) {
+                useCoordinates = false;
+                document.getElementById("id_country").type = "text";
+                document.getElementById("id_city").type = "text";
+                document.getElementById("id_coordX").type = "hidden";
+                document.getElementById("id_coordY").type = "hidden";
+            }
+            return useCoordinates;
+        }
+    </script>
 </div>
 {% endblock %}
