@@ -8,6 +8,7 @@ import threading
 import cv2
 import os
 import base64
+import numpy as np
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.gzip import gzip_page
 import time
@@ -154,11 +155,19 @@ def process_image(request):
         if image_data:
             # Decode the base64 image data
             image_data = base64.b64decode(image_data.split(',')[1])
-            
+
+            im_arr = np.frombuffer(image_data, dtype=np.uint8)  # im_arr is one-dim Numpy array
+            img = cv2.imdecode(im_arr, flags=cv2.IMREAD_COLOR)
+            face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
+            gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+            faces = face_cascade.detectMultiScale(gray, 1.1, 4)
+            for (x, y, w, h) in faces:
+                cv2.rectangle(img, (x, y), (x+w, y+h), (255, 0, 0), 2)
+                face = gray[y:y + h, x:x + w]
             # Save the image to a file
-            image_name = 'captured_image.png'
-            with open(os.path.join('', image_name), 'wb') as f:
-                f.write(image_data)
+            image_name = './Users/Nejc/captured_image.png'
+            cv2.imwrite(image_name, face)
                 
             # Return a JSON response indicating success
             return JsonResponse({'success': True})
