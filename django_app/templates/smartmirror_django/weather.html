@@ -63,10 +63,6 @@
     .slider.round:before {
         border-radius: 50%;
     }
-    
-    table {
-        text-align: center;
-    }
 </style>
 <div class="weatherDiv">
     <h1>WEATHER</h1>
@@ -79,16 +75,22 @@
     </label>
     <p1>Use coordinates</p1>
     <br></br>
-    <form class="form" action="" method="POST">
-        <table>
-            {% csrf_token %} {% for field in form %}
-            <tr class="form__group">
-                <td><label for="field_name">{{field.label}}: </label></td>
-                <td>{{field}}</td>
-            </tr>
-            {% endfor %}
-        </table>
-    </form>
+    <div class="divForm">
+        <form class="form" action="" method="POST">
+            <table>
+                {% csrf_token %} {% for field in form %}
+                <tr class="form__group">
+                    <td><label for="field_name">{{field.label}}: </label></td>
+                    <td>{{field}}</td>
+                </tr>
+                {% endfor %}
+                <tr>
+                    <td><input class="submitForm" type="submit"></input>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
     <script>
         var useCoordinates = false;
         document.getElementById("id_country").type = "text";
