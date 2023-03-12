@@ -100,18 +100,32 @@ def NewUserPage(request):
 	if request.method == 'POST':
 
 		form=UserForm(request.POST)
-		User.objects.create(
+		'''User.objects.create(
 			name = request.POST.get('name'),
 			#user_id = uuid.any(),
 			#request.POST.get('user_id'),
 			weather_api = request.POST.get('weather_api'),
 			news_api = request.POST.get('news_api')
-		)
+		)'''
+		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
+		file_to_open=os.path.join(BASE_DIR, "../Users"+os.path.sep+"users.json")
+		userData = "" 
+		with open(file_to_open,"r") as f_w:
+			userData = json.load(f_w)
+			#print(userData)
+		userData['user']=request.POST.get('userName')
+		userData['encryptedPassword'] = str(base64.b64encode(request.POST.get('userPassword').encode('ascii'))),
+		userData['apiKeys']['weather_api_key'] = request.POST.get('weather_api'),
+		userData['apiKeys']['news_api_key'] = request.POST.get('news_api')
+		print(userData)
+
+		with open(file_to_open,"w") as f_w:
+			json.dump(userData,f_w)
 	else:
 		form=UserForm()
 	
 	context = {'form': form}
-	return render(request,'smartmirror_django/user_prop.html', context)
+	return render(request,'smartmirror_django/create_new_user.html', context)
 
 @gzip_page
 def UserPicture(request):
