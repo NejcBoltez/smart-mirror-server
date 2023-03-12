@@ -6,7 +6,8 @@ class UserForm(forms.Form):
     
     #host = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     #topic = models.ForeignKey(Topic, on_delete=models.SET_NULL, null=True)
-    name = forms.CharField(max_length=200)
+    userName = forms.CharField(max_length=200)
+    userPassword = forms.CharField(widget=forms.PasswordInput)
     weather_api = forms.CharField(max_length=200)
     news_api = forms.CharField(max_length=200)
     class Meta:
