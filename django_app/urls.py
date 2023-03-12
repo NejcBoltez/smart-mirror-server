@@ -10,5 +10,6 @@ urlpatterns = [
     path('weather', views.WeatherPage, name="weather"),
     path('user_profile', views.UserPage, name="user_prop"),
     path('picture', views.showCamera, name="UserPicture"),
+    path('newUser/', views.NewUserPage, name="NewUserPage"),
     path('process_image/', views.process_image, name='process_image'),
 ]
