@@ -109,9 +109,9 @@ def NewUserPage(request):
 		)'''
 		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
 		image_dir=os.path.join(BASE_DIR, "../Users")
-		dir_path=str(image_dir)+"/"+str(request.POST.get('userName'))
-		os.mkdir(dir_path)
-		os.chmod(dir_path, 0o777)
+		user_dir=str(image_dir)+"/"+str(request.POST.get('userName'))
+		os.mkdir(user_dir)
+		os.chmod(user_dir, 0o777)
 		file_to_open=os.path.join(BASE_DIR, "../Users" + os.path.sep + "users.json")
 		userData = "" 
 		with open(file_to_open,"r") as f_w:
@@ -125,7 +125,7 @@ def NewUserPage(request):
 		userData['apiKeys']['news_api_key'] = request.POST.get('news_api')
 		print(userData)
 
-		with open(dir_path + os.path.sep + "users.json","w") as f_w:
+		with open(user_dir + os.path.sep + "users.json","w") as f_w:
 			json.dump(userData,f_w)
 	else:
 		form=UserForm()
