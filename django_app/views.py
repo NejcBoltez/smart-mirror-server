@@ -108,18 +108,23 @@ def NewUserPage(request):
 			news_api = request.POST.get('news_api')
 		)'''
 		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
-		file_to_open=os.path.join(BASE_DIR, "../Users"+os.path.sep+"users.json")
+		image_dir=os.path.join(BASE_DIR, "../Users")
+		user_dir=str(image_dir)+"/"+str(request.POST.get('userName'))
+		os.mkdir(user_dir)
+		os.chmod(user_dir, 0o777)
+		file_to_open=os.path.join(BASE_DIR, "../Users" + os.path.sep + "users.json")
 		userData = "" 
 		with open(file_to_open,"r") as f_w:
 			userData = json.load(f_w)
-			#print(userData)
+		
+		userData['userID']=str(uuid.uuid4())
 		userData['user']=request.POST.get('userName')
-		userData['encryptedPassword'] = str(base64.b64encode(request.POST.get('userPassword').encode('ascii'))),
-		userData['apiKeys']['weather_api_key'] = request.POST.get('weather_api'),
+		userData['encryptedPassword'] = str(base64.b64encode(request.POST.get('userPassword').encode('ascii')))
+		userData['apiKeys']['weather_api_key'] = request.POST.get('weather_api')
 		userData['apiKeys']['news_api_key'] = request.POST.get('news_api')
 		print(userData)
 
-		with open(file_to_open,"w") as f_w:
+		with open(user_dir + os.path.sep + "users.json","w") as f_w:
 			json.dump(userData,f_w)
 	else:
 		form=UserForm()
