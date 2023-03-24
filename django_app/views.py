@@ -124,7 +124,7 @@ def NewUserPage(request):
 		userData['apiKeys']['news_api_key'] = request.POST.get('news_api')
 		print(userData)
 
-		with open(user_dir + os.path.sep + "users.json","w") as f_w:
+		with open(user_dir + os.path.sep + request.POST.get('userName') + ".json","w") as f_w:
 			json.dump(userData,f_w)
 	else:
 		form=UserForm()
