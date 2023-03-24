@@ -116,12 +116,11 @@ def NewUserPage(request):
 		userData = "" 
 		with open(file_to_open,"r") as f_w:
 			userData = json.load(f_w)
-			#print(userData)
-
+		
 		userData['userID']=str(uuid.uuid4())
 		userData['user']=request.POST.get('userName')
-		userData['encryptedPassword'] = str(base64.b64encode(request.POST.get('userPassword').encode('ascii'))),
-		userData['apiKeys']['weather_api_key'] = request.POST.get('weather_api'),
+		userData['encryptedPassword'] = str(base64.b64encode(request.POST.get('userPassword').encode('ascii')))
+		userData['apiKeys']['weather_api_key'] = request.POST.get('weather_api')
 		userData['apiKeys']['news_api_key'] = request.POST.get('news_api')
 		print(userData)
 
