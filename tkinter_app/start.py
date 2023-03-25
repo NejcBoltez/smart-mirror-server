@@ -1,5 +1,8 @@
 #!/usr/bin/env python
-
+import sys
+sys.path.append('service')
+sys.path.append('controller')
+sys.path.append('repository')
 import os
 import threading
 from working_with_files import Work_with_files
@@ -9,8 +12,12 @@ from face_recognize import User_auth_GUI
 from speech_listen import Listening
 import asyncio
 import subprocess
-import tkinter as tk
-from tkinter import *
+try:
+	import tkinter as tk
+	from tkinter import *
+except:
+	import tk
+	from tk import *
 import json
 import time
 import os
