@@ -1,11 +1,19 @@
+import sys
+sys.path.append('../service')
+sys.path.append('../repository')
 import subprocess
 import os
 from face_recognize import User_auth_GUI
 from speech_listen import Listening
 from working_with_files import Work_with_files
-import tkinter as tk
-from tkinter import *
-from tkinter import ttk
+try:
+	import tkinter as tk
+	from tkinter import *
+	from tkinter import ttk
+except:
+	import tk
+	from tk import *
+	from tk import ttk
 
 class new_user_GUI():
 	def main(self, tabcontrol):

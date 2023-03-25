@@ -1,11 +1,20 @@
+import sys
+sys.path.append('../controller')
+sys.path.append('../repository')
 import cv2
 import sys
 import time
 from PIL import ImageTk
 import PIL.Image
 import threading
-import tkinter as tk
-from tkinter import *
+try:
+	import tkinter as tk
+	from tkinter import *
+	from tkinter import ttk
+except:
+	import tk
+	from tk import *
+	from tk import ttk
 
 
 from threading import Thread

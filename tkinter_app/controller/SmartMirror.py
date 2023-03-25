@@ -1,6 +1,14 @@
-import tkinter as tk
-from tkinter import *
-from tkinter import ttk
+import sys
+sys.path.append('../service')
+sys.path.append('../repository')
+try:
+	import tkinter as tk
+	from tkinter import *
+	from tkinter import ttk
+except:
+	import tk
+	from tk import *
+	from tk import ttk
 from difflib import IS_LINE_JUNK
 import time
 import asyncio

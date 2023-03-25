@@ -1,17 +1,26 @@
+import sys
+sys.path.append('../service')
+sys.path.append('../repository')
 import datetime
 from PIL import ImageTk
 from PIL import ImageTk
 import PIL.Image
 import time
 import os
-import tkinter as tk
-from tkinter import *
+try:
+	import tkinter as tk
+	from tkinter import *
+	from tkinter import ttk
+except:
+	import tk
+	from tk import *
+	from tk import ttk
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from working_with_files import Work_with_files
 import sys
-from tkinter import ttk
+
 
 class weather_GUI:
 	def __enter__(self):

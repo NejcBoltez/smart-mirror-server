@@ -1,12 +1,19 @@
+import sys
+sys.path.append('../service')
+sys.path.append('../repository')
 import io
 from urllib.request import urlopen
 from PIL import ImageTk
 import PIL.Image
 from working_with_files import Work_with_files
-import tkinter as tk
-from tkinter import *
-
-from tkinter import ttk
+try:
+	import tkinter as tk
+	from tkinter import *
+	from tkinter import ttk
+except:
+	import tk
+	from tk import *
+	from tk import ttk
 
 import sys
 
