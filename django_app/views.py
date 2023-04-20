@@ -89,14 +89,15 @@ def NewsPage(request):
 		saveNewsCodesJSON(str(request.body.decode().replace("news=","").replace("+", " ")).split('&'))
 	
 	if request.method == 'GET':
+		print (request.META['QUERY_STRING'])
 		try :
-			if (len(request.GET.get('remove')) != 0):
-				print(request.GET.get('remove'))
-				newsData.pop(int(request.GET.get('remove')))
-			elif (len(request.GET.get('add')) != 0):
+			if ('add' in request.META['QUERY_STRING']):
 				print(request.GET.get('add'))
 				newsData.append("")
 				print(newsData)
+			elif ('remove' in request.META['QUERY_STRING']):
+				print(request.GET.get('remove'))
+				newsData.pop(int(request.GET.get('remove')))
 			else:
 				data = getDataFromJSON()
 				newsData = data['newsData']
