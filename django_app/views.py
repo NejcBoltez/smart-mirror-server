@@ -17,6 +17,10 @@ import base64
 
 video = 'null'
 usedCam = 'null'
+loginedUser = 'Nejc'
+newsData = []
+
+newsProviders = ["Google","24ur","rtvslo","siol","racunalniske novice"]
 class VideoCamera(object):
 	def __init__(self):
 		try:
@@ -63,9 +67,45 @@ def homePage(request):
 	closeCamera()
 	return render(request,'smartmirror_django/home.html')
 
+def removeNewsCode(request):
+	data = getDataFromJSON()
+	id = 1
+	print("ID" + id)
+	providers = ["Google","24ur","rtvslo","siol","racunalniske novice"]
+	newsData = data['newsData'].pop(id)
+	context = { 'data': newsData,'providers':providers}
+	return render(request,'smartmirror_django/news.html',context)
+
+@csrf_exempt
 def NewsPage(request):
 	closeCamera()
-	return render(request,'smartmirror_django/news.html')
+
+	global newsData
+	global newsProviders
+
+	print(str(request.body))
+
+	if request.method == 'POST':
+		saveNewsCodesJSON(str(request.body.decode().replace("news=","").replace("+", " ")).split('&'))
+	
+	if request.method == 'GET':
+		try :
+			if (len(request.GET.get('remove')) != 0):
+				print(request.GET.get('remove'))
+				newsData.pop(int(request.GET.get('remove')))
+			elif (len(request.GET.get('add')) != 0):
+				print(request.GET.get('add'))
+				newsData.append("")
+				print(newsData)
+			else:
+				data = getDataFromJSON()
+				newsData = data['newsData']
+		except Exception as e:
+			data = getDataFromJSON()
+			newsData = data['newsData']
+		
+	context = { 'data': newsData,'providers':newsProviders}
+	return render(request,'smartmirror_django/news.html',context)
 
 def WeatherPage(request):
 	closeCamera()
@@ -100,13 +140,13 @@ def NewUserPage(request):
 	if request.method == 'POST':
 
 		form=UserForm(request.POST)
-		'''User.objects.create(
+		User.objects.create(
 			name = request.POST.get('name'),
 			#user_id = uuid.any(),
 			#request.POST.get('user_id'),
 			weather_api = request.POST.get('weather_api'),
 			news_api = request.POST.get('news_api')
-		)'''
+		)
 		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
 		image_dir=os.path.join(BASE_DIR, "../Users")
 		user_dir=str(image_dir)+"/"+str(request.POST.get('userName'))
@@ -210,3 +250,32 @@ def process_image(request):
 		
 	# Return a JSON response indicating failure
 	return JsonResponse({'success': False})
+def getDataFromJSON():
+	data = ""
+	BASE_DIR= os.path.dirname(os.path.abspath(__file__))
+	file_to_open=os.path.join(BASE_DIR, "../Users"+os.path.sep+loginedUser+os.path.sep+loginedUser+".json")
+	userData = "" 
+	with open(file_to_open,"r") as f_w:
+		data = f_w.read()
+	return json.loads(data)
+def saveDataToJSON():
+	data = ""
+	BASE_DIR= os.path.dirname(os.path.abspath(__file__))
+	file_to_open=os.path.join(BASE_DIR, "../Users"+os.path.sep+loginedUser+os.path.sep+loginedUser+".json")
+	userData = "" 
+	with open(file_to_open,"r") as f_w:
+		data = f_w.read()
+	return json.loads(data)
+
+def saveNewsCodesJSON(newsCodes):
+	data = ""
+	BASE_DIR= os.path.dirname(os.path.abspath(__file__))
+	file_to_open=os.path.join(BASE_DIR, "../Users"+os.path.sep+loginedUser+os.path.sep+"nejc.json")
+	userData = "" 
+	with open(file_to_open,"r") as f_w:
+		data = json.load(f_w)
+	print(type(newsCodes))
+	data["newsData"] = newsCodes
+	with open(file_to_open,"w") as f_w:
+			json.dump(data,f_w)
+	#return json.loads(data)
