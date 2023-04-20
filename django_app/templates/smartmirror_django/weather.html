@@ -1,7 +1,8 @@
-{% include 'main_header.html'%}
+{% extends 'main_header.html'%}
 <!--<header>
     <link rel="stylesheet" type="text/css" href="weather.css">
 </header>-->
+{% block content %}
 <style>
     .switch {
         position: relative;
@@ -10,7 +11,7 @@
         height: 15px;
     }
     
-    .switch input { 
+    .switch input {
         opacity: 0;
         width: 0;
         height: 0;
@@ -40,21 +41,21 @@
         transition: .4s;
     }
     
-    input:checked + .slider {
+    input:checked+.slider {
         background-color: #2196F3;
     }
     
-    input:focus + .slider {
+    input:focus+.slider {
         box-shadow: 0 0 1px #2196F3;
     }
     
-    input:checked + .slider:before {
+    input:checked+.slider:before {
         -webkit-transform: translateX(5px);
         -ms-transform: translateX(5px);
         transform: translateX(10px);
     }
-    
     /* Rounded sliders */
+    
     .slider.round {
         border-radius: 36px;
     }
@@ -63,24 +64,59 @@
         border-radius: 50%;
     }
 </style>
-<h1>WEATHER</h1>
+<div class="weatherDiv">
+    <h1>WEATHER</h1>
 
-<h2>CITY TO SHOW WEATHER FOR</h2>
-<p1>Use city name</p1>
-<label class="switch">
-    <input type="checkbox">
-    <span class="slider round"></span>
-</label>
-<p1>Use coordinates</p1>
-<br></br>
-<form class="form" action="" method="POST">
-    {% csrf_token %}
-    {% for field in form %}
-        <div class="form__group form__group">
-        <label for="field_name">{{field.label}}: </label>
-        {{field}}
-        </div>
-    {% endfor %}
-    <br>
-    <input type="submit"/>
-</form>
+    <span><h2>CITY TO SHOW WEATHER FOR</h2></span>
+    <p1>Use city name</p1>
+    <label class="switch">
+        <input type="checkbox">
+        <span class="slider round" onclick="btnClick()"></span>
+    </label>
+    <p1>Use coordinates</p1>
+    <br></br>
+    <div class="divForm">
+        <form class="form" action="" method="POST">
+            <table>
+                {% csrf_token %} {% for field in form %}
+                <tr class="form__group">
+                    <td><label for="field_name">{{field.label}}: </label></td>
+                    <td>{{field}}</td>
+                </tr>
+                {% endfor %}
+                <tr>
+                    <td><input class="submitForm" type="submit"></input>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <script>
+        var useCoordinates = false;
+        document.getElementById("id_country").type = "text";
+        document.getElementById("id_city").type = "text";
+        document.getElementById("id_coordX").type = "hidden";
+        document.getElementById("id_coordY").type = "hidden";
+
+
+        function btnClick(event) {
+            console.log(useCoordinates)
+            if (useCoordinates == false) {
+                useCoordinates = true;
+                document.getElementById("id_country").type = "hidden";
+                document.getElementById("id_city").type = "hidden";
+                document.getElementById("id_coordX").type = "text";
+                document.getElementById("id_coordY").type = "text";
+                console.log(document.getElementById("id_coordX"));
+            } else if (useCoordinates == true) {
+                useCoordinates = false;
+                document.getElementById("id_country").type = "text";
+                document.getElementById("id_city").type = "text";
+                document.getElementById("id_coordX").type = "hidden";
+                document.getElementById("id_coordY").type = "hidden";
+            }
+            return useCoordinates;
+        }
+    </script>
+</div>
+{% endblock %}

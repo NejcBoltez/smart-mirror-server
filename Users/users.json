@@ -1,0 +1,18 @@
+{
+    "userID": "",
+    "user": "",
+    "encryptedPassword": "",
+    "apiKeys": {
+        "weather_api_key": "",
+        "news_api_key": ""
+    },
+    "newsData": [{
+        "newsCode": ""
+    }],
+    "weatherData": {
+        "cityCode": "",
+        "countryCode": "",
+        "longtitude": "",
+        "latitude": ""
+    }
+}

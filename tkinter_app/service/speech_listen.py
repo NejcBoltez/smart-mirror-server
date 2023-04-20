@@ -1,3 +1,6 @@
+import sys
+sys.path.append('../controller')
+sys.path.append('../repository')
 import speech_recognition as sr
 import pyttsx3 as pyttsx
 import time

@@ -1,11 +1,19 @@
-import tkinter as tk
-from tkinter import *
+import sys
+sys.path.append('../service')
+sys.path.append('../repository')
+try:
+	import tkinter as tk
+	from tkinter import *
+	from tkinter import ttk
+except:
+	import tk
+	from tk import *
+	from tk import ttk
 import json
 from PIL import ImageTk
 from PIL import Image
 import os
 import subprocess
-from tkinter import ttk
 import sys
 from urllib import request
 from urllib import parse

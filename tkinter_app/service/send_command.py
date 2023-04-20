@@ -1,3 +1,6 @@
+import sys
+sys.path.append('../controller')
+sys.path.append('../repository')
 from working_with_files import Work_with_files
 from speech_listen import Speaking
 from news import display_news

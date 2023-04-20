@@ -1,3 +1,6 @@
+import sys
+sys.path.append('../controller')
+sys.path.append('../repository')
 import cv2
 import os
 import threading
@@ -8,8 +11,14 @@ import numpy
 from working_with_files import Work_with_files
 import time
 import threading
-import tkinter as tk
-from tkinter import *
+try:
+	import tkinter as tk
+	from tkinter import *
+	from tkinter import ttk
+except:
+	import tk
+	from tk import *
+	from tk import ttk
 
 def count_pics_for_user(user):
 	BASE_DIR= os.path.dirname(os.path.abspath(__file__))

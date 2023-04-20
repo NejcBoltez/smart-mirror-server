@@ -1,3 +1,6 @@
+import sys
+sys.path.append('../controller')
+sys.path.append('../repository')
 from urllib import request
 from working_with_files import Work_with_files
 import time

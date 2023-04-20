@@ -1,5 +1,14 @@
-import tkinter as tk
-from tkinter import *
+import sys
+sys.path.append('../service')
+sys.path.append('../repository')
+try:
+	import tkinter as tk
+	from tkinter import *
+	from tkinter import ttk
+except:
+	import tk
+	from tk import *
+	from tk import ttk
 
 class Popup_window:
 	def __init__(self):	

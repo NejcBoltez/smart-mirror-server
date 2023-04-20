@@ -1,5 +1,14 @@
-import tkinter as tk
-from tkinter import *
+import sys
+sys.path.append('../service')
+sys.path.append('../repository')
+try:
+	import tkinter as tk
+	from tkinter import *
+	from tkinter import ttk
+except:
+	import tk
+	from tk import *
+	from tk import ttk
 #Youtube video https://www.youtube.com/watch?v=qmQr0Uyi0Ls
 
 from youtube_search import YoutubeSearch
@@ -9,7 +18,7 @@ from PIL import ImageTk
 import PIL.Image
 from urllib.request import urlopen
 from working_with_files import Work_with_files
-from tkinter import ttk
+
 
 def get_yt_data(search_for):
 	results = YoutubeSearch(str(search_for).replace("_", " "), max_results=20).to_json()

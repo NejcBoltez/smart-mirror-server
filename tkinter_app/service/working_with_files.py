@@ -1,3 +1,6 @@
+import sys
+sys.path.append('../controller')
+sys.path.append('../repository')
 import os
 import json
 
