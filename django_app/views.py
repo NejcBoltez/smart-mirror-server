@@ -15,56 +15,12 @@ import time
 import json
 import base64
 
-video = 'null'
-usedCam = 'null'
 loginedUser = 'Nejc'
 newsData = []
 
 newsProviders = ["Google","24ur","rtvslo","siol","racunalniske novice"]
-class VideoCamera(object):
-	def __init__(self):
-		try:
-			self.video = cv2.VideoCapture(0)
-			(self.grabbed, self.frame) = self.video.read()
-			c = threading.Thread(target=self.update, args=())
-			c.setName("CAM_thread")
-			c.start()
-		except:
-			self.video = cv2.VideoCapture(-1)
-			(self.grabbed, self.frame) = self.video.read()
-			c = threading.Thread(target=self.update, args=())
-			c.setName("CAM_thread")
-			c.start()
-			
-	def __del__(self):
-		self.video.release()
-
-	def get_frame(self):
-		image = self.frame
-		_, jpeg = cv2.imencode('.jpg', image)
-		return jpeg.tobytes()
-
-	def update(self):
-		#(self.grabbed, self.frame) = self.video.read()
-		while True:
-			(self.grabbed, self.frame) = self.video.read()
-			time.sleep(0.1)
-def gen(camera):
-	while True:
-		frame = camera.get_frame()
-		yield(b'--frame\r\n'
-			  b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
-def detect(camera):
-	while True:
-	
-		_, img = gen(camera)
-		gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-		faces = face_cascade.detectMultiScale(gray, 1.1, 4)
-		for (x, y, w, h) in faces:
-			cv2.rectangle(img, (x, y), (x+w, y+h), (255, 0, 0), 2)
 
 def homePage(request):
-	closeCamera()
 	return render(request,'smartmirror_django/home.html')
 
 def removeNewsCode(request):
@@ -78,12 +34,9 @@ def removeNewsCode(request):
 
 @csrf_exempt
 def NewsPage(request):
-	closeCamera()
 
 	global newsData
 	global newsProviders
-
-	print(str(request.body))
 
 	if request.method == 'POST':
 		saveNewsCodesJSON(str(request.body.decode().replace("news=","").replace("+", " ")).split('&'))
@@ -109,24 +62,28 @@ def NewsPage(request):
 	return render(request,'smartmirror_django/news.html',context)
 
 def WeatherPage(request):
-	closeCamera()
 	if request.method == 'POST':
-
-		form=WeatherForm(request.POST)
+		print("TEST")
+		print (request.body.decode())
+		saveWeatherDataToJSON(request.body.decode().split("&"))
+		'''form=WeatherForm(request.POST)
 		Weather.objects.create(
 			city = request.POST.get('city'),
 			country = request.POST.get('country'),
 			coordX = request.POST.get('coordX'),
 			coordY = request.POST.get('coordY')
-		)
+		)'''
 	else:
 		form=WeatherForm()
+	form = WeatherForm()
 	context = {'form': form}
 	return render(request,'smartmirror_django/weather.html', context)
+
 def WeatherConfSave(request):
 	closeCamera()
 	weatherForm=WeatherForm()
 	if request.method == 'POST':
+		print(str(request.body))
 		Weather.objects.create(
 			city = request.POST.get('city'),
 			country = request.POST.get('country'),
@@ -185,11 +142,6 @@ def UserPicture(request):
 	except Exception as e:  # This is bad! replace it with proper handling
 		print(e)
 
-def closeCamera():
-	global usedCam
-	if (usedCam != 'null'):
-		usedCam.__del__()
-		usedCam = 'null'
 
 def UserPage(request):
 	if request.method == 'POST':
@@ -216,14 +168,11 @@ def UserPage(request):
 		with open(file_to_open,"w") as f_w:
 			json.dump(userData,f_w)
 		
-			
 	else:
 		form=UserForm()
 	
 	context = {'form': form}
 	return render(request,'smartmirror_django/user_prop.html', context)
-def showCamera(request):
-	return render(request,'smartmirror_django/cameraTest.html')
 
 @csrf_exempt
 def process_image(request):
@@ -251,6 +200,7 @@ def process_image(request):
 		
 	# Return a JSON response indicating failure
 	return JsonResponse({'success': False})
+
 def getDataFromJSON():
 	data = ""
 	BASE_DIR= os.path.dirname(os.path.abspath(__file__))
@@ -259,6 +209,7 @@ def getDataFromJSON():
 	with open(file_to_open,"r") as f_w:
 		data = f_w.read()
 	return json.loads(data)
+
 def saveDataToJSON():
 	data = ""
 	BASE_DIR= os.path.dirname(os.path.abspath(__file__))
@@ -275,8 +226,21 @@ def saveNewsCodesJSON(newsCodes):
 	userData = "" 
 	with open(file_to_open,"r") as f_w:
 		data = json.load(f_w)
-	print(type(newsCodes))
 	data["newsData"] = newsCodes
 	with open(file_to_open,"w") as f_w:
-			json.dump(data,f_w)
+		json.dump(data,f_w)
 	#return json.loads(data)
+def saveWeatherDataToJSON(weatherData):
+	print(weatherData)
+	data = ""
+	if ("csrf" in weatherData[0]):
+		print(True)
+		del weatherData[0]
+	BASE_DIR= os.path.dirname(os.path.abspath(__file__))
+	file_to_open=os.path.join(BASE_DIR, "../Users"+os.path.sep+loginedUser+os.path.sep+"nejc.json")
+	userData = "" 
+	with open(file_to_open,"r") as f_w:
+		data = json.load(f_w)
+	data["weatherData"] = weatherData
+	with open(file_to_open,"w") as f_w:
+		json.dump(data,f_w)
