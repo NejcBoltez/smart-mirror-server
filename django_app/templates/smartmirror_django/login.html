@@ -1,0 +1,10 @@
+{% extends 'main_header.html' %} {% block login %}
+<form action="/login" method="POST">
+    <p1>Username: </p1>
+    <input type="text" />
+    <p1>Password: </p1>
+    <input type="password" />
+    <br/>
+    <input type="submit" />
+</form>
+{% endblock %}
