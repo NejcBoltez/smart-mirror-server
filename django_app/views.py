@@ -80,7 +80,6 @@ def WeatherPage(request):
 	return render(request,'smartmirror_django/weather.html', context)
 
 def WeatherConfSave(request):
-	closeCamera()
 	weatherForm=WeatherForm()
 	if request.method == 'POST':
 		print(str(request.body))
@@ -94,7 +93,6 @@ def WeatherConfSave(request):
 	return redirect('home', RequestContext(request))
 
 def NewUserPage(request):
-	closeCamera()
 	if request.method == 'POST':
 
 		form=UserForm(request.POST)
@@ -230,6 +228,7 @@ def saveNewsCodesJSON(newsCodes):
 	with open(file_to_open,"w") as f_w:
 		json.dump(data,f_w)
 	#return json.loads(data)
+	
 def saveWeatherDataToJSON(weatherData):
 	print(weatherData)
 	data = ""
