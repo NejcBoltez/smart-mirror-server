@@ -58,6 +58,7 @@
     </style>
     <header>
         <h1 class="title">WELCOME TO MY SMART MIRROR WEB APP</h1>
+        <a href="/logout">LOGOUT</a>
     </header>
     <div class="home-container">
         <div class="nav-container">
@@ -74,7 +75,10 @@
             <br></br>
         </div>
         <div class="value-container">
-            {% block content%} {% endblock %}
+            {% if user.is_authenticated %}
+            <h1>TEST</h1>{% block content%} {% endblock %} {%else%}
+            <h1>YOU ARE NOT LOGINED YET. PLEASE LOGIN.</h1>
+            <a href="/login">LOGIN</a>{% block login %} {% endblock %} {%endif%}
         </div>
 
         <div class="footer">

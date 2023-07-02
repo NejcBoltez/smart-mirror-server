@@ -14,6 +14,9 @@ from django.views.decorators.gzip import gzip_page
 import time
 import json
 import base64
+from django.contrib.auth import authenticate, login, logout
+
+
 
 loginedUser = 'Nejc'
 newsData = []
@@ -243,3 +246,23 @@ def saveWeatherDataToJSON(weatherData):
 	data["weatherData"] = weatherData
 	with open(file_to_open,"w") as f_w:
 		json.dump(data,f_w)
+
+@csrf_exempt
+def Login(request):
+	if request.method == 'POST':
+		user = authenticate(username="nejc", password="Gabrje157")
+		if user is not None:
+			# A backend authenticated the credentials
+			#saveNewsCodesJSON(str(request.body.decode().replace("news=","").replace("+", " ")).split('&'))
+			print(user)
+			login(request, user)
+			return render(request,'smartmirror_django/home.html')
+		else:
+			# No backend authenticated the credentials
+			print("Problem")
+	else:
+		return render(request,'smartmirror_django/login.html')
+@csrf_exempt
+def Logout(request):
+	logout(request)
+	return render(request,'smartmirror_django/login.html')
