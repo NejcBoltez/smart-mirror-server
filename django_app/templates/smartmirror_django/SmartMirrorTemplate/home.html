@@ -21,13 +21,31 @@
     </div>
     <div class="center">
         <h2>HELLO NEJC</h2>
+        <div class="bottom">
+            <div class="news">
+                <div>
+                    {%for code in newsData%}
+                    <p>{{code.description}} - {{code.source.name}}</p>{%endfor%}
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="right">
         <div class="weather">
-            <h2>WEATHER</h2>
+            <div>
+                {%for code in weatherData.weather%}
+                <img src="{{code.icon}}.PNG" alt="ICON"> {%endfor%}
+            </div>
+            <div>
+                <p>TEMP: {{weatherData.main.temp}}</p>
+                <p>MIN TEMP: {{weatherData.main.temp_min}}</p>
+                <p>MAX TEMP: {{weatherData.main.temp_max}}</p>
+                <p>HUMIDITY: {{weatherData.main.humidity}}</p>
+            </div>
         </div>
     </div>
+
     {%elif data == "weather"%}
     <div class="left">
     </div>
