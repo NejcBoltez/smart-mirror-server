@@ -1,0 +1,25 @@
+{% extends 'smartmirror_django/SmartMirrorTemplate/home.html' %} {% block ytSearch %}
+<div class="left">
+    <div class="class">
+        <h1>Weather</h1>
+
+        <p class="clock"></p>
+    </div>
+</div>
+<div class="center">
+    {%for code in values%}
+    <div class="ytSearchItem">
+        {%for c in code.thumbnails|slice:":1"%}
+        <p>{{code.title}}</p>
+        <img width="230" src="{{c}}" alt="" />
+        <p></p> {%endfor%}
+    </div>
+    {%endfor%}
+</div>
+
+<div class="right ">
+    <div class="weather ">
+        <h2>WEATHER</h2>
+    </div>
+</div>
+{%endblock%}

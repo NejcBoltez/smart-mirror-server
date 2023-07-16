@@ -1,0 +1,88 @@
+{% extends 'BlankSmartMirrorPage.html' %} {% block content %}
+<script>
+    window.onload = function() {
+        setInterval(updateTime, 1000);
+    };
+
+    function updateTime() {
+        const d = new Date();
+        const dText = d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
+        document.getElementsByClassName("clock")[0].textContent = dText;
+    }
+</script>
+<div class="content">
+    {%if data == "home"%}
+    <div class="left">
+        <div class="class">
+            <h1>TIME</h1>
+
+            <p class="clock"></p>
+        </div>
+    </div>
+    <div class="center">
+        <h2>HELLO NEJC</h2>
+    </div>
+
+    <div class="right">
+        <div class="weather">
+            <h2>WEATHER</h2>
+        </div>
+    </div>
+    {%elif data == "weather"%}
+    <div class="left">
+    </div>
+    <div class="center">
+        <h2>HELLO NEJC</h2>
+    </div>
+
+    <div class="right">
+    </div>
+    {%elif data == "news"%}
+    <div class="left">
+    </div>
+    <div class="center">
+        {%for code in values%}
+        <div class="searchItem">
+            <p>{{code.title}}</p>
+            <img width="230" src="{{code.urlToImage}}" alt="" />
+            <p>{{code.description}}</p>
+        </div>
+        {%endfor%}
+    </div>
+
+    <div class="right">
+    </div>
+    {%elif data == "ytStream"%}
+    <div class="left">
+    </div>
+    <div class="center">
+
+        <div>
+            {%for c in values.thumbnails|slice:":1"%}
+            <p>{{values.title}}</p>
+            <iframe width="420" height="315" src={{values.videoURL}}>
+                </iframe> {%endfor%}
+        </div>
+
+    </div>
+
+    <div class="right">
+    </div>
+    {%elif data == "ytSearch"%}
+    <div class="left">
+    </div>
+    <div class="center">
+        {%for code in values%}
+        <div class="searchItem">
+            {%for c in code.thumbnails|slice:":1"%}
+            <p>{{code.title}}</p>
+            <img width="230" src="{{c}}" alt="" />
+            <p></p> {%endfor%}
+        </div>
+        {%endfor%}
+    </div>
+
+    <div class="right">
+    </div>{%endif%}
+</div>
+{% endblock %}
