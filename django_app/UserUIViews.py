@@ -24,7 +24,7 @@ newsData = []
 newsProviders = ["Google","24ur","rtvslo","siol","racunalniske novice"]
 
 def homePage(request):
-	return render(request,'smartmirror_django/home.html')
+	return render(request,'smartmirror_django/webUI/home.html')
 
 def removeNewsCode(request):
 	data = getDataFromJSON()
@@ -33,7 +33,7 @@ def removeNewsCode(request):
 	providers = ["Google","24ur","rtvslo","siol","racunalniske novice"]
 	newsData = data['newsData'].pop(id)
 	context = { 'data': newsData,'providers':providers}
-	return render(request,'smartmirror_django/news.html',context)
+	return render(request,'smartmirror_django/webUI/news.html',context)
 
 @csrf_exempt
 def NewsPage(request):
@@ -62,7 +62,7 @@ def NewsPage(request):
 			newsData = data['newsData']
 		
 	context = { 'data': newsData,'providers':newsProviders}
-	return render(request,'smartmirror_django/news.html',context)
+	return render(request,'smartmirror_django/webUI/news.html',context)
 
 def WeatherPage(request):
 	if request.method == 'POST':
@@ -80,7 +80,7 @@ def WeatherPage(request):
 		form=WeatherForm()
 	form = WeatherForm()
 	context = {'form': form}
-	return render(request,'smartmirror_django/weather.html', context)
+	return render(request,'smartmirror_django/webUI/weather.html', context)
 
 def WeatherConfSave(request):
 	weatherForm=WeatherForm()
@@ -129,7 +129,7 @@ def NewUserPage(request):
 		form=UserForm()
 	
 	context = {'form': form}
-	return render(request,'smartmirror_django/create_new_user.html', context)
+	return render(request,'smartmirror_django/webUI/create_new_user.html', context)
 
 @gzip_page
 def UserPicture(request):
@@ -173,7 +173,7 @@ def UserPage(request):
 		form=UserForm()
 	
 	context = {'form': form}
-	return render(request,'smartmirror_django/user_prop.html', context)
+	return render(request,'smartmirror_django/webUI/user_prop.html', context)
 
 @csrf_exempt
 def process_image(request):
@@ -256,13 +256,13 @@ def Login(request):
 			#saveNewsCodesJSON(str(request.body.decode().replace("news=","").replace("+", " ")).split('&'))
 			print(user)
 			login(request, user)
-			return render(request,'smartmirror_django/home.html')
+			return render(request,'smartmirror_django/webUI/home.html')
 		else:
 			# No backend authenticated the credentials
 			print("Problem")
 	else:
-		return render(request,'smartmirror_django/login.html')
+		return render(request,'smartmirror_django/webUI/login.html')
 @csrf_exempt
 def Logout(request):
 	logout(request)
-	return render(request,'smartmirror_django/login.html')
+	return render(request,'smartmirror_django/webUI/login.html')
