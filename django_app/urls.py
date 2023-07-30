@@ -3,6 +3,7 @@ from django.contrib import admin
 from django.urls import path, include
 from . import UserUIViews
 from . import SmartMirrorViews
+from . import TvAppViews
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -14,5 +15,6 @@ urlpatterns = [
     path('login', UserUIViews.Login, name="LoginPage"),
     path('logout', UserUIViews.Logout, name="LogoutPage"),
     path('process_image/', UserUIViews.process_image, name='process_image'),
-    path('smart_mirror/<str:test>', SmartMirrorViews.homePage, name='process_image')
+    path('smart_mirror/<str:test>', SmartMirrorViews.homePage, name='smart_mirror'),
+    path('tvApp', TvAppViews.homePage, name='tvApp')
 ]
