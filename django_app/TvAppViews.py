@@ -19,4 +19,4 @@ from .working_with_files import Work_with_files
 
 
 def homePage(request):
-	return render(request,'smartmirror_django/Tvapp/home.html')
+	return render(request,'smartmirror_django/TvApp/home.html')
