@@ -18,5 +18,5 @@ from django.contrib.auth import authenticate, login, logout
 from .working_with_files import Work_with_files
 
 
-def homePage(request,test):
-	return render(request,'smartmirror_django/Tvapp/home.html',context)
+def homePage(request):
+	return render(request,'smartmirror_django/Tvapp/home.html')

@@ -1,7 +1,8 @@
+{% extends 'BlankSmartMirrorPage.html' %} {% block content %}
 <div>
     <script>
         window.onload = function() {
-            setInterval(updateImg, 1000);
+            setInterval(updateImg, 10000);
         };
 
         function updateImg() {
@@ -11,3 +12,4 @@
     <h1>TV APPLICATION</h1>
     <img src="https://meteo.arso.gov.si/uploads/probase/www/observ/radar/si0-rm-anim.gif" alt="">
 </div>
+{% endblock %}
