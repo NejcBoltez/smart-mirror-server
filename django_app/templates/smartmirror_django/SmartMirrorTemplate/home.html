@@ -32,9 +32,11 @@
     </div>
     <div class="right">
         <div class="weather">
+            {% load static %}
             <div>
                 {%for code in weatherData.weather%}
-                <img src="{{code.icon}}.PNG" alt="ICON"> {%endfor%}
+                <p>{{code.icon}}</p>
+                <img src="images/01d.PNG" alt="ICON"> {%endfor%}
             </div>
             <div>
                 <p>TEMP: {{weatherData.main.temp}}</p>
