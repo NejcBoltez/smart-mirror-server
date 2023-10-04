@@ -4,6 +4,7 @@ from django.urls import path, include
 from . import UserUIViews
 from . import SmartMirrorViews
 from . import TvAppViews
+from . import DashboardViews
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -16,5 +17,6 @@ urlpatterns = [
     path('logout', UserUIViews.Logout, name="LogoutPage"),
     path('process_image/', UserUIViews.process_image, name='process_image'),
     path('smart_mirror/<str:test>', SmartMirrorViews.homePage, name='smart_mirror'),
-    path('tvApp', TvAppViews.homePage, name='tvApp')
+    path('tvApp', TvAppViews.homePage, name='tvApp'),
+    path('dashboard', DashboardViews.homePage, name='dashboard')
 ]
