@@ -1,4 +1,4 @@
-{% extends 'BlankSmartMirrorPage.html' %} {% block content %}
+{% extends 'Dashboard.html' %} {% block content %}
 <script>
     window.onload = function() {
         setInterval(updateTime, 1000);
@@ -7,22 +7,30 @@
     function updateTime() {
         const d = new Date();
         const timeText = d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
-        const dateText = d.getDate();
+        const dateText = d.getDate() + "/" + parseInt(parseInt(d.getUTCMonth()) + 1) + "/" + d.getFullYear();
         document.getElementsByClassName("clock")[0].textContent = timeText;
-        document.getElementsByClassName("calendar")[0].textContent = dateText;
+        //document.getElementsByClassName("calendar")[0].textContent = dateText;
+        document.getElementsByClassName("day")[0].textContent = d.getDate();
+        document.getElementsByClassName("monthYear")[0].textContent = parseInt(parseInt(d.getUTCMonth()) + 1) + "/" + d.getFullYear();
     }
 </script>
 <div class="top">
-    
+
 </div>
-<div class="center">
-    <div class="left">
+<div class="content">
+    <div class="dashboardItem">
         <p class="calendar"></p>
+
+        <p class="day"></p>
+
+        <p class="monthYear"></p>
     </div>
-    <div class="center">
-        <p class="clock"></p>
+    <div class="dashboardItem">
+        <div>
+            <p class="clock"></p>
+        </div>
     </div>
-    <div class="right">
+    <div class="dashboardItem">
         <div class="weather">
             <div>
                 <p>TEMP: {{weatherData.main.temp}}</p>
