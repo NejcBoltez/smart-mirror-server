@@ -36,10 +36,14 @@
                     <option name="news" value="{{p}}">{{p}}</option>
                 {% endif %}
             {% endfor %}
-        </select>
-        <a type="button" href="news?remove={{ forloop.counter0 }}" class="remove" id="{{ forloop.counter0 }}"> - </a>
+        </select> {% load static %}
+        <a type="button" href="news?remove={{ forloop.counter0 }}" class="remove" id="{{ forloop.counter0 }}">
+            <img src="{%static 'images/remove.png'%}" height="20px" alt="remove">
+        </a>
         <br> <br>{% endfor %}
-        <a href="news?add=true" type="button" class="addNew"> + </a>
+        <a href="news?add=true" type="button" class="addNew">
+            <img src="{%static 'images/appendNew.png'%}" height="20px" alt="remove">
+        </a>
 
         <input type="submit" />
     </form>
