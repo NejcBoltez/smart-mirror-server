@@ -1,22 +1,18 @@
-import sys
 import os
 import json
 from youtube_search import YoutubeSearch
 import subprocess
 import sys
 from urllib import request
-from urllib import parse
 
 class Work_with_files:
 	def get_yt_data(search_for):
 		results = YoutubeSearch(str(search_for).replace("_", " "), max_results=20).to_json()
 		get_results=json.loads(results)
-		#save_youtube_data(get_results)
 		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
 		file_to_open=os.path.join(BASE_DIR, "../json_data"+os.path.sep+"youtube_data.json")
 		with open(file_to_open,"w") as f_w:
 			json.dump(get_results,f_w)
-		#print(get_results)
 		return get_results
 
 	def getSaved_yt_data():
@@ -36,6 +32,7 @@ class Work_with_files:
 		print(r_p['videos'][videoToPlay])
 		r_p['videos'][videoToPlay]['videoURL'] = "https://www.youtube.com/embed/" + r_p['videos'][videoToPlay]['id'] + "?autoplay=1"
 		return r_p['videos'][videoToPlay]
+	
 	def save_image(url_of_image):
 		url_split=url_of_image.split(".")
 		file_end=url_split[len(url_split)-1]
@@ -49,37 +46,24 @@ class Work_with_files:
 			start_popup.wait()
 		except Exception as e:
 			print(e)
+
 	def get_wiki_data(question):
 		wiki_api_url="https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts|pageimages&exsentences=6&pithumbsize=500&exintro&explaintext&redirects=1&titles="+str(question.replace("_", "%20"))#str(title[0])
 		print(wiki_api_url)
 		with request.urlopen(wiki_api_url) as wiki_resp:
 			read_wiki=json.loads(wiki_resp.read().decode())
-			#print(read_wiki)
 
 		wiki_response=list(read_wiki["query"]["pages"].values())[0]
 		title=wiki_response["title"]
 		answer=wiki_response["extract"]
-		#print(wiki_response["query"]["pages"].values())
 		try:
 			url_of_image=wiki_response["thumbnail"]["source"]
 		except Exception as e:
 			print(str(e))
 			wiki_response["thumbnail"]={"source":""}
 		print(wiki_response)
-		#save_image(wiki_api_url)
-		'''url_split=url_of_image.split(".")
-		file_end=url_split[len(url_split)-1]
-		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
-		wiki=os.path.join(BASE_DIR, "./wiki_pictures/wiki.jpg")
-		file_name="./wiki_pictures/wiki."+str(file_end)
-		if(os.path.isfile(file_name)):
-			os.remove(file_name)
-		try:
-			start_popup=subprocess.Popen(["wget", "-O",file_name, url_of_image])
-			start_popup.wait()
-		except Exception as e:
-			print(e)'''
 		return wiki_response
+	
 	def create_dir_for_user(new_user):
 		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
 		image_dir=os.path.join(BASE_DIR, "../Users")
@@ -151,7 +135,7 @@ class Work_with_files:
 		for i in r_p['list']:
 			date = i['dt_txt'].split(" ")[0]
 			if (date not in allDates):
-    				allDates.append(date)
+					allDates.append(date)
 		return allDates
 	def read_weather_data():
 		r_p=""
