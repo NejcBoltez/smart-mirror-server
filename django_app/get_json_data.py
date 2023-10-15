@@ -11,10 +11,6 @@ while(True):
 		APIK_news=get_api["news_api"]
 		api = NewsApiClient(api_key=APIK_news)
 		news_response = api.get_top_headlines(sources='bbc-news')
-		'''URLnews = "https://newsapi.org/v2/top-headlines?country=si&apiKey="+APIK_news
-		with request.urlopen(URLnews) as news_resp:
-			news_response=json.loads(news_resp.read().decode())'''
-		#print(news_response["articles"])
 
 		Work_with_files.save_news_data(news_response)
 

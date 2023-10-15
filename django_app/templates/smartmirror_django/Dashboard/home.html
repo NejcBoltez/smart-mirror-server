@@ -9,7 +9,6 @@
         const timeText = d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
         const dateText = d.getDate() + "/" + parseInt(parseInt(d.getUTCMonth()) + 1) + "/" + d.getFullYear();
         document.getElementsByClassName("clock")[0].textContent = timeText;
-        //document.getElementsByClassName("calendar")[0].textContent = dateText;
         document.getElementsByClassName("day")[0].textContent = d.getDate();
         document.getElementsByClassName("monthYear")[0].textContent = parseInt(parseInt(d.getUTCMonth()) + 1) + "/" + d.getFullYear();
     }
