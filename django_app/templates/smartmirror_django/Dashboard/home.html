@@ -2,6 +2,8 @@
 <script>
     window.onload = function() {
         setInterval(updateTime, 1000);
+        setInterval(getSpeedTest, 1000);
+
     };
 
     function updateTime() {
@@ -12,9 +14,35 @@
         document.getElementsByClassName("day")[0].textContent = d.getDate();
         document.getElementsByClassName("monthYear")[0].textContent = parseInt(parseInt(d.getUTCMonth()) + 1) + "/" + d.getFullYear();
     }
+    async function getSpeedTest() {
+        let startTime, endTime;
+        let kboutput = document.getElementsByClassName("kbs")[0];
+        let mboutput = document.getElementsByClassName("mbs")[0];
+        let urlForTesting = "https://source.unsplash.com/random?topics=natur"
+        console.log(urlForTesting)
+        startTime = new Date().getTime();
+        await fetch(urlForTesting).then((response) => {
+            endTime = new Date().getTime();
+            console.log("endTime: " + endTime)
+            console.log("startTime: " + startTime)
+            console.log(endTime - startTime)
+            imageSize = response.headers.get("content-length");
+            let timeDuration = (endTime - startTime) / 1000;
+            let loadedBits = imageSize * 8;
+            console.log(loadedBits)
+            console.log(timeDuration)
+            let speedInBps = (loadedBits / timeDuration).toFixed(2);
+            let speedInKbps = (speedInBps / 1024).toFixed(2);
+            let speedInMbps = (speedInKbps / 1024).toFixed(2);
+            console.log(speedInKbps)
+            document.getElementsByClassName("kbs")[0].textContent = speedInKbps + " Kbs"
+            document.getElementsByClassName("mbs")[0].textContent = speedInMbps + " Mbs"
+        });
+    }
 </script>
 <div class="top">
-
+    <span style="float: left;" class="kbs"></span>
+    <span style="float: right;" class="mbs"></span>
 </div>
 <div class="content">
     <div class="dashboardItem">

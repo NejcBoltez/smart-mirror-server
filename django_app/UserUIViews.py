@@ -1,15 +1,14 @@
 from django.shortcuts import redirect, render
-from django.http import StreamingHttpResponse, JsonResponse
+from django.http import JsonResponse
 from django.template import RequestContext
-from .models import User, Weather
-from .forms import WeatherForm,UserForm
+from .models import User
+from .forms import UserForm
 import uuid
 import cv2
 import os
 import base64
 import numpy as np
 from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.gzip import gzip_page
 import json
 import base64
 from django.contrib.auth import authenticate, login, logout
@@ -73,7 +72,7 @@ def WeatherPage(request):
 		saveWeatherDataToJSON(request.body.decode().split("&"))
 	else:
 		form=WeatherForm()
-	form = WeatherForm()
+	Form = WeatherForm()
 	context = {'form': form}
 	return render(request,'smartmirror_django/webUI/weather.html', context)
 

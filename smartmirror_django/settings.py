@@ -102,7 +102,11 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+    "https://8.8.8.8",
+]
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
