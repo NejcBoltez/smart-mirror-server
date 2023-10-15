@@ -1,14 +1,12 @@
 from django.shortcuts import render
 from .working_with_files import Work_with_files
 
-
-
-
 loginedUser = 'Nejc'
 youtubeData = []
 
 newsProviders = ["Google","24ur","rtvslo","siol","racunalniske novice"]
 
+#Return the Home page
 def homePage(request,test):
 	global youtubeData
 	newsData = 1

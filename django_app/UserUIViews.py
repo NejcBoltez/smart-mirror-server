@@ -21,9 +21,11 @@ newsData = []
 
 newsProviders = ["Google","24ur","rtvslo","siol","racunalniske novice"]
 
+#Return the Home page
 def homePage(request):
 	return render(request,'smartmirror_django/webUI/home.html')
 
+#remove the news provider from the json
 def removeNewsCode(request):
 	data = getDataFromJSON()
 	id = 1
@@ -33,6 +35,7 @@ def removeNewsCode(request):
 	context = { 'data': newsData,'providers':providers}
 	return render(request,'smartmirror_django/webUI/news.html',context)
 
+#Return the News page
 @csrf_exempt
 def NewsPage(request):
 
@@ -62,6 +65,7 @@ def NewsPage(request):
 	context = { 'data': newsData,'providers':newsProviders}
 	return render(request,'smartmirror_django/webUI/news.html',context)
 
+#Return the Weather Page
 def WeatherPage(request):
 	if request.method == 'POST':
 		print("TEST")
@@ -73,6 +77,7 @@ def WeatherPage(request):
 	context = {'form': form}
 	return render(request,'smartmirror_django/webUI/weather.html', context)
 
+#Save the new Weather configuration
 def WeatherConfSave(request):
 	weatherForm=WeatherForm()
 	if request.method == 'POST':
@@ -86,6 +91,7 @@ def WeatherConfSave(request):
 		print(request.POST.get('weather_api'))
 	return redirect('home', RequestContext(request))
 
+#Return the page to create a new user
 def NewUserPage(request):
 	if request.method == 'POST':
 
@@ -120,6 +126,7 @@ def NewUserPage(request):
 	context = {'form': form}
 	return render(request,'smartmirror_django/webUI/create_new_user.html', context)
 
+#Return the user properties page
 def UserPage(request):
 	if request.method == 'POST':
 
@@ -144,6 +151,7 @@ def UserPage(request):
 	context = {'form': form}
 	return render(request,'smartmirror_django/webUI/user_prop.html', context)
 
+#Save the user image for face recognition
 @csrf_exempt
 def process_image(request):
 	if request.method == 'POST':
@@ -171,6 +179,7 @@ def process_image(request):
 	# Return a JSON response indicating failure
 	return JsonResponse({'success': False})
 
+#Getting data from JSON file
 def getDataFromJSON():
 	data = ""
 	BASE_DIR= os.path.dirname(os.path.abspath(__file__))
@@ -180,6 +189,7 @@ def getDataFromJSON():
 		data = f_w.read()
 	return json.loads(data)
 
+#Saving data to JSON
 def saveDataToJSON():
 	data = ""
 	BASE_DIR= os.path.dirname(os.path.abspath(__file__))
@@ -189,6 +199,7 @@ def saveDataToJSON():
 		data = f_w.read()
 	return json.loads(data)
 
+#Saving News providers to JSON
 def saveNewsCodesJSON(newsCodes):
 	data = ""
 	BASE_DIR= os.path.dirname(os.path.abspath(__file__))
@@ -200,7 +211,8 @@ def saveNewsCodesJSON(newsCodes):
 	with open(file_to_open,"w") as f_w:
 		json.dump(data,f_w)
 	#return json.loads(data)
-	
+
+#Save weather data to JSON	
 def saveWeatherDataToJSON(weatherData):
 	print(weatherData)
 	data = ""
@@ -216,6 +228,7 @@ def saveWeatherDataToJSON(weatherData):
 	with open(file_to_open,"w") as f_w:
 		json.dump(data,f_w)
 
+#Login function
 @csrf_exempt
 def Login(request):
 	if request.method == 'POST':
@@ -229,6 +242,7 @@ def Login(request):
 	else:
 		return render(request,'smartmirror_django/webUI/login.html')
 	
+#Logout function
 @csrf_exempt
 def Logout(request):
 	logout(request)
