@@ -97,9 +97,7 @@ def NewUserPage(request):
 
 		form=UserForm(request.POST)
 		User.objects.create(
-			name = request.POST.get('name'),
-			weather_api = request.POST.get('weather_api'),
-			news_api = request.POST.get('news_api')
+			userName = request.POST.get('userName'),
 		)
 		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
 		image_dir=os.path.join(BASE_DIR, "../Users")
