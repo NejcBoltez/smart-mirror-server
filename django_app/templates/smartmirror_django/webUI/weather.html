@@ -68,14 +68,15 @@
     <h1>WEATHER</h1>
 
     <span><h2>CITY TO SHOW WEATHER FOR</h2></span>
-    <p1>Use city name</p1>
-    <label class="switch">
-        <input type="checkbox">
-        <span class="slider round" onclick="btnClick()"></span>
-    </label>
-    <p1>Use coordinates</p1>
-    <br></br>
+
     <form class="form" action="" method="POST">
+        <p1>Use city name</p1>
+        <label class="switch">
+            <input name="test" type="checkbox">
+            <span class="slider round" onclick="btnClick()"></span>
+        </label>
+        <p1>Use coordinates</p1>
+        <br></br>
         {% csrf_token %} {% for field in form %}
         <div class="form__group form__group">
             <label for="name">{{field.label}}: </label> {{field}}

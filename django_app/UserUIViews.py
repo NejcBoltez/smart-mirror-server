@@ -47,7 +47,7 @@ def NewsPage(request):
 		News.objects.create(
 			user_id = request.user.id,
 			news_api = request.POST.get('news_api'),
-			news_file = request.user.name + '/news.json',
+			news_file = request.user.username + '/news.json',
 		)
 		saveNewsCodesJSON(str(request.body.decode().replace("news=","").replace("+", " ")).split('&'))
 	
@@ -76,7 +76,9 @@ def WeatherPage(request):
 	if request.method == 'POST':
 		print("TEST")
 		print (request.body.decode())
-		print (request.POST.get('api_key'))
+		useCoordinates = False
+		if (request.POST.get('test') == 'on'):
+			useCoordinates = True	
 		Weather.objects.create(
 			user_id = request.user.id,
 			weather_api = request.POST.get('weather_api'),
@@ -84,7 +86,8 @@ def WeatherPage(request):
 			weather_country = request.POST.get('weather_country'),
 			weather_longitude = request.POST.get('weather_longitude'),
 			weather_latitude = request.POST.get('weather_latitude'),
-			weather_file = request.user.name + '/weather.json',
+			weather_file = request.user.username + '/weather.json',
+			use_coordinates = useCoordinates
 		)
 		#saveWeatherDataToJSON(request.body.decode().split("&"))
 	else:

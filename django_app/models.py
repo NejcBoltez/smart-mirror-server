@@ -25,7 +25,7 @@ class Weather(models.Model):
     class Meta:
             ordering = ['-updated', '-created']
     def __str__(self):
-        return self.weather_city + "   (" + str(self.user_id) + ")"
+        return str(self.weather_city) + "   (" + str(self.user_id) + ")"
 class News(models.Model):
     user_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     news_api = models.CharField(max_length=200)
