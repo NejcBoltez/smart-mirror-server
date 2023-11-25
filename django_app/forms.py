@@ -1,20 +1,20 @@
 from dataclasses import field
-from .models import Weather, News, User
+from .models import Weather, News, UserData
 from django import forms
 
-class UserForm(forms.Form):
-    userName = forms.CharField(max_length=200)
-    userPassword = forms.CharField(max_length=200)
+class UserDataForm(forms.Form):
+    weather_api = forms.CharField(max_length=200)
+    news_api = forms.CharField(max_length=200)
     class Meta:
-        model=User
+        model=UserData
         fields = '__all__'
+        
 class WeatherForm(forms.Form):
     weather_api = forms.CharField(max_length=200)
     weather_city = forms.CharField(max_length=200)
     weather_country = forms.CharField(max_length=200)
     weather_longitude = forms.CharField(max_length=200)
     weather_latitude = forms.CharField(max_length=200)
-    use_coordinates = forms.BooleanField()
     class Meta:
         model=Weather
         fields = '__all__'

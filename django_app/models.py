@@ -1,10 +1,11 @@
 from django.db import models
 import uuid
 
-class User(models.Model):
+class UserData(models.Model):
     user_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    userName = models.CharField(max_length=200, unique=True)
-    userPassword = models.CharField(max_length=200, unique=True)
+    userName = models.CharField(max_length=200, editable=False)
+    weather_api = models.CharField(max_length=200)
+    news_api = models.CharField(max_length=200)
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
     class Meta:
@@ -13,7 +14,6 @@ class User(models.Model):
         return self.userName + "   (" + str(self.user_id) + ")"
 class Weather(models.Model):
     user_id = models.UUIDField(default=uuid.uuid4, editable=False)
-    weather_api = models.CharField(max_length=200)
     weather_city = models.CharField(max_length=200, null=True)
     weather_country = models.CharField(max_length=200, null=True)
     weather_longitude = models.CharField(max_length=200, null=True)
@@ -28,7 +28,6 @@ class Weather(models.Model):
         return str(self.weather_city) + "   (" + str(self.user_id) + ")"
 class News(models.Model):
     user_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    news_api = models.CharField(max_length=200)
     news_file = models.CharField(max_length=200)
     news_providers = models.CharField(max_length=200)
     updated = models.DateTimeField(auto_now=True)

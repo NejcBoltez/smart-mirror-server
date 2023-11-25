@@ -1,8 +1,8 @@
 from django.shortcuts import redirect, render
 from django.http import StreamingHttpResponse, JsonResponse
 from django.template import RequestContext
-from .models import Weather, News
-from .forms import WeatherForm,UserForm
+from .models import Weather, News, UserData
+from .forms import WeatherForm,UserDataForm
 import uuid
 import cv2
 import os
@@ -135,8 +135,14 @@ def NewUserPage(request):
 def UserPage(request):
 	if request.method == 'POST':
 
-		form=UserCreationForm(request.POST)
-		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
+		form=UserDataForm(request.POST)
+		UserData.objects.create(
+			user_id = request.user.id,
+			userName = request.user.username,
+			weather_api = request.POST.get('weather_api'),
+			news_api = request.POST.get('news_api'),
+		)
+		'''BASE_DIR= os.path.dirname(os.path.abspath(__file__))
 		file_to_open=os.path.join(BASE_DIR, "../Users"+os.path.sep+"users.json")
 		userData = "" 
 		with open(file_to_open,"r") as f_w:
@@ -148,10 +154,10 @@ def UserPage(request):
 		print(userData)
 
 		with open(file_to_open,"w") as f_w:
-			json.dump(userData,f_w)
+			json.dump(userData,f_w)'''
 		
 	else:
-		form=UserCreationForm()
+		form=UserDataForm()
 	
 	context = {'form': form}
 	return render(request,'smartmirror_django/webUI/user_prop.html', context)
@@ -237,13 +243,12 @@ def saveWeatherDataToJSON(weatherData):
 @csrf_exempt
 def Login(request):
 	if request.method == 'POST':
-		user = authenticate(username="nejc", password="Gabrje157")
-		if user is not None:
-			print(user)
-			login(request, user)
+		username = request.POST['username']
+		password = request.POST['password']
+		user = authenticate(request, username=username, password=password)
+		if user:
+			login(request, user)    
 			return render(request,'smartmirror_django/webUI/home.html')
-		else:
-			print("Problem")
 	else:
 		return render(request,'smartmirror_django/webUI/login.html')
 	
