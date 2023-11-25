@@ -15,14 +15,12 @@ class WeatherForm(forms.Form):
     weather_longitude = forms.CharField(max_length=200)
     weather_latitude = forms.CharField(max_length=200)
     use_coordinates = forms.BooleanField()
-    weather_file = forms.CharField(max_length=200)
     class Meta:
         model=Weather
         fields = '__all__'
 
 class NewsForm():
     news_api = forms.CharField(max_length=200)
-    news_file = forms.CharField(max_length=200)
     news_providers = forms.CharField(max_length=200)
     class Meta:
         model=News

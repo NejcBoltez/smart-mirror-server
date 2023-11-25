@@ -75,11 +75,25 @@
     </label>
     <p1>Use coordinates</p1>
     <br></br>
-    <div class="divForm">
+    <form class="form" action="" method="POST">
+        {% csrf_token %} {% for field in form %}
+        <div class="form__group form__group">
+            <label for="name">{{field.label}}: </label> {{field}}
+        </div>
+        {% endfor %}
+        <input type="submit" />
+    </form>
+    <!--<div class="divForm">
         <form action="/weather" method="POST">
             {% csrf_token %}
 
             <table>
+                <tr>
+                    <td>
+                        <span>API-key: </span>
+                        <input id="api_key" name="api_key" type="text">
+                    </td>
+                </tr>
                 <tr>
                     <td>
                         <span>Country: </span>
@@ -108,19 +122,19 @@
             <br>
             <input type="submit"></input>
         </form>
-    </div>
+    </div>-->
     <script>
         var useCoordinates = false;
-        document.getElementById("id_country").disabled = false;
-        document.getElementById("id_city").disabled = false;
-        document.getElementById("id_coordX").disabled = true;
-        document.getElementById("id_coordY").disabled = true;
+        document.getElementsByName("weather_country")[0].disabled = false;
+        document.getElementsByName("weather_city")[0].disabled = false;
+        document.getElementsByName("weather_longitude")[0].disabled = true;
+        document.getElementsByName("weather_latitude")[0].disabled = true;
 
         function btnClick(event) {
-            document.getElementById("id_country").disabled = !useCoordinates;
-            document.getElementById("id_city").disabled = !useCoordinates;
-            document.getElementById("id_coordX").disabled = useCoordinates;
-            document.getElementById("id_coordY").disabled = useCoordinates;
+            document.getElementsByName("weather_country")[0].disabled = !useCoordinates;
+            document.getElementsByName("weather_city")[0].disabled = !useCoordinates;
+            document.getElementsByName("weather_longitude")[0].disabled = useCoordinates;
+            document.getElementsByName("weather_latitude")[0].disabled = useCoordinates;
             useCoordinates = !useCoordinates;
             return useCoordinates;
         }

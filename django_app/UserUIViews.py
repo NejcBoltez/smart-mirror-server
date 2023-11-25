@@ -1,7 +1,7 @@
 from django.shortcuts import redirect, render
 from django.http import StreamingHttpResponse, JsonResponse
 from django.template import RequestContext
-from .models import User, Weather
+from .models import Weather, News
 from .forms import WeatherForm,UserForm
 import uuid
 import cv2
@@ -13,7 +13,8 @@ from django.views.decorators.gzip import gzip_page
 import json
 import base64
 from django.contrib.auth import authenticate, login, logout
-
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
 
 
 loginedUser = 'Nejc'
@@ -43,6 +44,11 @@ def NewsPage(request):
 	global newsProviders
 
 	if request.method == 'POST':
+		News.objects.create(
+			user_id = request.user.id,
+			news_api = request.POST.get('news_api'),
+			news_file = request.user.name + '/news.json',
+		)
 		saveNewsCodesJSON(str(request.body.decode().replace("news=","").replace("+", " ")).split('&'))
 	
 	if request.method == 'GET':
@@ -61,7 +67,7 @@ def NewsPage(request):
 		except Exception as e:
 			data = getDataFromJSON()
 			newsData = data['newsData']
-		
+	print(newsData)
 	context = { 'data': newsData,'providers':newsProviders}
 	return render(request,'smartmirror_django/webUI/news.html',context)
 
@@ -70,36 +76,34 @@ def WeatherPage(request):
 	if request.method == 'POST':
 		print("TEST")
 		print (request.body.decode())
-		saveWeatherDataToJSON(request.body.decode().split("&"))
+		print (request.POST.get('api_key'))
+		Weather.objects.create(
+			user_id = request.user.id,
+			weather_api = request.POST.get('weather_api'),
+			weather_city = request.POST.get('weather_city'),
+			weather_country = request.POST.get('weather_country'),
+			weather_longitude = request.POST.get('weather_longitude'),
+			weather_latitude = request.POST.get('weather_latitude'),
+			weather_file = request.user.name + '/weather.json',
+		)
+		#saveWeatherDataToJSON(request.body.decode().split("&"))
 	else:
 		form=WeatherForm()
 	form = WeatherForm()
 	context = {'form': form}
 	return render(request,'smartmirror_django/webUI/weather.html', context)
 
-#Save the new Weather configuration
-def WeatherConfSave(request):
-	weatherForm=WeatherForm()
-	if request.method == 'POST':
-		print(str(request.body))
-		Weather.objects.create(
-			city = request.POST.get('city'),
-			country = request.POST.get('country'),
-			coordX = request.POST.get('coordX'),
-			coordY = request.POST.get('coordY')
-		)
-		print(request.POST.get('weather_api'))
-	return redirect('home', RequestContext(request))
 
 #Return the page to create a new user
 def NewUserPage(request):
 	if request.method == 'POST':
 
-		form=UserForm(request.POST)
+		form=UserCreationForm(request.POST)
 		User.objects.create(
-			userName = request.POST.get('userName'),
+			username = request.POST.get('username'),
+			password = request.POST.get('password1')
 		)
-		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
+		'''BASE_DIR= os.path.dirname(os.path.abspath(__file__))
 		image_dir=os.path.join(BASE_DIR, "../Users")
 		user_dir=str(image_dir)+"/"+str(request.POST.get('userName'))
 		os.mkdir(user_dir)
@@ -117,9 +121,9 @@ def NewUserPage(request):
 		print(userData)
 
 		with open(user_dir + os.path.sep + request.POST.get('userName') + ".json","w") as f_w:
-			json.dump(userData,f_w)
+			json.dump(userData,f_w)'''
 	else:
-		form=UserForm()
+		form=UserCreationForm()
 	
 	context = {'form': form}
 	return render(request,'smartmirror_django/webUI/create_new_user.html', context)
@@ -128,7 +132,7 @@ def NewUserPage(request):
 def UserPage(request):
 	if request.method == 'POST':
 
-		form=UserForm(request.POST)
+		form=UserCreationForm(request.POST)
 		BASE_DIR= os.path.dirname(os.path.abspath(__file__))
 		file_to_open=os.path.join(BASE_DIR, "../Users"+os.path.sep+"users.json")
 		userData = "" 
@@ -144,7 +148,7 @@ def UserPage(request):
 			json.dump(userData,f_w)
 		
 	else:
-		form=UserForm()
+		form=UserCreationForm()
 	
 	context = {'form': form}
 	return render(request,'smartmirror_django/webUI/user_prop.html', context)
