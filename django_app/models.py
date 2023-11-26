@@ -29,7 +29,7 @@ class Weather(models.Model):
 class News(models.Model):
     user_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     news_file = models.CharField(max_length=200)
-    news_providers = models.CharField(max_length=200)
+    news_provider = models.CharField(max_length=200)
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
     class Meta:

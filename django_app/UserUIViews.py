@@ -106,25 +106,6 @@ def NewUserPage(request):
 			username = request.POST.get('username'),
 			password = request.POST.get('password1')
 		)
-		'''BASE_DIR= os.path.dirname(os.path.abspath(__file__))
-		image_dir=os.path.join(BASE_DIR, "../Users")
-		user_dir=str(image_dir)+"/"+str(request.POST.get('userName'))
-		os.mkdir(user_dir)
-		os.chmod(user_dir, 0o777)
-		file_to_open=os.path.join(BASE_DIR, "../Users" + os.path.sep + "users.json")
-		userData = "" 
-		with open(file_to_open,"r") as f_w:
-			userData = json.load(f_w)
-		
-		userData['userID']=str(uuid.uuid4())
-		userData['user']=request.POST.get('userName')
-		userData['encryptedPassword'] = str(base64.b64encode(request.POST.get('userPassword').encode('ascii')))
-		userData['apiKeys']['weather_api_key'] = request.POST.get('weather_api')
-		userData['apiKeys']['news_api_key'] = request.POST.get('news_api')
-		print(userData)
-
-		with open(user_dir + os.path.sep + request.POST.get('userName') + ".json","w") as f_w:
-			json.dump(userData,f_w)'''
 	else:
 		form=UserCreationForm()
 	
@@ -133,31 +114,19 @@ def NewUserPage(request):
 
 #Return the user properties page
 def UserPage(request):
+	currentUser = UserData.objects.get(user_id=request.user.id)
+	print(currentUser)
+	print(currentUser.weather_api)
 	if request.method == 'POST':
 
 		form=UserDataForm(request.POST)
-		UserData.objects.create(
-			user_id = request.user.id,
-			userName = request.user.username,
-			weather_api = request.POST.get('weather_api'),
-			news_api = request.POST.get('news_api'),
-		)
-		'''BASE_DIR= os.path.dirname(os.path.abspath(__file__))
-		file_to_open=os.path.join(BASE_DIR, "../Users"+os.path.sep+"users.json")
-		userData = "" 
-		with open(file_to_open,"r") as f_w:
-			userData = json.load(f_w)
-		userData['user']=request.POST.get('userName')
-		userData['encryptedPassword'] = str(base64.b64encode(request.POST.get('userPassword').encode('ascii'))),
-		userData['apiKeys']['weather_api_key'] = request.POST.get('weather_api'),
-		userData['apiKeys']['news_api_key'] = request.POST.get('news_api')
-		print(userData)
-
-		with open(file_to_open,"w") as f_w:
-			json.dump(userData,f_w)'''
+		currentUser.userName=request.user.username
+		currentUser.weather_api = request.POST.get('weather_api')
+		currentUser.news_api = request.POST.get('news_api')
+		currentUser.save()
 		
 	else:
-		form=UserDataForm()
+		form=UserDataForm({'weather_api': currentUser.weather_api, 'news_api': currentUser.news_api})
 	
 	context = {'form': form}
 	return render(request,'smartmirror_django/webUI/user_prop.html', context)

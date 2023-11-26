@@ -68,22 +68,29 @@
     <h1>WEATHER</h1>
 
     <span><h2>CITY TO SHOW WEATHER FOR</h2></span>
+    <table>
+        <tr>
+            <form class="form" action="" method="POST">
+                <td>
+                    <span>Use city name</span>
 
-    <form class="form" action="" method="POST">
-        <p1>Use city name</p1>
-        <label class="switch">
-            <input name="test" type="checkbox">
-            <span class="slider round" onclick="btnClick()"></span>
-        </label>
-        <p1>Use coordinates</p1>
-        <br></br>
-        {% csrf_token %} {% for field in form %}
-        <div class="form__group form__group">
-            <label for="name">{{field.label}}: </label> {{field}}
-        </div>
-        {% endfor %}
-        <input type="submit" />
-    </form>
+                    <label class="switch">
+                                    <input name="test" type="checkbox">
+                                    <span class="slider round" onclick="btnClick()"></span>
+                                </label>
+                    <span>Use coordinates</span>
+                </td>
+                {% csrf_token %} {% for field in form %}
+                <td class="form__group form__group">
+                    <label for="name">{{field.label}}: </label> {{field}}
+                </td>
+                {% endfor %}
+                <td>
+                    <br />
+                    <input type="submit" /></td>
+            </form>
+        </tr>
+    </table>
     <!--<div class="divForm">
         <form action="/weather" method="POST">
             {% csrf_token %}
