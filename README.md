@@ -15,3 +15,7 @@ searching through youtube
 playing youtube video
 displaying weather forecast
 displaying news
+
+# Create django admin password
+
+run command 'python manage.py createsuperuser'

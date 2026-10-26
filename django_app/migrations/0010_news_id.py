@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="news",
             name="id",
-            field=models.DateTimeField(auto_now_add=True, default=1),
+            field=models.DateTimeField(auto_now_add=True, default='1999-1-1 00:00:00', serialize=False),
             preserve_default=False,
         ),
     ]
