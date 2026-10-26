@@ -6,5 +6,8 @@
     <input name="password" type="password" />
     <br/>
     <input type="submit" />
+    {% if error %}
+        <p style="color: red; font-weight: bold">{{ description }}</p>
+    {% endif %}
 </form>
 {% endblock %}
