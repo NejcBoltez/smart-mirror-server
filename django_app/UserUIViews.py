@@ -214,13 +214,28 @@ def Login(request):
 	if request.method == 'POST':
 		username = request.POST['username']
 		password = request.POST['password']
-		print(username)
-		print(password)
-		user = authenticate(request, username=username, password=password)
-		print(user)
-		if user == True:
-			login(request, user)    
+
+		user_exists = False
+		try:
+			user_obj = User.objects.get(username=username)
+			user_exists = True
+		except User.DoesNotExist:
+			user_exists = False
+		
+		if user_exists == True:
+			user = authenticate(request, username=username, password=password)
+			if user != None:
+				login(request, user)    
+			else:
+				print("Invalid password. Please try again.")
+
+				context = { 'error': 'True', 'description': 'Invalid password. Please try again.'}
+				return render(request,'smartmirror_django/webUI/login.html', context)
 			return render(request,'smartmirror_django/webUI/home.html')
+		else:
+			print("User does not exist. Please login with a valid user.")
+			context = { 'error': 'True', 'description': 'User does not exist. Please login with a valid user.'}
+			return render(request,'smartmirror_django/webUI/login.html', context)
 	else:
 		return render(request,'smartmirror_django/webUI/login.html')
 	
