@@ -214,8 +214,11 @@ def Login(request):
 	if request.method == 'POST':
 		username = request.POST['username']
 		password = request.POST['password']
+		print(username)
+		print(password)
 		user = authenticate(request, username=username, password=password)
-		if user:
+		print(user)
+		if user == True:
 			login(request, user)    
 			return render(request,'smartmirror_django/webUI/home.html')
 	else:
