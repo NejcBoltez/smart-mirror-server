@@ -1,6 +1,10 @@
+from pathlib import Path
+
 from django.shortcuts import redirect, render
 from django.http import StreamingHttpResponse, JsonResponse
 from django.template import RequestContext
+
+from smartmirror_django.settings import BASE_DIR
 from .models import Weather, News, UserData
 from .forms import WeatherForm,UserDataForm
 import uuid
@@ -49,7 +53,7 @@ def NewsPage(request):
 			news_api = request.POST.get('news_api'),
 			news_file = request.user.username + '/news.json',
 		)
-		saveNewsCodesJSON(str(request.body.decode().replace("news=","").replace("+", " ")).split('&'))
+		saveNewsCodesJSON(str(request.body.decode().replace("news=","").replace("+", " ")).split('&'),request.user.username )
 	
 	if request.method == 'GET':
 		print (request.META['QUERY_STRING'])
@@ -62,10 +66,10 @@ def NewsPage(request):
 				print(request.GET.get('remove'))
 				newsData.pop(int(request.GET.get('remove')))
 			else:
-				data = getDataFromJSON()
+				data = getDataFromJSON(request.user.username)
 				newsData = data['newsData']
 		except Exception as e:
-			data = getDataFromJSON()
+			data = getDataFromJSON(request.user.username)
 			newsData = data['newsData']
 	print(newsData)
 	context = { 'data': newsData,'providers':newsProviders}
@@ -89,7 +93,7 @@ def WeatherPage(request):
 			weather_file = request.user.username + '/weather.json',
 			use_coordinates = useCoordinates
 		)
-		#saveWeatherDataToJSON(request.body.decode().split("&"))
+		#saveWeatherDataToJSON(request.body.decode().split("&"), request.user.username)
 	else:
 		form=WeatherForm()
 	form = WeatherForm()
@@ -160,30 +164,30 @@ def process_image(request):
 	return JsonResponse({'success': False})
 
 #Getting data from JSON file
-def getDataFromJSON():
+def getDataFromJSON(username):
 	data = ""
 	BASE_DIR= os.path.dirname(os.path.abspath(__file__))
-	file_to_open=os.path.join(BASE_DIR, "../Users"+os.path.sep+loginedUser+os.path.sep+loginedUser+".json")
-	userData = "" 
+	file_to_open=os.path.join(BASE_DIR, "../Users"+os.path.sep+username+os.path.sep+username+".json")
+	
 	with open(file_to_open,"r") as f_w:
 		data = f_w.read()
 	return json.loads(data)
 
 #Saving data to JSON
-def saveDataToJSON():
+def saveDataToJSON(username):
 	data = ""
 	BASE_DIR= os.path.dirname(os.path.abspath(__file__))
-	file_to_open=os.path.join(BASE_DIR, "../Users"+os.path.sep+loginedUser+os.path.sep+loginedUser+".json")
-	userData = "" 
+	file_to_open=os.path.join(BASE_DIR, "../Users"+os.path.sep+username+os.path.sep+username+".json")
+	
 	with open(file_to_open,"r") as f_w:
 		data = f_w.read()
 	return json.loads(data)
 
 #Saving News providers to JSON
-def saveNewsCodesJSON(newsCodes):
+def saveNewsCodesJSON(newsCodes, username):
 	data = ""
 	BASE_DIR= os.path.dirname(os.path.abspath(__file__))
-	file_to_open=os.path.join(BASE_DIR, "../Users"+os.path.sep+loginedUser+os.path.sep+"nejc.json")
+	file_to_open=os.path.join(BASE_DIR, "../Users"+os.path.sep+username+os.path.sep+username+".json")
 	userData = "" 
 	with open(file_to_open,"r") as f_w:
 		data = json.load(f_w)
@@ -193,14 +197,14 @@ def saveNewsCodesJSON(newsCodes):
 	#return json.loads(data)
 
 #Save weather data to JSON	
-def saveWeatherDataToJSON(weatherData):
+def saveWeatherDataToJSON(weatherData, username):
 	print(weatherData)
 	data = ""
 	if ("csrf" in weatherData[0]):
 		print(True)
 		del weatherData[0]
 	BASE_DIR= os.path.dirname(os.path.abspath(__file__))
-	file_to_open=os.path.join(BASE_DIR, "../Users"+os.path.sep+loginedUser+os.path.sep+"nejc.json")
+	file_to_open=os.path.join(BASE_DIR, "../Users"+os.path.sep+username+os.path.sep+username+".json")
 	userData = "" 
 	with open(file_to_open,"r") as f_w:
 		data = json.load(f_w)
@@ -225,7 +229,8 @@ def Login(request):
 		if user_exists == True:
 			user = authenticate(request, username=username, password=password)
 			if user != None:
-				login(request, user)    
+				login(request, user) 
+				create_User_files(username)
 			else:
 				print("Invalid password. Please try again.")
 
@@ -238,7 +243,37 @@ def Login(request):
 			return render(request,'smartmirror_django/webUI/login.html', context)
 	else:
 		return render(request,'smartmirror_django/webUI/login.html')
+
+def create_User_files(username):
+	BASE_DIR= os.path.dirname(os.path.abspath(__file__))
+	folder_path=Path(BASE_DIR, "../Users"+os.path.sep+username)
+	file_to_open=os.path.join(BASE_DIR, "../Users"+os.path.sep+username+os.path.sep+username+".json")
+	print(file_to_open)
 	
+	userData = "" 
+	folder_path.mkdir(parents=True, exist_ok=True)
+
+	with open(file_to_open,"w") as f_w:
+		data = {
+			"userID": "",
+			"user": username,
+			"encryptedPassword": "",
+			"apiKeys": {
+				"weather_api_key": "",
+				"news_api_key": ""
+			},
+			"newsData": [{
+				"newsCode": ""
+			}],
+			"weatherData": {
+				"cityCode": "",
+				"countryCode": "",
+				"longtitude": "",
+				"latitude": ""
+			}
+		}
+		json.dump(data,f_w)
+
 #Logout function
 @csrf_exempt
 def Logout(request):
